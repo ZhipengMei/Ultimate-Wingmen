@@ -1,0 +1,262 @@
+//
+//  GMapViewController.swift
+//  Bromance
+//
+//  Created by Zhipeng Mei on 12/15/16.
+//  Copyright © 2016 Team Grit. All rights reserved.
+//
+
+import UIKit
+import GoogleMaps
+import CoreLocation
+import GeoFire
+import FirebaseDatabase
+import Firebase
+import FirebaseAuth
+
+
+class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate  {
+    
+    //store the device id
+    let deviceID = UIDevice.current.identifierForVendor?.uuidString
+
+    //getting current user
+    let user = FIRAuth.auth()?.currentUser
+    //database reference
+    let geofireRef = FIRDatabase.database().reference()
+    
+    @IBOutlet var myView: UIView!                       //myView contains 2 subview (mapview and tableview)
+
+    var mapView: GMSMapView?                            //display nearby users
+    
+    var nearbyUIDArray = [String]()                //array contains a list of users id
+    var nearbyUIDSet = Set<String>()               //google map refresh many times, using set to get non-duplicated data
+    
+    var usersDict:NSDictionary = NSDictionary()         //dictionary holds all users info
+    
+    var usersArray = [AnyObject]()
+    var loggedInUser: AnyObject?
+    
+    let locationManager = CLLocationManager()           //for getting current user location
+    var geoFire: GeoFire? = nil                         //geo instance for upload and retrieve location data to firebase
+    
+    //initialize coordinate instance, making sure app wont crash when location not turn on
+    var locationLat: CLLocationDegrees = 0
+    var locationLong: CLLocationDegrees = 0
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        manageConnections(userID: (user?.uid)!)
+        segmentMapView()            //display mapview
+    }
+    
+    func segmentMapView(){
+        // Ask for Authorisation from the User.
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.requestAlwaysAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
+    }
+
+    
+    // *** google map view ***
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        showCurrentLocationOnMap()
+        onReresh()
+        self.locationManager.stopUpdatingLocation() //stop updating location
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("error with location manager: ", error)
+    }
+    
+    //getting the user's current location
+    func showCurrentLocationOnMap(){
+        
+        //setup user's current latitude and longitude
+        locationLat = (locationManager.location?.coordinate.latitude)!
+        locationLong = (locationManager.location?.coordinate.longitude)!
+        
+        //getting current position to map
+        let camera = GMSCameraPosition.camera(withLatitude: locationLat, longitude: locationLong, zoom: 9.5)
+        mapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: self.myView.frame.size.width, height: self.myView.frame.size.height), camera: camera)
+        
+        //setting up transparent blue color for radius range
+        let blue = UIColor.blue // 1.0 alpha
+        let semi = blue.withAlphaComponent(0.5) // 0.5 alpha
+        
+        //adding circle to mapview
+        let circle = GMSCircle()
+        circle.radius = 32186 // 20 miles
+        circle.fillColor = semi
+        circle.position = (self.locationManager.location?.coordinate)! // Your CLLocationCoordinate2D  position
+        circle.strokeWidth = 5;
+        circle.strokeColor = UIColor.clear
+        circle.map = mapView; // Add it to the map
+        
+        //add marker to map view
+        let marker = GMSMarker()
+        marker.position = camera.target     //place marker to current user position onto the map
+        marker.snippet = "Current Location"
+        marker.icon =  GMSMarker.markerImage(with: UIColor.yellow)  //set the marker to yellow color
+        marker.appearAnimation = kGMSMarkerAnimationPop
+        marker.map = mapView
+        
+        //saving location data onto firebase
+        saveGeoData(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!)
+    }
+    
+    //function for saving GeoLocation data to firebase
+    func saveGeoData(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
+        //create a GeoFire instance
+        geoFire = GeoFire(firebaseRef: geofireRef.child("locations") )    //create a child folder to store geo-location data
+        
+        let userID = user?.uid  //get user id
+        
+        //storing data to firebaseDatabase with key as uid
+        geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID)
+    }
+    
+    // refresh buttion trigger grab new user's current location
+    @IBAction func refresh(_ sender: Any) {
+        onReresh()
+    }
+    
+    func onReresh() {
+        locationManager.startUpdatingLocation() //update user's current location when refresh button activated
+        getNearbyUser()
+    }
+    
+    func getNearbyUser(){
+
+        // Query locations at user current location with a radius of 20 miles (math: 32186 meters /1000)
+        let circleQuery = geoFire?.query(at: locationManager.location, withRadius: 32)
+        //request for nearby user data
+        circleQuery?.observe(.keyEntered, with: { (key: String?, location: CLLocation?) in
+            //only get nearby location other than current user (compare by latitude, add compare longitude for more precise comparison)
+            if (key != self.user?.displayName){
+                //add nearby user's marker to map view
+                let otherUserMarker = GMSMarker()
+                otherUserMarker.position = (location?.coordinate)!     //place marker to current user position onto the map
+                otherUserMarker.snippet = "Player In Action"
+                otherUserMarker.appearAnimation = kGMSMarkerAnimationPop
+                otherUserMarker.map = self.mapView
+                self.myView.addSubview(self.mapView!)   //add marker to the mapView
+                self.nearbyUIDSet.insert(key!)     //insert specific nearby user's uid query data into set (non-duplicated data)
+            }
+            
+        })
+        
+        // call .observeReady block when .observe is finished 
+        circleQuery?.observeReady({
+            //print("All initial data has been loaded and events have been fired!")
+            if(self.nearbyUIDSet.count > 0){
+                //once getting nearby user success, then display the data
+                self.getNearbyUsersData(userIDset: self.nearbyUIDSet)
+            }
+            //print("nearbyUIDSet \(self.nearbyUIDSet.count)")
+        })
+
+
+    }
+    // *** google map view end ***
+    
+
+    //*** getting specific users' data function ***
+    func getNearbyUsersData(userIDset: Set<String>) {
+        
+        self.loggedInUser = FIRAuth.auth()?.currentUser
+
+        self.geofireRef.child("user_profile").observe(.value, with: {
+            (snapshot) in
+            
+            self.usersDict = (snapshot.value as? NSDictionary)! //store JSON in userDict
+            self.nearbyUIDArray = Array(userIDset)  //convert set to array
+            //clear up arrays
+            self.usersArray = []
+            
+            //outter loop to match nearby users
+            for index in 0...(self.nearbyUIDArray.count - 1) {
+                    
+                //inner gets all data from dictionary
+                for(userID, details) in self.usersDict {        //key-value for loop
+                    
+                    //match nearby users with all users dictionary
+                    if(userID as? String == self.nearbyUIDArray[index]) {
+                        
+                        //**********
+                        let connections = (details as! NSDictionary).object(forKey: "connections") as! NSDictionary
+                        
+                        for(deviceID, connection) in connections {
+                            if((connection as! NSDictionary).object(forKey: "online") as! Bool)
+                            {
+                                (details as! NSDictionary).setValue(true, forKey:"online")
+                            }
+                        }
+                        
+                        //store nearby users ID
+                        if(self.loggedInUser?.uid != userID as? String)
+                        {
+                            (details as! NSDictionary).setValue(userID, forKey:"uID")
+                            self.usersArray.append(details as! NSDictionary)
+                        }
+                        //**********
+
+                    }//end if
+
+                }//end inner for
+            }//end outter for
+        })//end observe
+
+    }//*** getting all users' info function end ***
+
+    
+    //checking users online status
+    func manageConnections(userID: String) {
+    
+        //create a reference to the database
+        let myConnectionsRef = FIRDatabase.database().reference(withPath: "user_profile/\(userID)/connections/\(self.deviceID!)")
+        //when user logged in, set value to true
+        myConnectionsRef.child("online").setValue(true)
+        myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
+        
+        //observe which will moniter if the user is logged in or out
+        myConnectionsRef.observe(.value, with: {
+            snapshot in
+            
+            //guard statements only run if the conditions are not met
+            guard let connected = snapshot.value as? Bool, connected else {
+                return
+            }
+        })
+    }//manageConnections end
+
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        onReresh()
+        if segue.identifier == "toCollection" {
+            if let collectionVC = segue.destination as? NearbyUserCollection {
+                let selectedPloggedInUser = self.loggedInUser
+                let selectedPackages = self.usersArray
+                collectionVC.loggedInUserNearby = selectedPloggedInUser
+                collectionVC.usersArrayNearby = selectedPackages
+            }
+            
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
