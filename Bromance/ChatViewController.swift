@@ -25,6 +25,13 @@ class ChatViewController: JSQMessagesViewController {
     var conversationID: String?
     var rootRef = FIRDatabase.database().reference()    //reference to firebase database
     
+    var convoIDarray = [String]()                //array contains a list of users id
+    var convoIDset = Set<String>()
+    
+    var convoDict = [String]()         //dictionary holds all users info
+    var convoDictSet = Set<String>()         //dictionary holds all users info
+
+    
 //    private var userIsTypingRef: AnyObject?// 1
 //    private var localTyping = false // 2
 //    var isTyping: Bool {
@@ -55,9 +62,9 @@ class ChatViewController: JSQMessagesViewController {
         let senderIdFive = String(senderId.characters.prefix(5))
         //setting up conversation id
         if(senderIdFive > receiverIdFive) {
-            self.conversationID = senderIdFive + receiverIdFive
+            self.conversationID = senderIdFive + receiverIdFive + self.receiverId
         } else {
-            self.conversationID = receiverIdFive + senderIdFive
+            self.conversationID = receiverIdFive + senderIdFive + self.receiverId
         }
   
     }
@@ -123,6 +130,7 @@ class ChatViewController: JSQMessagesViewController {
     private func addMessage(withId id: String, name: String, text: String) {
         if let message = JSQMessage(senderId: id, displayName: name, text: text) {
             messages.append(message)
+            //try append name
         }
     }
     
@@ -135,7 +143,15 @@ class ChatViewController: JSQMessagesViewController {
         formatter.dateFormat = "dd.MM.yyyy"
         let result = formatter.string(from: date)
 
+//        let itemRef = rootRef.child("messages").child("\(self.conversationID!)").childByAutoId() // 1
+
+//        let convoRef = rootRef.child("messages").child("\(self.conversationID!)")
+//        let receierItem = ["receiverId": self.receiverId]
+//        convoRef.setValue(receierItem)  //store receiver id
+        
+//        let itemRef = rootRef.child("messages").child("\(self.conversationID!)").child("contents").childByAutoId() // 1
         let itemRef = rootRef.child("messages").child("\(self.conversationID!)").childByAutoId() // 1
+
         let messageItem = [ // 2
             "senderId": senderId!,
             "senderName": senderName,
@@ -146,15 +162,33 @@ class ChatViewController: JSQMessagesViewController {
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
         finishSendingMessage() // 5
         
-        //update conversation id that belongs to current user
-        let uesrRef = rootRef.child("user_profile/\(senderId!)")
-        let convoID = uesrRef.child("conversation_id").child("\(self.conversationID!)")
-        convoID.setValue(self.conversationID!)
-        
-        
+        updateConvoIdInfo()
         
 //        isTyping = false
     }
+    
+    func updateConvoIdInfo() {
+        
+        let contactedUserRef = rootRef.child("user_profile/\(senderId!)").child("conversation_id")
+        
+        contactedUserRef.observe(.value, with: {(snapshot) in
+            if (snapshot.value as? NSArray) == nil {
+                self.convoDictSet.insert(self.conversationID!)
+                self.convoIDarray = Array(self.convoDictSet)
+                contactedUserRef.setValue(self.convoIDarray)
+            } else {
+                
+                self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
+                self.convoDictSet = Set(self.convoDict)
+                
+                //update conversation id that belongs to current user
+                self.convoDictSet.insert(self.conversationID!)
+                self.convoIDarray = Array(self.convoDictSet)
+                contactedUserRef.setValue(self.convoIDarray)
+            }
+        })
+    }
+    
     
     private func observeMessages() {
         let messageRef = rootRef.child("messages/\(self.conversationID!)")
@@ -166,6 +200,7 @@ class ChatViewController: JSQMessagesViewController {
         messageQuery.observe(.childAdded, with: { (snapshot) in
             // 3
             let messageData = snapshot.value as! Dictionary<String, String>
+            //print(messageData)
 
             if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let text = messageData["text"] as String!, text.characters.count > 0 {
                 // 4

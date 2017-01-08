@@ -55,7 +55,6 @@ class NearbyUserCollection: UICollectionViewController {
         if(usersArrayNearby.count > 0){            //making sure set is not empty
             count = self.usersArrayNearby.count
         }
-//        print("count \(count)")
         return count
     }
 

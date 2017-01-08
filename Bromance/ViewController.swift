@@ -242,7 +242,9 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                         }//end profilePicRef.put
             
                     }
-                    
+//                    var dummyArray = [String]()
+//                    dummyArray = [""]
+//                    databaseRef.child("user_profile").child("\(user.uid)/conversation_id").setValue(dummyArray)
                     databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName)
                     databaseRef.child("user_profile").child("\(user.uid)/age").setValue("")
                     databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
