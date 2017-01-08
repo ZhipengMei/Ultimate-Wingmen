@@ -65,7 +65,7 @@ class NearbyUserCollection: UICollectionViewController {
         if(usersArrayNearby.count > 0){
             //display username
             cell.usernameLabel.text = (self.usersArrayNearby[indexPath.row]["username"] as? String)!.components(separatedBy: " ")[0]
-            
+//            print(self.usersArrayNearby[indexPath.row])
             //display user image (make sure image is avaialbe and permission to access)
             if let imageURL = NSURL(string: self.usersArrayNearby[indexPath.row]["profile_pic_small"] as! String) {
                 if let imageData = NSData(contentsOf: imageURL as URL) {   //convert image nsurl to nsdata
