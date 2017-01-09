@@ -140,16 +140,10 @@ class ChatViewController: JSQMessagesViewController {
         //get the current time
         let date = Date()
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
+        formatter.dateFormat = "MM.dd.yyyy"
         let result = formatter.string(from: date)
 
-//        let itemRef = rootRef.child("messages").child("\(self.conversationID!)").childByAutoId() // 1
 
-//        let convoRef = rootRef.child("messages").child("\(self.conversationID!)")
-//        let receierItem = ["receiverId": self.receiverId]
-//        convoRef.setValue(receierItem)  //store receiver id
-        
-//        let itemRef = rootRef.child("messages").child("\(self.conversationID!)").child("contents").childByAutoId() // 1
         let itemRef = rootRef.child("messages").child("\(self.conversationID!)").childByAutoId() // 1
 
         let messageItem = [ // 2

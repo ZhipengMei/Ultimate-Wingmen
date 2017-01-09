@@ -17,11 +17,19 @@ class ChatTableVC: UITableViewController {
 
     var convoDict = [String]()         //dictionary holds all users info
     
+//    var contactedUsersArray:NSDictionary = NSDictionary()         //dictionary holds all contacted users info
+    var contactedUsersArray = [AnyObject]()
+
+    
+    var name: String = ""
+    var sendId: String = ""
+    var receiveId: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         checkConvoId()
-        tableView.reloadData()
+        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -71,44 +79,135 @@ class ChatTableVC: UITableViewController {
             } else {
                 self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
                 self.tableView.reloadData()
-
-//                print(self.convoDict)
-//                print(self.convoDict[0])
             }
         })
     }
     
-    
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //parsing convoDict into readable username and receiver id
+        let convoId = self.convoDict[indexPath.row] as String
+        self.receiveId = convoId
+        
+        //pass the following info into ChatViewController
+        self.receiveId = removeChar(someString: self.receiveId)
+        self.sendId = (self.user?.uid)!
+        let thisString = self.contactedUsersArray[indexPath.row].object(forKey: "username") as! String
+        self.name = thisString.components(separatedBy: " ")[0]
+
+        // handle tap events
+        let chatVC = self.storyboard?.instantiateViewController(withIdentifier: "chatVC") as! ChatViewController
+        chatVC.senderId = self.sendId
+        chatVC.senderDisplayName = self.name
+        chatVC.receiverId = self.receiveId
+        
+        self.navigationController?.pushViewController(chatVC, animated: true)
+    }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tablecell", for: indexPath) as! ChatTableCell
         
-        var receiverId: String
         let convoId = self.convoDict[indexPath.row] as String
         
         //remove the the first 10 char from the string and get the contacted user's id
-        receiverId = convoId
-        receiverId.removeSubrange(receiverId.startIndex..<receiverId.index(receiverId.startIndex, offsetBy: 10))
-
-        let contactedUserRef = rootRef.child("user_profile/\(receiverId)/")
-        contactedUserRef.observe(.value, with: {(snapshot) in
-            if let userDict = snapshot.value as? NSDictionary {
-                cell.username.text = (userDict["username"] as! String).components(separatedBy: " ")[0]
-
-            }
-                
-        })
+        self.receiveId = convoId
+        self.receiveId = removeChar(someString: self.receiveId)
         
-        
-        
-//        cell.username =
-        
+        let insideCellForRowAt = true
+        self.observeUserProfile(conersationId: convoId, cell: cell, insideCellForRowAt: insideCellForRowAt)
 
         return cell
     }
+    
+    
+    //remove the first 10 chars on the string
+    private func removeChar(someString: String) -> String{
+        var thisString = someString
+        thisString.removeSubrange(thisString.startIndex..<thisString.index(thisString.startIndex, offsetBy: 10))
+        return thisString
+    }
+    
+    
+    //retrieve entire user profile data
+    private func observeUserProfile(conersationId: String, cell: ChatTableCell, insideCellForRowAt: Bool) {
+
+        let contactedUserRef = rootRef.child("user_profile/\(receiveId)/")
+        contactedUserRef.observe(.value, with: {(snapshot) in
+            if let userDict = snapshot.value as? NSDictionary {
+                
+                //add current uesrDict to contactedUsersArray
+                self.contactedUsersArray.append(userDict)
+                
+                let thisUsername = (userDict["username"] as! String).components(separatedBy: " ")[0]
+                
+                //only runs the following if inside tableview for display
+                if insideCellForRowAt == true {
+                    cell.username.text = thisUsername
+                    self.observeProfilePic(userDict: userDict, cell: cell)
+                    self.observeLastText(conversationId: conersationId, cell: cell)
+                }
+                
+            }
+        })
+    }
+    
  
+    //retrieve last text and its date
+    private func observeLastText(conversationId: String, cell: ChatTableCell) {
+        //*************************
+        //display last text
+        let messageRef = self.rootRef.child("messages/\(conversationId)")
+        let messageQuery = messageRef.queryLimited(toLast:1)
+        
+        // 2. We can use the observe method to listen for new
+        // messages being written to the Firebase DB
+        messageQuery.observe(.childAdded, with: { (snapshot) in
+            // 3
+            let messageData = snapshot.value as! Dictionary<String, String>
+            
+            if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let date = messageData["date"], let text = messageData["text"] as String!, text.characters.count > 0 {
+                
+                cell.lastText.text = text
+                cell.dateSent.text = date
+                
+            } else {
+                print("Error! Could not decode message data")
+            }
+        })//end message query *************************
+    }
+    
+    //retrieve profile picture, if non setup then use a default profile image
+    private func observeProfilePic(userDict: NSDictionary , cell: ChatTableCell){
+        //*************************
+        //display user image (make sure image is avaialbe and permission to access)
+        if let imageURL = NSURL(string: userDict["profile_pic_small"] as! String) {
+            if let imageData = NSData(contentsOf: imageURL as URL) {   //convert image nsurl to nsdata
+                cell.profilePic.image = UIImage(data: imageData as Data)    //display profile image
+            } else {
+                if let defaultImageURL = NSURL(string: "https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default%2Fprofile_pic_small.jpg?alt=media&token=02d85d91-ac43-4a0b-a8f6-32b0821b51e4") {
+                    if let defaultImageData = NSData(contentsOf: defaultImageURL as URL) {   //convert image nsurl to nsdata
+                        cell.profilePic.image = UIImage(data: defaultImageData as Data)    //display profile image
+                    }
+                }
+            }//end else
+        }// end if *************************
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /*
     // Override to support conditional editing of the table view.
@@ -156,3 +255,4 @@ class ChatTableVC: UITableViewController {
     */
 
 }
+

@@ -135,43 +135,43 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     }
     
     
-    //***user choose email and passowrd signup method***
-    @IBAction func CreateAccount(_ sender: UIButton) {
-        FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passwordField.text!, completion: {
-            user, error in
-            
-            self.myView.isHidden = true
-            self.activityIndicator.startAnimating()
-            
-            //if user is already existed
-            if error != nil {
-                self.login()
-                self.activityIndicator.stopAnimating()
-            }
-            else {
-                print("User Created")
-                self.login()
-                self.storeInfoFirstLogin()   //store new user's data
-                self.activityIndicator.stopAnimating()
-                self.performSegue(withIdentifier: "setup_Username_Segue", sender: nil)
-            }
-            
-        })
-    }
+//    //***user choose email and passowrd signup method***
+//    @IBAction func CreateAccount(_ sender: UIButton) {
+//        FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passwordField.text!, completion: {
+//            user, error in
+//            
+//            self.myView.isHidden = true
+//            self.activityIndicator.startAnimating()
+//            
+//            //if user is already existed
+//            if error != nil {
+//                self.login()
+//                self.activityIndicator.stopAnimating()
+//            }
+//            else {
+//                print("User Created")
+//                self.login()
+//                self.storeInfoFirstLogin()   //store new user's data
+//                self.activityIndicator.stopAnimating()
+//                self.performSegue(withIdentifier: "setup_Username_Segue", sender: nil)
+//            }
+//            
+//        })
+//    }
     
-    //user login function
-    func login() {
-        FIRAuth.auth()?.signIn(withEmail: (emailField).text!, password: passwordField.text!, completion: {
-            user, error in
-
-            if error != nil {
-                print("Incorrect")
-            }
-            else {
-                print("Yeahhhh")
-            }
-        })
-    }
+//    //user login function
+//    func login() {
+//        FIRAuth.auth()?.signIn(withEmail: (emailField).text!, password: passwordField.text!, completion: {
+//            user, error in
+//
+//            if error != nil {
+//                print("Incorrect")
+//            }
+//            else {
+//                print("Yeahhhh")
+//            }
+//        })
+//    }
     //***user choose email and passowrd signup method end ***
     
     
@@ -242,9 +242,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                         }//end profilePicRef.put
             
                     }
-//                    var dummyArray = [String]()
-//                    dummyArray = [""]
-//                    databaseRef.child("user_profile").child("\(user.uid)/conversation_id").setValue(dummyArray)
+
                     databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName)
                     databaseRef.child("user_profile").child("\(user.uid)/age").setValue("")
                     databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
@@ -256,10 +254,8 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                     print("user has logged in earlier")
                 }
             })//end databaseRef.child("user_profile")
-
         }
-        
-        
+    
     }
 
     
