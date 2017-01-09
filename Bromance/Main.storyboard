@@ -307,6 +307,9 @@
                                                     <rect key="frame" x="16" y="7" width="120" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Report a Problem"/>
+                                                    <connections>
+                                                        <action selector="onReportProblem:" destination="vkd-XX-fO4" eventType="touchUpInside" id="3lM-P9-lce"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -322,6 +325,9 @@
                                                     <rect key="frame" x="16" y="7" width="129" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Send Us Feedback"/>
+                                                    <connections>
+                                                        <action selector="onFeedBack:" destination="vkd-XX-fO4" eventType="touchUpInside" id="O5Q-Fj-RWT"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -358,7 +364,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="90A-ii-bQf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3796" y="3206.4467766116945"/>
+            <point key="canvasLocation" x="1918" y="3168"/>
         </scene>
         <!--Basic Info-->
         <scene sceneID="vRo-sc-2Wa">
@@ -420,7 +426,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2O3-vr-097" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2856.8000000000002" y="3918.8905547226391"/>
+            <point key="canvasLocation" x="1918" y="3887"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="uu6-EK-JXG">
