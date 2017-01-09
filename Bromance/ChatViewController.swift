@@ -161,24 +161,55 @@ class ChatViewController: JSQMessagesViewController {
 //        isTyping = false
     }
     
+    //update an array of conversation id, use it to show recently contacted users
     func updateConvoIdInfo() {
         
         let contactedUserRef = rootRef.child("user_profile/\(senderId!)").child("conversation_id")
+        var runItOnce = false
         
-        contactedUserRef.observe(.value, with: {(snapshot) in
+        contactedUserRef.observe(.value , with: {(snapshot) in
             if (snapshot.value as? NSArray) == nil {
-                self.convoDictSet.insert(self.conversationID!)
-                self.convoIDarray = Array(self.convoDictSet)
-                contactedUserRef.setValue(self.convoIDarray)
+                
+                if runItOnce == false {
+                    self.convoDictSet.insert(self.conversationID!)
+                    self.convoIDarray = Array(self.convoDictSet)
+                    contactedUserRef.setValue(self.convoIDarray)
+                    runItOnce = true
+                }
+                
             } else {
+//                self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
+//                self.convoDictSet = Set(self.convoDict)
+//                
+//                //update conversation id that belongs to current user
+//                self.convoDictSet.insert(self.conversationID!)
+//                self.convoIDarray = Array(self.convoDictSet)
+//                contactedUserRef.setValue(self.convoIDarray)
                 
-                self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
-                self.convoDictSet = Set(self.convoDict)
-                
-                //update conversation id that belongs to current user
-                self.convoDictSet.insert(self.conversationID!)
-                self.convoIDarray = Array(self.convoDictSet)
-                contactedUserRef.setValue(self.convoIDarray)
+                //testing ***********
+                if runItOnce == false {
+                    self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
+                    print("\n\n\nself.convoDict \(self.convoDict)")
+                    
+                    if let indexOfA = self.convoDict.index(of: self.conversationID!) {
+                        self.convoDict.remove(at: indexOfA)
+                        self.convoDict.insert(self.conversationID!, at: 0)
+                    } else {
+                        self.convoDict.insert(self.conversationID!, at: 0)
+                    }
+                    
+                    print("\n\n\nself.convoDict \(self.convoDict)")
+                    //                self.convoDictSet = Set(self.convoDict)
+                    
+                    //update conversation id that belongs to current user
+                    //                self.convoDictSet.insert(self.conversationID!)
+                    //                self.convoIDarray = Array(self.convoDictSet)
+                    contactedUserRef.setValue(self.convoDict)
+                    //testing ends ***********
+                    runItOnce = true
+                }
+
+
             }
         })
     }

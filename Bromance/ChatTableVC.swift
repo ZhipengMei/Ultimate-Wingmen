@@ -15,12 +15,10 @@ class ChatTableVC: UITableViewController {
     let user = FIRAuth.auth()?.currentUser
     let rootRef = FIRDatabase.database().reference()    //reference to firebase database
 
-    var convoDict = [String]()         //dictionary holds all users info
-    
-//    var contactedUsersArray:NSDictionary = NSDictionary()         //dictionary holds all contacted users info
-    var contactedUsersArray = [AnyObject]()
+    var convoDict = [String]()              //dictionary holds all conversation id belogs to the current user
+    var contactedUsersArray = [AnyObject]() //holds all contacted users info
 
-    
+    //pass following data to ChatViewController
     var name: String = ""
     var sendId: String = ""
     var receiveId: String = ""
@@ -37,10 +35,9 @@ class ChatTableVC: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        //show most recent contact person here
+    
         
-        
-        //delete conversation, take away conversation id from only, do not delete the entire chat log
+        //***To do ***delete conversation, take away conversation id from only, do not delete the entire chat log
         
     }
 
@@ -62,20 +59,19 @@ class ChatTableVC: UITableViewController {
         if self.convoDict.count > 0 {
             count = self.convoDict.count
         }
-//        print("count is \(count)")
+        //print("count is \(count)")
         return count
     }
     
-
-
+    //load recently contacted users and chat
     func checkConvoId() {
         
         let myid = user?.uid
         let contactedUserArrayRef = rootRef.child("user_profile/\(myid!)/conversation_id")
-//        print(contactedUserRef)
+        //print(contactedUserRef)
         contactedUserArrayRef.observe(.value, with: {(snapshot) in
             if (snapshot.value as? NSArray) == nil {
-//                print("do nothing")
+                //print("do nothing")
             } else {
                 self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
                 self.tableView.reloadData()
@@ -83,6 +79,7 @@ class ChatTableVC: UITableViewController {
         })
     }
     
+    //handles to tab, nav to chatViewController and pass data
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //parsing convoDict into readable username and receiver id
         let convoId = self.convoDict[indexPath.row] as String
@@ -103,7 +100,7 @@ class ChatTableVC: UITableViewController {
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
     
-    
+    //load data to cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tablecell", for: indexPath) as! ChatTableCell
         
