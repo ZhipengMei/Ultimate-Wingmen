@@ -176,17 +176,11 @@ class ChatTableVC: UITableViewController {
     //retrieve profile picture, if non setup then use a default profile image
     private func observeProfilePic(userDict: NSDictionary , cell: ChatTableCell){
         //*************************
-        //display user image (make sure image is avaialbe and permission to access)
-        if let imageURL = NSURL(string: userDict["profile_pic_small"] as! String) {
-            if let imageData = NSData(contentsOf: imageURL as URL) {   //convert image nsurl to nsdata
-                cell.profilePic.image = UIImage(data: imageData as Data)    //display profile image
-            } else {
-                if let defaultImageURL = NSURL(string: "https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default%2Fprofile_pic_small.jpg?alt=media&token=02d85d91-ac43-4a0b-a8f6-32b0821b51e4") {
-                    if let defaultImageData = NSData(contentsOf: defaultImageURL as URL) {   //convert image nsurl to nsdata
-                        cell.profilePic.image = UIImage(data: defaultImageData as Data)    //display profile image
-                    }
-                }
-            }//end else
+        //display user image (make sure image is available and permission to access)
+        if let imageURL = userDict["profile_pic_small"] {
+            
+            cell.profilePic.loadImageUsingCache(urlString: imageURL as! String)
+            
         }// end if *************************
     }
     

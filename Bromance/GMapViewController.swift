@@ -102,7 +102,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
         let marker = GMSMarker()
         marker.position = camera.target     //place marker to current user position onto the map
         marker.snippet = "Current Location"
-        marker.icon =  GMSMarker.markerImage(with: UIColor.yellow)  //set the marker to yellow color
+        marker.icon =  GMSMarker.markerImage(with: UIColor.green)  //set the marker to yellow color
         marker.appearAnimation = kGMSMarkerAnimationPop
         marker.map = mapView
         

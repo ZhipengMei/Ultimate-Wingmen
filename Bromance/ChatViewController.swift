@@ -26,7 +26,7 @@ class ChatViewController: JSQMessagesViewController {
     var rootRef = FIRDatabase.database().reference()    //reference to firebase database
     
     var convoIDarray = [String]()                //array contains a list of users id
-    var convoIDset = Set<String>()
+//    var convoIDset = Set<String>()
     
     var convoDict = [String]()         //dictionary holds all users info
     var convoDictSet = Set<String>()         //dictionary holds all users info
@@ -171,25 +171,16 @@ class ChatViewController: JSQMessagesViewController {
             if (snapshot.value as? NSArray) == nil {
                 
                 if runItOnce == false {
-                    self.convoDictSet.insert(self.conversationID!)
-                    self.convoIDarray = Array(self.convoDictSet)
+                    self.convoIDarray.insert(self.conversationID!, at: 0)
                     contactedUserRef.setValue(self.convoIDarray)
                     runItOnce = true
                 }
                 
             } else {
-//                self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
-//                self.convoDictSet = Set(self.convoDict)
-//                
-//                //update conversation id that belongs to current user
-//                self.convoDictSet.insert(self.conversationID!)
-//                self.convoIDarray = Array(self.convoDictSet)
-//                contactedUserRef.setValue(self.convoIDarray)
                 
-                //testing ***********
                 if runItOnce == false {
                     self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
-                    print("\n\n\nself.convoDict \(self.convoDict)")
+                    //print("\n\n\nself.convoDict \(self.convoDict)")
                     
                     if let indexOfA = self.convoDict.index(of: self.conversationID!) {
                         self.convoDict.remove(at: indexOfA)
@@ -197,15 +188,7 @@ class ChatViewController: JSQMessagesViewController {
                     } else {
                         self.convoDict.insert(self.conversationID!, at: 0)
                     }
-                    
-                    print("\n\n\nself.convoDict \(self.convoDict)")
-                    //                self.convoDictSet = Set(self.convoDict)
-                    
-                    //update conversation id that belongs to current user
-                    //                self.convoDictSet.insert(self.conversationID!)
-                    //                self.convoIDarray = Array(self.convoDictSet)
                     contactedUserRef.setValue(self.convoDict)
-                    //testing ends ***********
                     runItOnce = true
                 }
 

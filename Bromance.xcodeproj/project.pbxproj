@@ -14,6 +14,7 @@
 		3A76A3AD1E063E7E00C69338 /* usernameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A76A3AC1E063E7E00C69338 /* usernameVC.swift */; };
 		3A7D84F71E03CAC500F7A4DB /* GMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7D84F61E03CAC500F7A4DB /* GMapViewController.swift */; };
 		3A7D84F91E03CECE00F7A4DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7D84F81E03CECE00F7A4DB /* CoreLocation.framework */; };
+		3A8DB1E61E23F44E00AF3889 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8DB1E51E23F44E00AF3889 /* Extensions.swift */; };
 		3ABC2DB61DF0D970004E89E2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ABC2DB51DF0D970004E89E2 /* AppDelegate.swift */; };
 		3ABC2DB81DF0D970004E89E2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ABC2DB71DF0D970004E89E2 /* ViewController.swift */; };
 		3ABC2DBD1DF0D970004E89E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3ABC2DBC1DF0D970004E89E2 /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 		3A76A3AC1E063E7E00C69338 /* usernameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = usernameVC.swift; sourceTree = "<group>"; };
 		3A7D84F61E03CAC500F7A4DB /* GMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GMapViewController.swift; sourceTree = "<group>"; };
 		3A7D84F81E03CECE00F7A4DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		3A8DB1E51E23F44E00AF3889 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3ABC2DB21DF0D970004E89E2 /* Bromance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bromance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ABC2DB51DF0D970004E89E2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3ABC2DB71DF0D970004E89E2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -122,6 +124,14 @@
 			name = "Support Files";
 			sourceTree = "<group>";
 		};
+		3A8DB1E21E23F39A00AF3889 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				3A8DB1E51E23F44E00AF3889 /* Extensions.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		3ABC2DA91DF0D96F004E89E2 = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +153,7 @@
 		3ABC2DB41DF0D970004E89E2 /* Bromance */ = {
 			isa = PBXGroup;
 			children = (
+				3A8DB1E21E23F39A00AF3889 /* Helpers */,
 				3AC7FC291E1CD6C5001D371E /* Main.storyboard */,
 				3ABC2DB51DF0D970004E89E2 /* AppDelegate.swift */,
 				3AC6A3CD1E12147A00F2D624 /* Core Features */,
@@ -246,7 +257,7 @@
 				TargetAttributes = {
 					3ABC2DB11DF0D970004E89E2 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = V5KYEP5U7A;
+						DevelopmentTeam = 2539R9VP4A;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -367,6 +378,7 @@
 				3AC6A3CC1E12026600F2D624 /* ProfileDetailViewController.swift in Sources */,
 				3ABC2DB61DF0D970004E89E2 /* AppDelegate.swift in Sources */,
 				3A4C5AD01E13AFD8007D897E /* NearbyUsersCollectionCell.swift in Sources */,
+				3A8DB1E61E23F44E00AF3889 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,7 +497,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Bromance/Bromance.entitlements;
-				DEVELOPMENT_TEAM = V5KYEP5U7A;
+				DEVELOPMENT_TEAM = 2539R9VP4A;
 				INFOPLIST_FILE = Bromance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.teamgrit.Bromance;
@@ -500,7 +512,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Bromance/Bromance.entitlements;
-				DEVELOPMENT_TEAM = V5KYEP5U7A;
+				DEVELOPMENT_TEAM = 2539R9VP4A;
 				INFOPLIST_FILE = Bromance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.teamgrit.Bromance;

@@ -65,23 +65,23 @@ class NearbyUserCollection: UICollectionViewController {
         if(usersArrayNearby.count > 0){
             //display username
             cell.usernameLabel.text = (self.usersArrayNearby[indexPath.row]["username"] as? String)!.components(separatedBy: " ")[0]
-//            print(self.usersArrayNearby[indexPath.row])
+
             //display user image (make sure image is avaialbe and permission to access)
-            if let imageURL = NSURL(string: self.usersArrayNearby[indexPath.row]["profile_pic_small"] as! String) {
-                if let imageData = NSData(contentsOf: imageURL as URL) {   //convert image nsurl to nsdata
-                    cell.userImage.image = UIImage(data: imageData as Data)    //display profile image
-                    //add a border to the images
-                    cell.userImage.layer.borderWidth = 1.5
-                } else {
-                    if let defaultImageURL = NSURL(string: "https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default%2Fprofile_pic_small.jpg?alt=media&token=02d85d91-ac43-4a0b-a8f6-32b0821b51e4") {
-                        if let defaultImageData = NSData(contentsOf: defaultImageURL as URL) {   //convert image nsurl to nsdata
-                            cell.userImage.image = UIImage(data: defaultImageData as Data)    //display profile image
-                            //add a border to the images
-                            cell.userImage.layer.borderWidth = 1.5
-                        }
-                    }
-                }//end else
-            }
+            if let imageURL = self.usersArrayNearby[indexPath.row]["profile_pic_small"]  {
+                //attempting to load image from cache, else download
+                cell.userImage.loadImageUsingCache(urlString: imageURL as! String)
+                //add a border to the images
+                cell.userImage.layer.borderWidth = 1.5
+            } else {
+                //use default image
+                let defaultImageURL = "https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default%2Fprofile_pic_small.jpg?alt=media&token=02d85d91-ac43-4a0b-a8f6-32b0821b51e4"
+                
+                //attempting to load image from cache, else download
+                cell.userImage.loadImageUsingCache(urlString: defaultImageURL)
+                //add a border to the images
+                cell.userImage.layer.borderWidth = 1.5
+                
+            }//end else
             
             let connections = (self.usersArrayNearby[indexPath.row]).object(forKey: "connections") as! NSDictionary
             for(deviceID, connection) in connections {

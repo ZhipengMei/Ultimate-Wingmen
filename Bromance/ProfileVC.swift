@@ -25,9 +25,6 @@ class ProfileVC: UIViewController {
         if let user = FIRAuth.auth()?.currentUser {
             //user is signed in
             let name = user.displayName
-//            let email = user.email
-//            let photoUrl = user.photoURL
-//            let uid = user.uid              //firebase uid
             
             self.username.text = name   //display username
 
@@ -36,17 +33,20 @@ class ProfileVC: UIViewController {
             let storageRef = storage.reference(forURL: "gs://bromance-e91d8.appspot.com")  //reference to your particular storage service
             let profileRef = storageRef.child(user.uid + "/profile_pic_small.jpg")            //create a child reference "profile_pic.jpg"
 
-            // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-            profileRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
-                if error != nil {
-                    print("Unable to download image")
-                } else {
-                    if(data != nil){
-                        self.profilePic.image = UIImage(data:data!)
-                    }
-                }
-            }
+            //download image every time is a hassle
+//            // Download from firebase storage in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+//            profileRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
+//                if error != nil {
+//                    print("Unable to download image")
+//                } else {
+//                    if(data != nil){
+//                        self.profilePic.image = UIImage(data:data!)
+//                    }
+//                }
+//            }
             
+            let thisImageUrl = "\(user.photoURL!)"
+            self.profilePic.loadImageUsingCache(urlString: thisImageUrl)
             
             //download image from facebook only when profile image does not exist
             if(self.profilePic.image == nil) {
@@ -55,11 +55,12 @@ class ProfileVC: UIViewController {
                 let fbprofileImage = FBSDKGraphRequest(graphPath: "me/picture", parameters: ["height":300,"width":300,"redirect":false], httpMethod:"GET")
                 fbprofileImage?.start(completionHandler: {(connection, result, error) -> Void in
                     
+                    //print(result)
+                    
                     if(error == nil) {
-                        let dictionary = result as? NSDictionary
-                        let data = dictionary?.object(forKey: "data")
-                        
-                        let urlPic = ((data as AnyObject).object(forKey:"url"))! as! String
+                        let dictionary = result as? NSDictionary        //store JSON result as a dictionary
+                        let data = dictionary?.object(forKey: "data") //go inside the data node
+                        let urlPic = ((data as AnyObject).object(forKey:"url"))! as! String//get the image url
                         
                         if let imageData = NSData(contentsOf: NSURL(string: urlPic)! as URL){
                             profileRef.put(imageData as Data, metadata: nil){  //upload profile image into firebase
@@ -71,17 +72,14 @@ class ProfileVC: UIViewController {
                                     print("Error in downloading image")
                                 }
                             }
-                            
-                            self.profilePic.image = UIImage(data: imageData as Data)
-                            
-                        }
-                        
-                    }
+                            //check cache, else download
+                            self.profilePic.loadImageUsingCache(urlString: urlPic)
+                        }//end if
+                    }//end if
                 })// *** getting picture from facebook end ***
                 
             } //end if
-            
-            
+        
         } else {
             
         }
