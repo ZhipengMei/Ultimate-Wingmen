@@ -132,13 +132,13 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     }
     
     func getNearbyUser(){
-
+        self.nearbyUIDSet.removeAll()   //reset it
         // Query locations at user current location with a radius of 20 miles (math: 32186 meters /1000)
         let circleQuery = geoFire?.query(at: locationManager.location, withRadius: 32)
         //request for nearby user data
         circleQuery?.observe(.keyEntered, with: { (key: String?, location: CLLocation?) in
             //only get nearby location other than current user (compare by latitude, add compare longitude for more precise comparison)
-            if (key != self.user?.displayName){
+            if (key != self.user?.uid){
                 //add nearby user's marker to map view
                 let otherUserMarker = GMSMarker()
                 otherUserMarker.position = (location?.coordinate)!     //place marker to current user position onto the map
@@ -147,6 +147,10 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
                 otherUserMarker.map = self.mapView
                 self.myView.addSubview(self.mapView!)   //add marker to the mapView
                 self.nearbyUIDSet.insert(key!)     //insert specific nearby user's uid query data into set (non-duplicated data)
+            } else {
+                if self.nearbyUIDSet.count == 0 {
+                    self.myView.addSubview(self.mapView!)
+                }
             }
             
         })

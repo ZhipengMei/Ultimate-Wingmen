@@ -248,7 +248,12 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                     databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
                     databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("")
                     databaseRef.child("user_profile").child("\(user.uid)/website").setValue("")
-                    databaseRef.child("user_profile").child("\(user.uid)/email").setValue(user.email)
+                    if let email = user.email {
+                        databaseRef.child("user_profile").child("\(user.uid)/email").setValue(email)
+                    } else {
+                        databaseRef.child("user_profile").child("\(user.uid)/email").setValue("")
+                    }
+                    
                     
                 } else {
                     print("user has logged in earlier")

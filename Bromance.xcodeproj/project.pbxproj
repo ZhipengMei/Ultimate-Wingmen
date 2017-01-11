@@ -26,6 +26,7 @@
 		3AC7FC2C1E1DC36A001D371E /* ChatTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC7FC2B1E1DC369001D371E /* ChatTableVC.swift */; };
 		3AC7FC2F1E1DC395001D371E /* ChatTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC7FC2E1E1DC395001D371E /* ChatTableCell.swift */; };
 		3ADFEC261DF4E20F002C9433 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3ADFEC251DF4E20F002C9433 /* GoogleService-Info.plist */; };
+		3AEF31301E2614350081F514 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF312F1E2614350081F514 /* User.swift */; };
 		F7C5A6771E23BEB009B4B9BA /* Pods_Bromance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D58092EB9E5C445312805FCC /* Pods_Bromance.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		3AC7FC2E1E1DC395001D371E /* ChatTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTableCell.swift; sourceTree = "<group>"; };
 		3ADFEC241DF4DA87002C9433 /* Bromance.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bromance.entitlements; sourceTree = "<group>"; };
 		3ADFEC251DF4E20F002C9433 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3AEF312F1E2614350081F514 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D58092EB9E5C445312805FCC /* Pods_Bromance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bromance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBBF6032F2BEE2B574B866BB /* Pods-Bromance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bromance.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bromance/Pods-Bromance.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				3A8DB1E51E23F44E00AF3889 /* Extensions.swift */,
+				3AEF312F1E2614350081F514 /* User.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				3A4C5AC81E130D92007D897E /* TextInputCell.swift in Sources */,
 				3AC7FC251E1CAC65001D371E /* NearbyUserCollection.swift in Sources */,
 				3A76A3AD1E063E7E00C69338 /* usernameVC.swift in Sources */,
+				3AEF31301E2614350081F514 /* User.swift in Sources */,
 				3A7D84F71E03CAC500F7A4DB /* GMapViewController.swift in Sources */,
 				3ABC2DB81DF0D970004E89E2 /* ViewController.swift in Sources */,
 				3AC6A3CC1E12026600F2D624 /* ProfileDetailViewController.swift in Sources */,

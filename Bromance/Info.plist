@@ -4,8 +4,8 @@
 <dict>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Our App is Using Location Services </string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Our App is Using Location Services </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Our App is Using Location Services </string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -92,5 +92,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

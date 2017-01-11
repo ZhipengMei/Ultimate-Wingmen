@@ -25,8 +25,9 @@ class ChatViewController: JSQMessagesViewController {
     var conversationID: String?
     var rootRef = FIRDatabase.database().reference()    //reference to firebase database
     
-    var convoIDarray = [String]()                //array contains a list of users id
-//    var convoIDset = Set<String>()
+//    var senderConvoIDarray = [String]()                //array contains a list of users id
+//    var receiverConvoIDarray = [String]()
+    //    var convoIDset = Set<String>()
     
     var convoDict = [String]()         //dictionary holds all users info
     var convoDictSet = Set<String>()         //dictionary holds all users info
@@ -62,9 +63,9 @@ class ChatViewController: JSQMessagesViewController {
         let senderIdFive = String(senderId.characters.prefix(5))
         //setting up conversation id
         if(senderIdFive > receiverIdFive) {
-            self.conversationID = senderIdFive + receiverIdFive + self.receiverId
+            self.conversationID = senderIdFive + receiverIdFive
         } else {
-            self.conversationID = receiverIdFive + senderIdFive + self.receiverId
+            self.conversationID = receiverIdFive + senderIdFive
         }
   
     }
@@ -137,65 +138,59 @@ class ChatViewController: JSQMessagesViewController {
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         //acutal sender name is the current user
         let senderName = FIRAuth.auth()?.currentUser?.displayName
-        //get the current time
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM.dd.yyyy"
-        let result = formatter.string(from: date)
 
+//        //get the current date
+//        let date = Date()
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "MM.dd.yyyy"
+//        let result = formatter.string(from: date)
+
+        let timestamp = NSDate().timeIntervalSince1970
+        //print("date is \(timestamp)")
 
         let itemRef = rootRef.child("messages").child("\(self.conversationID!)").childByAutoId() // 1
 
         let messageItem = [ // 2
             "senderId": senderId!,
-            "senderName": senderName,
+            "senderName": senderName!,
             "text": text!,
-            "date": result
-            ]
+            "timestamp": "\(timestamp)",
+            "receiverId": receiverId!
+            ] as [String : Any]
+        
         itemRef.setValue(messageItem) // 3
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
+        updateUserMessageId()
         finishSendingMessage() // 5
         
-        updateConvoIdInfo()
         
 //        isTyping = false
     }
     
-    //update an array of conversation id, use it to show recently contacted users
-    func updateConvoIdInfo() {
-        
-        let contactedUserRef = rootRef.child("user_profile/\(senderId!)").child("conversation_id")
-        var runItOnce = false
-        
-        contactedUserRef.observe(.value , with: {(snapshot) in
-            if (snapshot.value as? NSArray) == nil {
-                
-                if runItOnce == false {
-                    self.convoIDarray.insert(self.conversationID!, at: 0)
-                    contactedUserRef.setValue(self.convoIDarray)
-                    runItOnce = true
-                }
-                
-            } else {
-                
-                if runItOnce == false {
-                    self.convoDict = (snapshot.value as? Array)! //store JSON in userDict
-                    //print("\n\n\nself.convoDict \(self.convoDict)")
-                    
-                    if let indexOfA = self.convoDict.index(of: self.conversationID!) {
-                        self.convoDict.remove(at: indexOfA)
-                        self.convoDict.insert(self.conversationID!, at: 0)
-                    } else {
-                        self.convoDict.insert(self.conversationID!, at: 0)
-                    }
-                    contactedUserRef.setValue(self.convoDict)
-                    runItOnce = true
-                }
-
-
-            }
-        })
+    //using fan-out method to create reference to the conversation id 
+    func updateUserMessageId() {
+        let senderMegRef = rootRef.child("user_messagesId").child(senderId!).child(receiverId!)
+        let receiverMegRef = rootRef.child("user_messagesId").child(receiverId!).child(senderId!)
+        self.updateMegId(contactedUserRef: senderMegRef)
+        self.updateMegId(contactedUserRef: receiverMegRef)
     }
+    
+    func updateMegId(contactedUserRef: FIRDatabaseReference) {
+        var thisIdArray = [String]()
+        thisIdArray.removeAll()
+        
+        var handle: UInt = 0
+        handle = contactedUserRef.observe(.value, with: {
+            snapshot in
+            if (snapshot.value as? NSArray) == nil {
+                thisIdArray.insert(self.conversationID!, at: 0)
+                contactedUserRef.setValue(thisIdArray)
+                contactedUserRef.removeObserver(withHandle: handle)
+            }
+        }, withCancel: nil)
+    }
+    
+
     
     
     private func observeMessages() {
