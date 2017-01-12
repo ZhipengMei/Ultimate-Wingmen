@@ -145,8 +145,9 @@ class ChatViewController: JSQMessagesViewController {
 //        formatter.dateFormat = "MM.dd.yyyy"
 //        let result = formatter.string(from: date)
 
-        let timestamp = NSDate().timeIntervalSince1970
-        //print("date is \(timestamp)")
+//        let timestamp = NSDate().timeIntervalSince1970
+        let timeStamp = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+
 
         let itemRef = rootRef.child("messages").child("\(self.conversationID!)").childByAutoId() // 1
 
@@ -154,7 +155,8 @@ class ChatViewController: JSQMessagesViewController {
             "senderId": senderId!,
             "senderName": senderName!,
             "text": text!,
-            "timestamp": "\(timestamp)",
+//            "timestamp": "\(timeStamp)",
+            "timestamp": timeStamp,
             "receiverId": receiverId!
             ] as [String : Any]
         
@@ -171,25 +173,24 @@ class ChatViewController: JSQMessagesViewController {
     func updateUserMessageId() {
         let senderMegRef = rootRef.child("user_messagesId").child(senderId!).child(receiverId!)
         let receiverMegRef = rootRef.child("user_messagesId").child(receiverId!).child(senderId!)
-        self.updateMegId(contactedUserRef: senderMegRef)
-        self.updateMegId(contactedUserRef: receiverMegRef)
+        senderMegRef.updateChildValues([self.conversationID!:1])
+        receiverMegRef.updateChildValues([self.conversationID!:1])
+
+//        self.updateMegId(contactedUserRef: senderMegRef)
+//        self.updateMegId(contactedUserRef: receiverMegRef)
     }
     
-    func updateMegId(contactedUserRef: FIRDatabaseReference) {
-        var thisIdArray = [String]()
-        thisIdArray.removeAll()
-        
-        var handle: UInt = 0
-        handle = contactedUserRef.observe(.value, with: {
-            snapshot in
-            if (snapshot.value as? NSArray) == nil {
-                thisIdArray.insert(self.conversationID!, at: 0)
-                contactedUserRef.setValue(thisIdArray)
-                contactedUserRef.removeObserver(withHandle: handle)
-            }
-        }, withCancel: nil)
-    }
-    
+//    func updateMegId(contactedUserRef: FIRDatabaseReference) {
+//        var handle: UInt = 0
+//        handle = contactedUserRef.observe(.value, with: {
+//            snapshot in
+//            if (snapshot.value as? NSArray) == nil {
+//                contactedUserRef.updateChildValues([self.conversationID!:1])
+//                contactedUserRef.removeObserver(withHandle: handle)
+//            }
+//        }, withCancel: nil)
+//    }
+//    
 
     
     
@@ -202,10 +203,10 @@ class ChatViewController: JSQMessagesViewController {
         // messages being written to the Firebase DB
         messageQuery.observe(.childAdded, with: { (snapshot) in
             // 3
-            let messageData = snapshot.value as! Dictionary<String, String>
+            let messageData = snapshot.value as! Dictionary<String, AnyObject>
             //print(messageData)
 
-            if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let text = messageData["text"] as String!, text.characters.count > 0 {
+            if let id = messageData["senderId"] as! String!, let name = messageData["senderName"] as! String!, let text = messageData["text"] as! String!, text.characters.count > 0 {
                 // 4
                 self.addMessage(withId: id, name: name, text: text)
                 
