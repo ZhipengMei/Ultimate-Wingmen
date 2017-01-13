@@ -20,17 +20,13 @@ class ChatViewController: JSQMessagesViewController {
 //    private lazy var messageRef: FIRDatabaseReference = self.root.child("messages")
 //    private var newMessageRefHandle: FIRDatabaseHandle?
     
-    var receiverData: AnyObject!
+//    var receiverData: AnyObject!
     var receiverId: String!
     var conversationID: String?
     var rootRef = FIRDatabase.database().reference()    //reference to firebase database
     
-//    var senderConvoIDarray = [String]()                //array contains a list of users id
-//    var receiverConvoIDarray = [String]()
-    //    var convoIDset = Set<String>()
-    
-    var convoDict = [String]()         //dictionary holds all users info
-    var convoDictSet = Set<String>()         //dictionary holds all users info
+//    var convoDict = [String]()         //dictionary holds all users info
+//    var convoDictSet = Set<String>()         //dictionary holds all users info
 
     
 //    private var userIsTypingRef: AnyObject?// 1
@@ -48,7 +44,7 @@ class ChatViewController: JSQMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         title = senderDisplayName
         
         //setup bubbles
@@ -70,12 +66,17 @@ class ChatViewController: JSQMessagesViewController {
   
     }
     
-    override func viewDidAppear(_ animated: Bool){
-        super.viewDidAppear(animated)
-        
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.view.backgroundColor = UIColor.white
         observeMessages()
-//        observeTyping()
+
     }
+    
+//    override func viewDidAppear(_ animated: Bool){
+//        super.viewDidAppear(animated)
+//        
+////        observeTyping()
+//    }
 
 
     override func didReceiveMemoryWarning() {
@@ -243,6 +244,7 @@ class ChatViewController: JSQMessagesViewController {
 //        })
 //    }
     
+
     
 
 }

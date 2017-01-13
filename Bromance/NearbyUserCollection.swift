@@ -111,7 +111,7 @@ class NearbyUserCollection: UICollectionViewController {
         chatVC.senderId = self.loggedInUserNearby?.uid
         chatVC.senderDisplayName = selectedPackageUsername
         chatVC.receiverId =  selectedReceiverId as! String!
-        chatVC.receiverData =  selectedPackage as AnyObject!
+//        chatVC.receiverData =  selectedPackage as AnyObject!
         
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
