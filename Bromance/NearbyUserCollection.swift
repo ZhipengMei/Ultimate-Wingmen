@@ -12,7 +12,7 @@ import FirebaseAuth
 private let reuseIdentifier = "CollectionViewCell"
 
 class NearbyUserCollection: UICollectionViewController {
-
+    
     var usersArrayNearby = [AnyObject]()
     var loggedInUserNearby: AnyObject?
     

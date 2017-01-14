@@ -23,7 +23,8 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     //getting current user
     let user = FIRAuth.auth()?.currentUser
     //database reference
-    let geofireRef = FIRDatabase.database().reference()
+    let rootRef = FIRDatabase.database().reference()    //reference to firebase database
+//    var handle: UInt!
     
     @IBOutlet var myView: UIView!                       //myView contains 2 subview (mapview and tableview)
 
@@ -50,6 +51,21 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
         segmentMapView()            //display mapview
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        rootRef.removeAllObservers()
+        self.mapView?.clear()
+        self.mapView?.removeFromSuperview()
+        self.mapView = nil
+        self.mapView?.delegate = nil
+    }
+    
+    
+    
     func segmentMapView(){
         // Ask for Authorisation from the User.
         self.locationManager.requestWhenInUseAuthorization()
@@ -66,7 +82,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     // *** google map view ***
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         showCurrentLocationOnMap()
-        onReresh()
+//        onRefresh()
         self.locationManager.stopUpdatingLocation() //stop updating location
     }
     
@@ -80,6 +96,8 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
         //setup user's current latitude and longitude
         locationLat = (locationManager.location?.coordinate.latitude)!
         locationLong = (locationManager.location?.coordinate.longitude)!
+        //saving location data onto firebase
+        saveGeoData(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!)
         
         //getting current position to map
         let camera = GMSCameraPosition.camera(withLatitude: locationLat, longitude: locationLong, zoom: 9.5)
@@ -106,14 +124,14 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
         marker.appearAnimation = kGMSMarkerAnimationPop
         marker.map = mapView
         
-        //saving location data onto firebase
-        saveGeoData(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!)
+        self.myView.addSubview(self.mapView!) //Add google map to superview
+        getNearbyUser()
     }
     
     //function for saving GeoLocation data to firebase
     func saveGeoData(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
         //create a GeoFire instance
-        geoFire = GeoFire(firebaseRef: geofireRef.child("locations") )    //create a child folder to store geo-location data
+        geoFire = GeoFire(firebaseRef: rootRef.child("locations") )    //create a child folder to store geo-location data
         
         let userID = user?.uid  //get user id
         
@@ -123,10 +141,10 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     
     // refresh buttion trigger grab new user's current location
     @IBAction func refresh(_ sender: Any) {
-        onReresh()
+        onRefresh()
     }
     
-    func onReresh() {
+    func onRefresh() {
         locationManager.startUpdatingLocation() //update user's current location when refresh button activated
         getNearbyUser()
     }
@@ -145,14 +163,8 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
                 otherUserMarker.snippet = "Player In Action"
                 otherUserMarker.appearAnimation = kGMSMarkerAnimationPop
                 otherUserMarker.map = self.mapView
-                self.myView.addSubview(self.mapView!)   //add marker to the mapView
                 self.nearbyUIDSet.insert(key!)     //insert specific nearby user's uid query data into set (non-duplicated data)
-            } else {
-                if self.nearbyUIDSet.count == 0 {
-                    self.myView.addSubview(self.mapView!)
-                }
             }
-            
         })
         
         // call .observeReady block when .observe is finished 
@@ -164,8 +176,6 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
             }
             //print("nearbyUIDSet \(self.nearbyUIDSet.count)")
         })
-
-
     }
     // *** google map view end ***
     
@@ -175,7 +185,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
         
         self.loggedInUser = FIRAuth.auth()?.currentUser
 
-        self.geofireRef.child("user_profile").observe(.value, with: {
+        self.rootRef.child("user_profile").observe(.value, with: {
             (snapshot) in
             
             self.usersDict = (snapshot.value as? NSDictionary)! //store JSON in userDict
@@ -241,7 +251,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
 
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        onReresh()
+//        onRefresh()
         if segue.identifier == "toCollection" {
             if let collectionVC = segue.destination as? NearbyUserCollection {
                 let selectedPloggedInUser = self.loggedInUser

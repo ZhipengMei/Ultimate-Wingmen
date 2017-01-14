@@ -18,6 +18,7 @@ extension UIImageView {
         
         //check cache for image first
         if let cachedImage = imageCache.object(forKey: urlString as NSString) {
+            //print("inside cachedimage")
             self.image = cachedImage
             return
         }
@@ -41,6 +42,7 @@ extension UIImageView {
                 // Bounce back to the main thread to update the UI
                 DispatchQueue.main.async {
                     if let downloadedImage = UIImage(data: data!) {
+                        //print("inside download image")
                         imageCache.setObject(downloadedImage, forKey: urlString as NSString)
                         self.image = downloadedImage
                     }
@@ -50,7 +52,7 @@ extension UIImageView {
         }//end task
         task.resume()
         
-    }
+    }//end loadimage function
     
     
 }

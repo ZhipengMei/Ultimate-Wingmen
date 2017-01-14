@@ -185,6 +185,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     // due to tab-gesture dismiss keyboard, tab-gesture would mess up google button
 
 
+    
     //store user's basic info on the very first login
     func storeInfoFirstLogin() {
         print("inside first login in")
@@ -192,81 +193,87 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
             print("inside first login in/ current user")
 
             //firebase storage to store media files
-            let storage = FIRStorage.storage()
-            let storageRef = storage.reference(forURL: "gs://bromance-e91d8.appspot.com")
+            let storageRef = FIRStorage.storage().reference(forURL: "gs://bromance-e91d8.appspot.com")
             let profilePicRef = storageRef.child(user.uid + "/profile_pic_small.jpg")
-            
             //store the userID
             let userID = user.uid
-            
             //firebase databse to store informations
             let databaseRef = FIRDatabase.database().reference()
+            let profileImageRef = databaseRef.child("user_profile").child(userID).child("profile_pic_small")
             
-            databaseRef.child("user_profile").child(userID).child("profile_pic_small").observe(.value, with: {
-                (snapshot) in
+            profileImageRef.observe(.value, with: {(snapshot) in
                 
                 let profile_pic = snapshot.value as? String
-                if(profile_pic == nil)
-                {
-                    if let imageData = NSData(contentsOf: user.photoURL!)
-                    {
-                        //upload profile image into firebase
-                        profilePicRef.put(imageData as Data, metadata: nil)
-                        {
-                            metadata,error in
-                            if(error == nil)
-                            {
-                                //size, content type or the download url
-                                let downloadUrl = metadata!.downloadURL
-                                databaseRef.child("user_profile").child("\(user.uid)/profile_pic_small").setValue(downloadUrl()!.absoluteString)
-                            } else {
-                                print("Error in downloading image")
-                            }
-                        }//end profilePicRef.put
-                    } else { //else use default image   
-                        print("settting up default image as user profile")
-                        let imageData = NSData(contentsOf: NSURL(string: "https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default%2Fprofile_pic_small.jpg?alt=media&token=02d85d91-ac43-4a0b-a8f6-32b0821b51e4")! as URL)
+                
+                //download image from facebook only if when profile image does not exist
+                //then upload to firebase, store that firebase storage url to user_profile image
+                if(profile_pic == nil) {
+                    //print("profile image is nil inside VC")
+                    //*** getting picture from facebook ***
+                    let fbprofileImage = FBSDKGraphRequest(graphPath: "me/picture", parameters: ["height":300,"width":300,"redirect":false], httpMethod:"GET")
+                    
+                    fbprofileImage?.start(completionHandler: {(connection, result, error) -> Void in
                         
-                        //upload profile image into firebase
-                        profilePicRef.put(imageData as! Data, metadata: nil)
-                        {
-                            metadata,error in
-                            if(error == nil)
-                            {
-                                //size, content type or the download url
-                                let downloadUrl = metadata!.downloadURL
-                                databaseRef.child("user_profile").child("\(user.uid)/profile_pic_small").setValue(downloadUrl()!.absoluteString)
-                            } else {
-                                print("Error in downloading image")
+                        if(error == nil) {
+                            let dictionary = result as? NSDictionary        //store JSON result as a dictionary
+                            let data = dictionary?.object(forKey: "data") //go inside the data node
+                            let urlPic = ((data as AnyObject).object(forKey:"url"))! as! String//get the image url
+                            
+                            if let imageData = NSData(contentsOf: NSURL(string: urlPic)! as URL){
+                                profilePicRef.put(imageData as Data, metadata: nil){  //upload profile image into firebase
+                                    metadata,error in
+                                    if(error == nil) {
+                                        //size, content type or the download url
+                                        let downloadUrl = metadata!.downloadURL
+                                        //print("downloadUrl is")
+                                        //print(downloadUrl()!.absoluteString)
+                                        profileImageRef.setValue(downloadUrl()!.absoluteString)
+                                    } else {
+                                        print("Error in downloading image")
+                                    }
+                                }
+                            }//end if
+                        }//end if
+                    })// *** getting picture from facebook end ***
+                    
+                    if(profile_pic == nil){
+                        //print("profile pic still nill")
+                        let imageUrl = user.photoURL
+                        
+                        if let imageData = NSData(contentsOf: imageUrl!){
+                            profilePicRef.put(imageData as Data, metadata: nil){  //upload profile image into firebase
+                                metadata,error in
+                                if(error == nil) {
+                                    //size, content type or the download url
+                                    let downloadUrl = metadata!.downloadURL
+                                    //print("downloadUrl is")
+                                    //print(downloadUrl()!.absoluteString)
+                                    profileImageRef.setValue(downloadUrl()!.absoluteString)
+                                } else {
+                                    print("Error in downloading image")
+                                }
                             }
-                        }//end profilePicRef.put
-            
-                    }
-
-                    databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName)
-                    databaseRef.child("user_profile").child("\(user.uid)/age").setValue("")
-                    databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
-                    databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("")
-                    databaseRef.child("user_profile").child("\(user.uid)/website").setValue("")
-                    if let email = user.email {
-                        databaseRef.child("user_profile").child("\(user.uid)/email").setValue(email)
-                    } else {
-                        databaseRef.child("user_profile").child("\(user.uid)/email").setValue("")
-                    }
+                        }//end if
+                        
+                        
+                    }//end if profile_pic still nil
                     
-                    
+                } //end if
+                
+                databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName)
+                databaseRef.child("user_profile").child("\(user.uid)/age").setValue("")
+                databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
+                databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("")
+                databaseRef.child("user_profile").child("\(user.uid)/website").setValue("")
+                if let email = user.email {
+                    databaseRef.child("user_profile").child("\(user.uid)/email").setValue(email)
                 } else {
-                    print("user has logged in earlier")
+                    databaseRef.child("user_profile").child("\(user.uid)/email").setValue("")
                 }
+            
             })//end databaseRef.child("user_profile")
-        }
-    
-    }
-
-    
-    
-    
-    
-    
+        }//end if FIRAuth.auth()?.currentUser
+    }//end storeInfoFirstLogin
+  
 }
 

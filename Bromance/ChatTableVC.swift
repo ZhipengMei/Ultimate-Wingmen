@@ -14,7 +14,8 @@ import FirebaseDatabase
 class ChatTableVC: UITableViewController {
     
     let rootRef = FIRDatabase.database().reference()    //reference to firebase database
-    
+//    var handle: UInt!
+
     var messages = [Message]()
     var messageDictionary = [String:Message]()
     
@@ -23,9 +24,14 @@ class ChatTableVC: UITableViewController {
         print("\n\n\n")
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         self.checkConvoId()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        rootRef.removeAllObservers()
     }
     
     //load recently contacted users and chat
@@ -41,18 +47,18 @@ class ChatTableVC: UITableViewController {
             FIRDatabase.database().reference().child("user_messagesId").child(myid).child(userId).observe(.childAdded, with: { (snapshot) in
                 
                 let messageId = snapshot.key
-                self.fetchMessageWithMessageId(messageId: messageId)
+                self.fetchLastTextWithMessageId(messageId: messageId)
             }, withCancel: nil)
         }, withCancel: nil)//end observe
     }
     
     
     //retrive last text
-    private func fetchMessageWithMessageId(messageId: String) {
+    private func fetchLastTextWithMessageId(messageId: String) {
         let messagesReference = FIRDatabase.database().reference().child("messages").child(messageId)
         let messageQuery = messagesReference.queryLimited(toLast:1)
         
-        messageQuery.observeSingleEvent(of: .childAdded, with: { (snapshot) in
+        messageQuery.observe(.childAdded, with: { (snapshot) in
             if let snapDict = snapshot.value as? NSDictionary{
                 let message = Message(dict: snapDict as! [String : NSObject])
                 
@@ -98,14 +104,6 @@ class ChatTableVC: UITableViewController {
         return messages.count
     }
     
-    //    //remove the first 10 chars on the string
-    //    private func removeChar(someString: String) -> String{
-    //        var thisString = someString
-    //        thisString.removeSubrange(thisString.startIndex..<thisString.index(thisString.startIndex, offsetBy: 10))
-    //        return thisString
-    //    } i
-    
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let message = messages[indexPath.row]
@@ -136,6 +134,11 @@ class ChatTableVC: UITableViewController {
     
     
     
-    
+    //    //remove the first 10 chars on the string
+    //    private func removeChar(someString: String) -> String{
+    //        var thisString = someString
+    //        thisString.removeSubrange(thisString.startIndex..<thisString.index(thisString.startIndex, offsetBy: 10))
+    //        return thisString
+    //    }
 }
 
