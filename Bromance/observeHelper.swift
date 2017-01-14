@@ -33,8 +33,6 @@ class observeHelper {
             }//end else
 
     }
-    
 
-    
 
 }

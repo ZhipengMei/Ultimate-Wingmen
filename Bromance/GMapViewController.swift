@@ -38,7 +38,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     var usersArray = [AnyObject]()
     var loggedInUser: AnyObject?
     
-    let locationManager = CLLocationManager()           //for getting current user location
+    let locationManager = CLLocationManager()                   // Create a location manager object
     var geoFire: GeoFire? = nil                         //geo instance for upload and retrieve location data to firebase
     
     //initialize coordinate instance, making sure app wont crash when location not turn on
@@ -48,7 +48,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
         manageConnections(userID: (user?.uid)!)
-        segmentMapView()            //display mapview
+        startSignificantChangeLocationUpdates()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,39 +58,39 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         rootRef.removeAllObservers()
-        self.mapView?.clear()
-        self.mapView?.removeFromSuperview()
         self.mapView = nil
         self.mapView?.delegate = nil
     }
     
-    
-    
-    func segmentMapView(){
-        // Ask for Authorisation from the User.
+    //******Get current location******
+    func startSignificantChangeLocationUpdates() {
+        // Ask for authorization from the User.
         self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.requestAlwaysAuthorization()           // Request location authorization
         
         if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
+            self.locationManager.delegate = self         // Set the delegate
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers //less accurate to save power
+            self.locationManager.startMonitoringSignificantLocationChanges()
         }
     }
-
     
-    // *** google map view ***
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         showCurrentLocationOnMap()
-//        onRefresh()
         self.locationManager.stopUpdatingLocation() //stop updating location
     }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("error with location manager: ", error)
+    func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
+        // Stop significant-change location updates when they aren't needed anymore
+        self.locationManager.stopMonitoringSignificantLocationChanges()
     }
     
-    //getting the user's current location
+    //******Get current location End ******
+    
+    
+    
+    // *** google map view ***
+    
+    //disllaying the user's current location with marker
     func showCurrentLocationOnMap(){
         
         //setup user's current latitude and longitude
@@ -141,12 +141,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     
     // refresh buttion trigger grab new user's current location
     @IBAction func refresh(_ sender: Any) {
-        onRefresh()
-    }
-    
-    func onRefresh() {
-        locationManager.startUpdatingLocation() //update user's current location when refresh button activated
-        getNearbyUser()
+        self.locationManager.startMonitoringSignificantLocationChanges()
     }
     
     func getNearbyUser(){
@@ -174,7 +169,6 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
                 //once getting nearby user success, then display the data
                 self.getNearbyUsersData(userIDset: self.nearbyUIDSet)
             }
-            //print("nearbyUIDSet \(self.nearbyUIDSet.count)")
         })
     }
     // *** google map view end ***
@@ -229,7 +223,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     }//*** getting all users' info function end ***
 
     
-    //checking users online status
+    //checking/update users online status
     func manageConnections(userID: String) {
     
         //create a reference to the database
@@ -251,7 +245,6 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
 
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        onRefresh()
         if segue.identifier == "toCollection" {
             if let collectionVC = segue.destination as? NearbyUserCollection {
                 let selectedPloggedInUser = self.loggedInUser
