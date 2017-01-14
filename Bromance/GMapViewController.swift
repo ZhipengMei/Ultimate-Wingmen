@@ -15,29 +15,15 @@ import Firebase
 import FirebaseAuth
 
 
-class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate  {
-    
-    //store the device id
-    let deviceID = UIDevice.current.identifierForVendor?.uuidString
-
-    //getting current user
-    let user = FIRAuth.auth()?.currentUser
-    //database reference
-    let rootRef = FIRDatabase.database().reference()    //reference to firebase database
-//    var handle: UInt!
+class GMapViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBOutlet var myView: UIView!                       //myView contains 2 subview (mapview and tableview)
-
+    let deviceID = UIDevice.current.identifierForVendor?.uuidString //store the device id
+    let user = FIRAuth.auth()?.currentUser                  //getting current user
+    let rootRef = FIRDatabase.database().reference()    //reference to firebase database
     var mapView: GMSMapView?                            //display nearby users
-    
-    var nearbyUIDArray = [String]()                //array contains a list of users id
     var nearbyUIDSet = Set<String>()               //google map refresh many times, using set to get non-duplicated data
-    
-    var usersDict:NSDictionary = NSDictionary()         //dictionary holds all users info
-    
-    var usersArray = [AnyObject]()
-    var loggedInUser: AnyObject?
-    
+    var nearbyUIDArray: [String]?
     let locationManager = CLLocationManager()                   // Create a location manager object
     var geoFire: GeoFire? = nil                         //geo instance for upload and retrieve location data to firebase
     
@@ -47,6 +33,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("\n\n\n\n")
         manageConnections(userID: (user?.uid)!)
         startSignificantChangeLocationUpdates()
     }
@@ -132,9 +119,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
     func saveGeoData(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
         //create a GeoFire instance
         geoFire = GeoFire(firebaseRef: rootRef.child("locations") )    //create a child folder to store geo-location data
-        
         let userID = user?.uid  //get user id
-        
         //storing data to firebaseDatabase with key as uid
         geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID)
     }
@@ -166,61 +151,18 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
         circleQuery?.observeReady({
             //print("All initial data has been loaded and events have been fired!")
             if(self.nearbyUIDSet.count > 0){
-                //once getting nearby user success, then display the data
-                self.getNearbyUsersData(userIDset: self.nearbyUIDSet)
+                self.nearbyUIDArray = Array(self.nearbyUIDSet)  //convert set to array (contains a list of nearby users' uid)
+                print("done nearbyUIDArray")
+                print(self.nearbyUIDArray!)
             }
         })
     }
     // *** google map view end ***
     
-
-    //*** getting specific users' data function ***
-    func getNearbyUsersData(userIDset: Set<String>) {
+    //download all nearby usersdata
+    private func getNearbyUsersData() {
         
-        self.loggedInUser = FIRAuth.auth()?.currentUser
-
-        self.rootRef.child("user_profile").observe(.value, with: {
-            (snapshot) in
-            
-            self.usersDict = (snapshot.value as? NSDictionary)! //store JSON in userDict
-            self.nearbyUIDArray = Array(userIDset)  //convert set to array
-            //clear up arrays
-            self.usersArray = []
-            
-            //outter loop to match nearby users
-            for index in 0...(self.nearbyUIDArray.count - 1) {
-                    
-                //inner gets all data from dictionary
-                for(userID, details) in self.usersDict {        //key-value for loop
-                    
-                    //match nearby users with all users dictionary
-                    if(userID as? String == self.nearbyUIDArray[index]) {
-                        
-                        //**********
-                        let connections = (details as! NSDictionary).object(forKey: "connections") as! NSDictionary
-                        
-                        for(deviceID, connection) in connections {
-                            if((connection as! NSDictionary).object(forKey: "online") as! Bool)
-                            {
-                                (details as! NSDictionary).setValue(true, forKey:"online")
-                            }
-                        }
-                        
-                        //store nearby users ID
-                        if(self.loggedInUser?.uid != userID as? String)
-                        {
-                            (details as! NSDictionary).setValue(userID, forKey:"uID")
-                            self.usersArray.append(details as! NSDictionary)
-                        }
-                        //**********
-
-                    }//end if
-
-                }//end inner for
-            }//end outter for
-        })//end observe
-
-    }//*** getting all users' info function end ***
+    }
 
     
     //checking/update users online status
@@ -232,38 +174,81 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate{//, UITabl
         myConnectionsRef.child("online").setValue(true)
         myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
         
-        //observe which will moniter if the user is logged in or out
-        myConnectionsRef.observe(.value, with: {
-            snapshot in
-            
-            //guard statements only run if the conditions are not met
-            guard let connected = snapshot.value as? Bool, connected else {
-                return
-            }
-        })
+//        //observe which will moniter if the user is logged in or out
+//        myConnectionsRef.observe(.value, with: {
+//            snapshot in
+//            
+//            //guard statements only run if the conditions are not met
+//            guard let connected = snapshot.value as? Bool, connected else {
+//                return
+//            }
+//        })
     }//manageConnections end
 
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toCollection" {
-            if let collectionVC = segue.destination as? NearbyUserCollection {
-                let selectedPloggedInUser = self.loggedInUser
-                let selectedPackages = self.usersArray
-                collectionVC.loggedInUserNearby = selectedPloggedInUser
-                collectionVC.usersArrayNearby = selectedPackages
+
+        if self.nearbyUIDArray != nil {
+            if segue.identifier == "toCollection" {
+                if let collectionVC = segue.destination as? NearbyUserCollection {
+                    guard let loggedInUser = FIRAuth.auth()?.currentUser else { return }
+                    collectionVC.usersArrayNearby = self.nearbyUIDArray!
+                    collectionVC.loggedInUserNearby = loggedInUser
+                }
             }
-            
         }
-    }
-    
-    
-    
-    
-    
-    
-    
+    }//end prepare function
     
     
     
     
 }
+
+//    //*** getting specific users' data function ***
+//    func getNearbyUsersData(userIDset: Set<String>) {
+//
+//        self.loggedInUser = FIRAuth.auth()?.currentUser
+//
+//        self.rootRef.child("user_profile").observe(.value, with: {
+//            (snapshot) in
+//
+//            self.usersDict = (snapshot.value as? NSDictionary)! //store JSON in userDict
+//            self.nearbyUIDArray = Array(userIDset)  //convert set to array
+//            //clear up arrays
+//            self.usersArray = []
+//
+//            //outter loop to match nearby users
+//            for index in 0...(self.nearbyUIDArray.count - 1) {
+//
+//                //inner gets all data from dictionary
+//                for(userID, details) in self.usersDict {        //key-value for loop
+//
+//                    //match nearby users with all users dictionary
+//                    if(userID as? String == self.nearbyUIDArray[index]) {
+//
+//                        //**********
+//                        let connections = (details as! NSDictionary).object(forKey: "connections") as! NSDictionary
+//
+//                        for(deviceID, connection) in connections {
+//                            if((connection as! NSDictionary).object(forKey: "online") as! Bool)
+//                            {
+//                                (details as! NSDictionary).setValue(true, forKey:"online")
+//                            }
+//                        }
+//
+//                        //store nearby users ID
+//                        if(self.loggedInUser?.uid != userID as? String)
+//                        {
+//                            (details as! NSDictionary).setValue(userID, forKey:"uID")
+//                            self.usersArray.append(details as! NSDictionary)
+//                        }
+//                        //**********
+//
+//                    }//end if
+//
+//                }//end inner for
+//            }//end outter for
+//        })//end observe
+//
+//    }//*** getting all users' info function end ***
+

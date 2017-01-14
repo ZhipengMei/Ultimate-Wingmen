@@ -21,7 +21,7 @@ class ChatTableVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("\n\n\n")
+        print("\n\n\n\n")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,6 +110,8 @@ class ChatTableVC: UITableViewController {
             self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
             return 0
         } else {
+            self.tableView.backgroundView = nil
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
             return messages.count
         }
     }
@@ -124,6 +126,7 @@ class ChatTableVC: UITableViewController {
             return
         }
         
+        //function to download user profile
         observeHelper.loadUserProfileUsingCache(thisUid: chatPartnerId) { (userprofile, error) in
             if error != nil {
                 print("observeHelper error: \(error!)")

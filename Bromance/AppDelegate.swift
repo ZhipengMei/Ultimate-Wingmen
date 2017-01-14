@@ -15,15 +15,12 @@ import TwitterKit
 import GoogleMaps
 import CoreLocation
 import GeoFire
-import CoreLocation
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, CLLocationManagerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
     var window: UIWindow?
     var storyboard = UIStoryboard(name: "Main", bundle: nil)
-    var locationManager = CLLocationManager() //initilize location manager
-
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
@@ -111,16 +108,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, CLLoca
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        self.locationManager.delegate = self
-        Timer.scheduledTimer(timeInterval: 60 * 30, target: self, selector: Selector("handleTimer:"), userInfo: nil, repeats: true)
-    }
-    
-    func handleTimer(timer: Timer) {
-        // start location services, here
-        self.locationManager.startUpdatingLocation() // I know i should be using signification location option here. this is just for testing now.
-
-        // Remember, have `didUpdateLocations` stop location services
-        // when good location received
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {

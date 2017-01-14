@@ -137,7 +137,7 @@
         <!--ProfileVC-->
         <scene sceneID="fje-wk-mvK">
             <objects>
-                <viewController id="BcD-dI-swM" customClass="ProfileVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="profileVC" id="BcD-dI-swM" customClass="ProfileVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iSF-Xf-9E6"/>
                         <viewControllerLayoutGuide type="bottom" id="PNa-i3-kT3"/>
@@ -207,7 +207,7 @@
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fVK-su-MVZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="fVK-su-MVZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -228,7 +228,7 @@
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YHV-eZ-01r">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YHV-eZ-01r">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -249,7 +249,7 @@
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="E7Z-GV-yOi">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="E7Z-GV-yOi">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -543,7 +543,7 @@
         <scene sceneID="1Qr-iq-hyW">
             <objects>
                 <collectionViewController storyboardIdentifier="NearbyUserCollection" id="qbK-0q-d9i" customClass="NearbyUserCollection" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="mTl-Fu-ckf">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="mTl-Fu-ckf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
