@@ -62,6 +62,8 @@ class ProfileVC: UIViewController {
         if self.userID != FIRAuth.auth()?.currentUser?.uid {
             self.messageBtn.isHidden = false
             self.moreBtn.isEnabled = false
+        } else {
+            self.messageBtn.isHidden = true
         }
 
     }

@@ -10,17 +10,31 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class EditProfileTableVC: UITableViewController {
+class EditProfileTableVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
-    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+//    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var profileImage: UIImageView!
+    @IBOutlet var username: UILabel!
+    @IBOutlet var emailAddress: UILabel!
+    @IBOutlet var gender: UILabel!
+    @IBOutlet var website: UILabel!
+    @IBOutlet var yearsInGame: UILabel!
+    @IBOutlet var age: UILabel!
     
-    var about = ["Username","Age","Gender","Years in Game", "Website","Email"]
+    var genderData = ["Man", "Woman"]
+    var picker = UIPickerView()
+    
+    
     var ref = FIRDatabase.database().reference()
-    
     var user = FIRAuth.auth()?.currentUser
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        picker.dataSource = self
+        picker.delegate = self
+        
         
         //add tapgesture and call hidekeyboard function
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(EditProfileTableVC.hideKeyboard))
@@ -32,167 +46,105 @@ class EditProfileTableVC: UITableViewController {
         observeHelper.loadUserProfileUsingCache(thisUid: (user?.uid)!) { (userprofile, error) in
             if error == nil {
                 
-                print(userprofile?.username)
-                
-//                //using while loop to update each item
-//                var index = 0
-//                while index < self.about.count {
-//                    
-//                    let indexPath = NSIndexPath(row: index, section: 0)
-//                    let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
-//                    
-//                    let field:String = (cell.myTextField.placeholder)!
-//                    
-//                    //(userDetails as AnyObject).object(forKey: "username")
-//                    switch (field) {
-//                    case "Username":
-//                        //cell.configure(text: userDetails.object(forKey: "username") as? String , placeholder: "username", labelText: "username")
-//                        
-//                        cell.configure(text: self.user?.displayName , placeholder: "username?", labelText: "username")
-//                        
-//                    case "Age":
-//                        cell.configure(text: userprofile?.age , placeholder: "Age?", labelText: "Age")
-//                        
-//                    case "Gender":
-//                        cell.configure(text: userprofile?.gender , placeholder: "Gender?", labelText: "Gender")
-//                        
-//                    case "Years in Game":
-//                        cell.configure(text: userprofile?.years_in_game , placeholder: "Years in Game?", labelText: "Years in Game")
-//                        
-//                    case "Website":
-//                        cell.configure(text: userprofile?.website , placeholder: "Website?", labelText: "Website")
-//                        
-//                    case "Email":
-//                        cell.configure(text: self.user?.email , placeholder: "Email?", labelText: "Email")
-//                        
-//                    default:
-//                        print("Do not update")
-//                    } //end switch
-//                    index += 1
-//                }//end while
+                self.username.text = userprofile?.username
+                self.emailAddress.text = userprofile?.email
+                self.gender.text = userprofile?.gender
+                self.website.text = userprofile?.website
+                self.yearsInGame.text = userprofile?.years_in_game
+                self.age.text = userprofile?.age
+                self.profileImage.loadImageUsingCache(urlString: (userprofile?.profile_pic_small)!)
                 
             }//end if
         }//end observeHelper
-        
-        
-
-
-//        //retrieving user basic info data from firebase
-//        _ = self.ref.child("user_profile").observe(FIRDataEventType.value, with: {(snapshot) in
-//            
-//            let usersDict = snapshot.value as! NSDictionary
-//            print(usersDict)
-//            let userDetails = usersDict.object(forKey: self.user?.uid as Any) as! NSDictionary
-//            //using while loop to update each item
-//            var index = 0
-//            while index < self.about.count {
-//                
-//                let indexPath = NSIndexPath(row: index, section: 0)
-//                let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
-//                
-//                let field:String = (cell.myTextField.placeholder)!
-//                
-//                //(userDetails as AnyObject).object(forKey: "username")
-//                    switch (field) {
-//                    case "Username":
-//                        //cell.configure(text: userDetails.object(forKey: "username") as? String , placeholder: "username", labelText: "username")
-//
-//                        cell.configure(text: self.user?.displayName , placeholder: "username?", labelText: "username")
-//
-//                        
-//                    case "Age":
-//                        cell.configure(text: userDetails.object(forKey: "age") as? String , placeholder: "Age?", labelText: "Age")
-//                        
-//                    case "Gender":
-//                        cell.configure(text: userDetails.object(forKey: "gender") as? String , placeholder: "Gender?", labelText: "Gender")
-//                        
-//                    case "Years in Game":
-//                        cell.configure(text: userDetails.object(forKey: "years_in_game") as? String , placeholder: "Years in Game?", labelText: "Years in Game")
-//                        
-//                    case "Website":
-//                        cell.configure(text: userDetails.object(forKey: "website") as? String , placeholder: "Website?", labelText: "Website")
-//                        
-//                    case "Email":
-//                        cell.configure(text: self.user?.email , placeholder: "Email?", labelText: "Email")
-//                        
-//                    default:
-//                        print("Do not update")
-//                    } //end switch
-//                index += 1
-//            }//end while
-//
-//        
-//        })
-        
         
     }//end view did load
 
 
 
-  
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TextInput", for: indexPath) as! TextInputCell
 
-        cell.configure(text: "", placeholder: "\(about[indexPath.row])", labelText: "\(about[indexPath.row])")
-
-
-        return cell
-    }
   
     //updating user info to firebase
     @IBAction func onUpdate(_ sender: Any) {
 
-        self.activityIndicator.startAnimating()
+//        self.activityIndicator.startAnimating()
         
-        var index = 0
-        while index < about.count {
-            
-            let indexPath = NSIndexPath(row: index, section: 0)
-            let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
-            
-            if (cell.myTextField.text != "") {
-                let item:String = (cell.myTextField.text!)
-
-                switch (about[index]) {
-                case "Username":
-                    //self.ref.child("user_profile").child("\(user!.uid)/username").setValue(item)
-                    
-                    //changing current user's displayname
-                    let changeRequest = FIRAuth.auth()?.currentUser?.profileChangeRequest()
-                    changeRequest?.displayName = item
-                    changeRequest?.commitChanges() { (error) in
-                        print("Successfully updated username to \(self.user?.displayName)")
-                    }
-                    
-                case "Age":
-                    self.ref.child("user_profile").child("\(user!.uid)/age").setValue(item)
-                case "Gender":
-                    self.ref.child("user_profile").child("\(user!.uid)/gender").setValue(item)
-                    
-                case "Years in Game":
-                    self.ref.child("user_profile").child("\(user!.uid)/years_in_game").setValue(item)
-                    
-                case "Website":
-                    self.ref.child("user_profile").child("\(user!.uid)/website").setValue(item)
-                    
-                case "Email":
-                    self.ref.child("user_profile").child("\(user!.uid)/email").setValue(item)
-                    
-                default:
-                    print("Do not update")
-                } //end switch
-            }//end if
-            index += 1
-        }//end while
+//        var index = 0
+//        while index < about.count {
+//            
+//            let indexPath = NSIndexPath(row: index, section: 0)
+//            let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
+//            
+//            if (cell.myTextField.text != "") {
+//                let item:String = (cell.myTextField.text!)
+//
+//                switch (about[index]) {
+//                case "Username":
+//                    //self.ref.child("user_profile").child("\(user!.uid)/username").setValue(item)
+//                    
+//                    //changing current user's displayname
+//                    let changeRequest = FIRAuth.auth()?.currentUser?.profileChangeRequest()
+//                    changeRequest?.displayName = item
+//                    changeRequest?.commitChanges() { (error) in
+//                        print("Successfully updated username to \(self.user?.displayName)")
+//                    }
+//                    
+//                case "Age":
+//                    self.ref.child("user_profile").child("\(user!.uid)/age").setValue(item)
+//                case "Gender":
+//                    self.ref.child("user_profile").child("\(user!.uid)/gender").setValue(item)
+//                    
+//                case "Years in Game":
+//                    self.ref.child("user_profile").child("\(user!.uid)/years_in_game").setValue(item)
+//                    
+//                case "Website":
+//                    self.ref.child("user_profile").child("\(user!.uid)/website").setValue(item)
+//                    
+//                case "Email":
+//                    self.ref.child("user_profile").child("\(user!.uid)/email").setValue(item)
+//                    
+//                default:
+//                    print("Do not update")
+//                } //end switch
+//            }//end if
+//            index += 1
+//        }//end while
         
 //        observeHelper.loadUserProfileUsingCache(thisUid: user!.uid) { (userprofile, error) in
 //            
 //        }
 
-        self.activityIndicator.stopAnimating()
+//        self.activityIndicator.stopAnimating()
     }
     
+    
+    //picker view for gender
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return genderData.count
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.gender.text = genderData[row]
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return genderData[row]
+    }
 
+//    
+//    //xib subview for gender
+//    var myCustomView: EditProfileTableVC? // declare variable inside your controller
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        if myCustomView == nil { // make it only once
+//            myCustomView = Bundle.main.loadNibNamed("EditProfileTableVC", owner: self, options: nil)?.first as? EditProfileTableVC
+//            myCustomView.
+//            
+//            self.view.addSubview(myCustomView) // you can omit 'self' here
+//            // if your app support both Portrait and Landscape orientations
+//            // you should add constraints here
+//        }
+//    }
     
     
     
@@ -200,18 +152,6 @@ class EditProfileTableVC: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    // MARK: - Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return about.count
     }
     //dismiss keyboard
     func hideKeyboard() {
