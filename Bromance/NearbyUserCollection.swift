@@ -32,27 +32,27 @@ class NearbyUserCollection: UICollectionViewController {
         return cell
     }
     
-    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if(usersArrayNearby.count > 0){
             let uidAtIndex = self.usersArrayNearby[indexPath.row]
-            guard let sendId = FIRAuth.auth()?.currentUser?.uid else { return }
             
             //function to download user profile or use existing
             observeHelper.loadUserProfileUsingCache(thisUid: uidAtIndex) { (userprofile, error) in
                 if error != nil {
                     print("observeHelper error: \(error!)")
                 } else {
-                    // do something with the userprofile
-                    if let chatVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chatVC") as? ChatViewController {
-                        chatVC.senderId = sendId
-                        chatVC.senderDisplayName = userprofile?.username
-                        chatVC.receiverId = uidAtIndex
+                    
+                    if let profile = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "profileVC") as? ProfileVC {
+                        
+                        self.tabBarController?.tabBar.isHidden = true
+                        profile.userID = uidAtIndex
+                        
                         if let navigator = self.navigationController {
-                            navigator.pushViewController(chatVC, animated: true)
+                            navigator.pushViewController(profile, animated: true)
                         }
                     }
+                    
                 }
             }//end observeHelper
         }//end if

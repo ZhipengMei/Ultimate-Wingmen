@@ -18,11 +18,24 @@ class observeHelper {
         var userprofile: User?    //reset the variable
             //check if the profile already exist
             if let index = userProfileCache.index(forKey: thisUid) {
+                print("using cache profile")
                 userprofile = userProfileCache[index].value
                 completion(userprofile!, nil)
             } else {
                 let ref = FIRDatabase.database().reference().child("user_profile").child(thisUid)
-                ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+                //obserview once then stop receiving users update
+//                ref.observeSingleEvent(of: .value, with: { (snapshot) in
+//                    if let snapDict = snapshot.value as? NSDictionary{
+//                        let thisUser = User(dict: snapDict as! [String : NSObject])
+//                        userProfileCache[thisUid] = thisUser
+//                        userprofile = userProfileCache[thisUid]
+//                        completion(userprofile!, nil)
+//                    }
+//                }, withCancel: nil)
+                
+                //keep observing
+                ref.observe(.value, with: { (snapshot) in
                     if let snapDict = snapshot.value as? NSDictionary{
                         let thisUser = User(dict: snapDict as! [String : NSObject])
                         userProfileCache[thisUid] = thisUser
@@ -30,8 +43,8 @@ class observeHelper {
                         completion(userprofile!, nil)
                     }
                 }, withCancel: nil)
+                
             }//end else
-
     }
 
 

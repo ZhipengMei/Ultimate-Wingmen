@@ -12,6 +12,8 @@ import FirebaseAuth
 
 class EditProfileTableVC: UITableViewController {
     
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    
     var about = ["Username","Age","Gender","Years in Game", "Website","Email"]
     var ref = FIRDatabase.database().reference()
     
@@ -25,73 +27,107 @@ class EditProfileTableVC: UITableViewController {
         tapGesture.cancelsTouchesInView = true
         tableView.addGestureRecognizer(tapGesture)
         
-
         //retrieving user basic info data from firebase
-        _ = self.ref.child("user_profile").observe(FIRDataEventType.value, with: {(snapshot) in
-            
-            let usersDict = snapshot.value as! NSDictionary
-            print(usersDict)
-            let userDetails = usersDict.object(forKey: self.user?.uid as Any) as! NSDictionary
-            //using while loop to update each item
-            var index = 0
-            while index < self.about.count {
+        //function to download user profile or use existing
+        observeHelper.loadUserProfileUsingCache(thisUid: (user?.uid)!) { (userprofile, error) in
+            if error == nil {
                 
-                let indexPath = NSIndexPath(row: index, section: 0)
-                let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
+                print(userprofile?.username)
                 
-                let field:String = (cell.myTextField.placeholder)!
+//                //using while loop to update each item
+//                var index = 0
+//                while index < self.about.count {
+//                    
+//                    let indexPath = NSIndexPath(row: index, section: 0)
+//                    let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
+//                    
+//                    let field:String = (cell.myTextField.placeholder)!
+//                    
+//                    //(userDetails as AnyObject).object(forKey: "username")
+//                    switch (field) {
+//                    case "Username":
+//                        //cell.configure(text: userDetails.object(forKey: "username") as? String , placeholder: "username", labelText: "username")
+//                        
+//                        cell.configure(text: self.user?.displayName , placeholder: "username?", labelText: "username")
+//                        
+//                    case "Age":
+//                        cell.configure(text: userprofile?.age , placeholder: "Age?", labelText: "Age")
+//                        
+//                    case "Gender":
+//                        cell.configure(text: userprofile?.gender , placeholder: "Gender?", labelText: "Gender")
+//                        
+//                    case "Years in Game":
+//                        cell.configure(text: userprofile?.years_in_game , placeholder: "Years in Game?", labelText: "Years in Game")
+//                        
+//                    case "Website":
+//                        cell.configure(text: userprofile?.website , placeholder: "Website?", labelText: "Website")
+//                        
+//                    case "Email":
+//                        cell.configure(text: self.user?.email , placeholder: "Email?", labelText: "Email")
+//                        
+//                    default:
+//                        print("Do not update")
+//                    } //end switch
+//                    index += 1
+//                }//end while
                 
-                //(userDetails as AnyObject).object(forKey: "username")
-                    switch (field) {
-                    case "Username":
-                        //cell.configure(text: userDetails.object(forKey: "username") as? String , placeholder: "username", labelText: "username")
-
-                        cell.configure(text: self.user?.displayName , placeholder: "username?", labelText: "username")
-
-                        
-                    case "Age":
-                        cell.configure(text: userDetails.object(forKey: "age") as? String , placeholder: "Age?", labelText: "Age")
-                        
-                    case "Gender":
-                        cell.configure(text: userDetails.object(forKey: "gender") as? String , placeholder: "Gender?", labelText: "Gender")
-                        
-                    case "Years in Game":
-                        cell.configure(text: userDetails.object(forKey: "years_in_game") as? String , placeholder: "Years in Game?", labelText: "Years in Game")
-                        
-                    case "Website":
-                        cell.configure(text: userDetails.object(forKey: "website") as? String , placeholder: "Website?", labelText: "Website")
-                        
-                    case "Email":
-                        cell.configure(text: self.user?.email , placeholder: "Email?", labelText: "Email")
-                        
-                    default:
-                        print("Do not update")
-                    } //end switch
-                index += 1
-            }//end while
-            
-        
-        })
+            }//end if
+        }//end observeHelper
         
         
-    }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
-    // MARK: - Table view data source
+//        //retrieving user basic info data from firebase
+//        _ = self.ref.child("user_profile").observe(FIRDataEventType.value, with: {(snapshot) in
+//            
+//            let usersDict = snapshot.value as! NSDictionary
+//            print(usersDict)
+//            let userDetails = usersDict.object(forKey: self.user?.uid as Any) as! NSDictionary
+//            //using while loop to update each item
+//            var index = 0
+//            while index < self.about.count {
+//                
+//                let indexPath = NSIndexPath(row: index, section: 0)
+//                let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
+//                
+//                let field:String = (cell.myTextField.placeholder)!
+//                
+//                //(userDetails as AnyObject).object(forKey: "username")
+//                    switch (field) {
+//                    case "Username":
+//                        //cell.configure(text: userDetails.object(forKey: "username") as? String , placeholder: "username", labelText: "username")
+//
+//                        cell.configure(text: self.user?.displayName , placeholder: "username?", labelText: "username")
+//
+//                        
+//                    case "Age":
+//                        cell.configure(text: userDetails.object(forKey: "age") as? String , placeholder: "Age?", labelText: "Age")
+//                        
+//                    case "Gender":
+//                        cell.configure(text: userDetails.object(forKey: "gender") as? String , placeholder: "Gender?", labelText: "Gender")
+//                        
+//                    case "Years in Game":
+//                        cell.configure(text: userDetails.object(forKey: "years_in_game") as? String , placeholder: "Years in Game?", labelText: "Years in Game")
+//                        
+//                    case "Website":
+//                        cell.configure(text: userDetails.object(forKey: "website") as? String , placeholder: "Website?", labelText: "Website")
+//                        
+//                    case "Email":
+//                        cell.configure(text: self.user?.email , placeholder: "Email?", labelText: "Email")
+//                        
+//                    default:
+//                        print("Do not update")
+//                    } //end switch
+//                index += 1
+//            }//end while
+//
+//        
+//        })
+        
+        
+    }//end view did load
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return about.count
-    }
 
   
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -106,6 +142,8 @@ class EditProfileTableVC: UITableViewController {
     //updating user info to firebase
     @IBAction func onUpdate(_ sender: Any) {
 
+        self.activityIndicator.startAnimating()
+        
         var index = 0
         while index < about.count {
             
@@ -146,14 +184,38 @@ class EditProfileTableVC: UITableViewController {
             }//end if
             index += 1
         }//end while
+        
+//        observeHelper.loadUserProfileUsingCache(thisUid: user!.uid) { (userprofile, error) in
+//            
+//        }
 
+        self.activityIndicator.stopAnimating()
     }
     
 
-
+    
+    
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: - Table view data source
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return about.count
+    }
     //dismiss keyboard
     func hideKeyboard() {
-        tableView.endEditing(true)
+        self.tableView.endEditing(true)
     }
 
 
