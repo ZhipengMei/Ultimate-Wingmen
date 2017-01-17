@@ -10,7 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class EditProfileTableVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class EditProfileTableVC: UITableViewController {
     
 //    @IBOutlet var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var profileImage: UIImageView!
@@ -21,21 +21,12 @@ class EditProfileTableVC: UITableViewController, UIPickerViewDelegate, UIPickerV
     @IBOutlet var yearsInGame: UILabel!
     @IBOutlet var age: UILabel!
     
-    var genderData = ["Man", "Woman"]
-    var picker = UIPickerView()
-    
-    
     var ref = FIRDatabase.database().reference()
     var user = FIRAuth.auth()?.currentUser
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        picker.dataSource = self
-        picker.delegate = self
-        
-        
+
         //add tapgesture and call hidekeyboard function
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(EditProfileTableVC.hideKeyboard))
         tapGesture.cancelsTouchesInView = true
@@ -43,9 +34,8 @@ class EditProfileTableVC: UITableViewController, UIPickerViewDelegate, UIPickerV
         
         //retrieving user basic info data from firebase
         //function to download user profile or use existing
-        observeHelper.loadUserProfileUsingCache(thisUid: (user?.uid)!) { (userprofile, error) in
+        updateProfile(thisUid: (user?.uid)!) { (userprofile, error) in
             if error == nil {
-                
                 self.username.text = userprofile?.username
                 self.emailAddress.text = userprofile?.email
                 self.gender.text = userprofile?.gender
@@ -53,15 +43,26 @@ class EditProfileTableVC: UITableViewController, UIPickerViewDelegate, UIPickerV
                 self.yearsInGame.text = userprofile?.years_in_game
                 self.age.text = userprofile?.age
                 self.profileImage.loadImageUsingCache(urlString: (userprofile?.profile_pic_small)!)
-                
+
             }//end if
         }//end observeHelper
         
     }//end view did load
-
-
-
-
+    
+    //update the user profile and save it into cache
+    var userprofile: User?    //reset the variable
+    func updateProfile(thisUid: String, completion: @escaping (User?, Error?) -> Void) {
+        let thisref = FIRDatabase.database().reference().child("user_profile").child((user?.uid)!)
+        //keep observing
+        thisref.observe(.value, with: { (snapshot) in
+            if let snapDict = snapshot.value as? NSDictionary{
+                let thisUser = User(dict: snapDict as! [String : NSObject])
+                userProfileCache[thisUid] = thisUser    //update cache
+                self.userprofile = userProfileCache[thisUid]
+                completion(self.userprofile!, nil)
+            }
+        }, withCancel: nil)
+    }
   
     //updating user info to firebase
     @IBAction func onUpdate(_ sender: Any) {
@@ -115,40 +116,35 @@ class EditProfileTableVC: UITableViewController, UIPickerViewDelegate, UIPickerV
 
 //        self.activityIndicator.stopAnimating()
     }
-    
-    
-    //picker view for gender
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return genderData.count
-    }
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.gender.text = genderData[row]
-    }
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return genderData[row]
-    }
 
-//    
-//    //xib subview for gender
-//    var myCustomView: EditProfileTableVC? // declare variable inside your controller
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        if myCustomView == nil { // make it only once
-//            myCustomView = Bundle.main.loadNibNamed("EditProfileTableVC", owner: self, options: nil)?.first as? EditProfileTableVC
-//            myCustomView.
-//            
-//            self.view.addSubview(myCustomView) // you can omit 'self' here
-//            // if your app support both Portrait and Landscape orientations
-//            // you should add constraints here
-//        }
-//    }
+    //action to update gender
+    @IBAction func genderPopupAction(_ sender: Any) {
+        let genderPopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "genderPopup") as! genderPopupView
+        self.addChildViewController(genderPopupVC)  //add new vc ontop of current vc
+        genderPopupVC.view.frame = self.view.frame
+        self.view.addSubview(genderPopupVC.view)
+        genderPopupVC.didMove(toParentViewController: self)
+    }
+    
+    
+    @IBAction func agePopupAction(_ sender: Any) {
+        let agePopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "agePopup") as! ageVC
+        self.addChildViewController(agePopupVC)  //add new vc ontop of current vc
+        agePopupVC.view.frame = self.view.frame
+        self.view.addSubview(agePopupVC.view)
+        agePopupVC.didMove(toParentViewController: self)
+    }
     
     
     
     
+    
+    
+    
+    
+    
+    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

@@ -244,7 +244,7 @@
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fVK-su-MVZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="fVK-su-MVZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -265,7 +265,7 @@
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YHV-eZ-01r">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YHV-eZ-01r">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -286,7 +286,7 @@
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="E7Z-GV-yOi">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="E7Z-GV-yOi">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -518,7 +518,7 @@
         <scene sceneID="1Qr-iq-hyW">
             <objects>
                 <collectionViewController storyboardIdentifier="NearbyUserCollection" id="qbK-0q-d9i" customClass="NearbyUserCollection" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="mTl-Fu-ckf">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="mTl-Fu-ckf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -672,7 +672,19 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dF2-9D-1cw">
+                                                    <rect key="frame" x="8" y="0.0" width="359" height="43"/>
+                                                    <connections>
+                                                        <action selector="genderPopupAction:" destination="zBz-VD-256" eventType="touchUpInside" id="XS2-nP-gLr"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="dF2-9D-1cw" firstAttribute="leading" secondItem="1Zq-cx-Glb" secondAttribute="leading" constant="8" id="F1j-Eg-H1e"/>
+                                                <constraint firstAttribute="bottom" secondItem="dF2-9D-1cw" secondAttribute="bottom" id="HCA-fC-ti4"/>
+                                                <constraint firstItem="dF2-9D-1cw" firstAttribute="top" secondItem="1Zq-cx-Glb" secondAttribute="top" id="TCe-hd-ZtR"/>
+                                                <constraint firstAttribute="trailing" secondItem="dF2-9D-1cw" secondAttribute="trailing" constant="8" id="lqp-D9-rg3"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Switch Cell" id="IiS-vJ-qzz" userLabel="Translucent Cell">
@@ -696,7 +708,19 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Toq-3b-fS3">
+                                                    <rect key="frame" x="8" y="0.0" width="359" height="43"/>
+                                                    <connections>
+                                                        <action selector="agePopupAction:" destination="zBz-VD-256" eventType="touchUpInside" id="sSQ-Ik-BMO"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Toq-3b-fS3" firstAttribute="leading" secondItem="c2b-rq-vi6" secondAttribute="leading" constant="8" id="H8r-8r-3YG"/>
+                                                <constraint firstAttribute="bottom" secondItem="Toq-3b-fS3" secondAttribute="bottom" id="Q7V-3G-c5O"/>
+                                                <constraint firstAttribute="trailing" secondItem="Toq-3b-fS3" secondAttribute="trailing" constant="8" id="bAg-ec-CMm"/>
+                                                <constraint firstItem="Toq-3b-fS3" firstAttribute="top" secondItem="c2b-rq-vi6" secondAttribute="top" id="dJH-o9-2zA"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Switch Cell" id="5NY-2u-zGI" userLabel="Translucent Cell">
@@ -752,7 +776,7 @@
                         </sections>
                     </tableView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Title" id="72Y-e0-YwX"/>
+                    <navigationItem key="navigationItem" title="My Profile" id="72Y-e0-YwX"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="age" destination="RB0-uX-2KA" id="scQ-YZ-qJt"/>
@@ -766,7 +790,125 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oUZ-fM-H6H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1918" y="3918"/>
+            <point key="canvasLocation" x="1917.5999999999999" y="4029.5352323838083"/>
+        </scene>
+        <!--Gender Popup View-->
+        <scene sceneID="UPi-FJ-CuE">
+            <objects>
+                <viewController storyboardIdentifier="genderPopup" id="KqT-s0-ue0" customClass="genderPopupView" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gwJ-wc-Mgc"/>
+                        <viewControllerLayoutGuide type="bottom" id="eGO-IB-6ks"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="DcG-L7-BCi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="7Zc-Ki-TxF">
+                                <rect key="frame" x="68" y="200" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oVD-zO-cmX">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Gender" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hyx-mL-mDE">
+                                                <rect key="frame" x="16" y="8" width="48" height="17"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TKQ-JM-vZs">
+                                                <rect key="frame" x="58" y="40" width="124" height="33"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <state key="normal" title="Man"/>
+                                                <connections>
+                                                    <action selector="man:" destination="KqT-s0-ue0" eventType="touchUpInside" id="uOe-xO-nnf"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nd9-2v-dNS">
+                                                <rect key="frame" x="65" y="87" width="111" height="33"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <state key="normal" title="Woman"/>
+                                                <connections>
+                                                    <action selector="woman:" destination="KqT-s0-ue0" eventType="touchUpInside" id="gep-tx-Dum"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="genderView" destination="oVD-zO-cmX" id="CYN-h9-lKq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jvo-cb-5jD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2626" y="4030"/>
+        </scene>
+        <!--AgeVC-->
+        <scene sceneID="zPJ-jY-t1A">
+            <objects>
+                <viewController storyboardIdentifier="agePopup" id="imH-cF-5jJ" customClass="ageVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="HRu-mL-z7c"/>
+                        <viewControllerLayoutGuide type="bottom" id="qBD-42-0dD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Whw-Gh-e7Y">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aqh-be-5IX" userLabel="Age View">
+                                <rect key="frame" x="67" y="192" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Age" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Lj-oN-45M">
+                                        <rect key="frame" x="16" y="8" width="26" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S5e-CX-sdN">
+                                        <rect key="frame" x="72" y="49" width="97" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                        <connections>
+                                            <action selector="enterAge:" destination="imH-cF-5jJ" eventType="editingChanged" id="zhk-X8-h7p"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N1m-ed-B8g">
+                                        <rect key="frame" x="191" y="98" width="37" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Done"/>
+                                        <connections>
+                                            <action selector="updateAge:" destination="imH-cF-5jJ" eventType="touchUpInside" id="Pd2-nt-uWg"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="ageField" destination="S5e-CX-sdN" id="cTU-mR-yi6"/>
+                        <outlet property="ageView" destination="Aqh-be-5IX" id="f5L-BA-DeZ"/>
+                        <outlet property="doneBtn" destination="N1m-ed-B8g" id="Br4-v6-Bce"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k5f-JP-OdK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3279" y="4030"/>
         </scene>
     </scenes>
     <resources>
