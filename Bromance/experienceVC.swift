@@ -1,5 +1,5 @@
 //
-//  genderPopupView.swift
+//  experienceVC.swift
 //  Bromance
 //
 //  Created by Zhipeng Mei on 1/17/17.
@@ -10,22 +10,27 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class genderPopupView: UIViewController {
-    
-    @IBOutlet var genderView: UIView!
+class experienceVC: UIViewController {
+
+    @IBOutlet var expTextField: UITextField!
+    @IBOutlet var doneBtn: UIButton!
+    @IBOutlet var expView: UIView!
     
     var ref = FIRDatabase.database().reference()
     let user = FIRAuth.auth()?.currentUser
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         //add tapgesture to dissmiss view
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeAnimate))
         tapGesture.cancelsTouchesInView = true
         view.addGestureRecognizer(tapGesture)
-
-        self.genderView.layer.cornerRadius = 5
+        
+        expTextField.becomeFirstResponder()
+        
+        doneBtn.isHidden = true
+        self.expView.layer.cornerRadius = 5
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         showAnimate()
     }
@@ -34,8 +39,7 @@ class genderPopupView: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // *** gender ***
+    
     func showAnimate() {
         self.view.transform = CGAffineTransform.init(scaleX: 1.3, y:1.3)
         self.view.alpha = 0
@@ -54,16 +58,22 @@ class genderPopupView: UIViewController {
             self.view.removeFromSuperview()
         }
     }
-    @IBAction func man(_ sender: Any) {
-        self.ref.child("user_profile").child("\(user!.uid)/gender").setValue("Man")
-        removeAnimate()
+    
+    func checkMaxLength(textField: UITextField!, maxLength: Int) {
+        if ((textField.text?.characters.count)! > maxLength) {
+            textField.deleteBackward()
+        }
     }
-    @IBAction func woman(_ sender: Any) {
-        self.ref.child("user_profile").child("\(user!.uid)/gender").setValue("Woman")
-        removeAnimate()
-    }
-    // *** gender end ***
     
 
+    @IBAction func textChanged(_ sender: Any) {
+        doneBtn.isHidden = false
+        checkMaxLength(textField: expTextField, maxLength: 2)
+    }
+
+    @IBAction func updateExp(_ sender: Any) {
+        self.ref.child("user_profile").child("\(user!.uid)/years_in_game").setValue(expTextField.text)
+        removeAnimate()
+    }
 
 }

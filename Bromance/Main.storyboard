@@ -744,7 +744,19 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NEe-7I-wk8">
+                                                    <rect key="frame" x="8" y="0.0" width="359" height="43"/>
+                                                    <connections>
+                                                        <action selector="websitePopupAction:" destination="zBz-VD-256" eventType="touchUpInside" id="oyN-Fl-8Wk"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="NEe-7I-wk8" firstAttribute="top" secondItem="PRK-0M-zMW" secondAttribute="top" id="DIo-9c-qqZ"/>
+                                                <constraint firstAttribute="trailing" secondItem="NEe-7I-wk8" secondAttribute="trailing" constant="8" id="GU7-G2-V6l"/>
+                                                <constraint firstItem="NEe-7I-wk8" firstAttribute="leading" secondItem="PRK-0M-zMW" secondAttribute="leading" constant="8" id="OVs-ef-4zM"/>
+                                                <constraint firstAttribute="bottom" secondItem="NEe-7I-wk8" secondAttribute="bottom" id="Yuh-Gh-hbj"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Switch Cell" id="wEp-0R-lFc" userLabel="Translucent Cell">
@@ -768,7 +780,19 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AnZ-Un-U51">
+                                                    <rect key="frame" x="8" y="0.0" width="359" height="43"/>
+                                                    <connections>
+                                                        <action selector="experiencePopupAction:" destination="zBz-VD-256" eventType="touchUpInside" id="74T-D7-OGP"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="AnZ-Un-U51" firstAttribute="leading" secondItem="o1e-a8-7g1" secondAttribute="leading" constant="8" id="F1k-c3-cik"/>
+                                                <constraint firstItem="AnZ-Un-U51" firstAttribute="top" secondItem="o1e-a8-7g1" secondAttribute="top" id="GYY-kQ-eFS"/>
+                                                <constraint firstAttribute="bottom" secondItem="AnZ-Un-U51" secondAttribute="bottom" id="Kqo-cy-LH3"/>
+                                                <constraint firstAttribute="trailing" secondItem="AnZ-Un-U51" secondAttribute="trailing" constant="8" id="cUs-yE-QAy"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -851,7 +875,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jvo-cb-5jD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2626" y="4030"/>
+            <point key="canvasLocation" x="2538" y="4030"/>
         </scene>
         <!--AgeVC-->
         <scene sceneID="zPJ-jY-t1A">
@@ -908,7 +932,125 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k5f-JP-OdK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3279" y="4030"/>
+            <point key="canvasLocation" x="3164" y="4030"/>
+        </scene>
+        <!--WebsiteVC-->
+        <scene sceneID="QAj-ds-LGf">
+            <objects>
+                <viewController storyboardIdentifier="websitePopup" id="mdH-hn-KtF" customClass="websiteVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nn7-wa-EgU"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ljg-Pt-zVn"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Go5-hO-wWL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qXx-Si-pEN" userLabel="Age View">
+                                <rect key="frame" x="67" y="198" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Website" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PhI-MT-XmZ">
+                                        <rect key="frame" x="16" y="8" width="53" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Db-gN-oX9">
+                                        <rect key="frame" x="191" y="98" width="37" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Done"/>
+                                        <connections>
+                                            <action selector="updateAge:" destination="imH-cF-5jJ" eventType="touchUpInside" id="Fuj-iL-JPT"/>
+                                            <action selector="updateWebsite:" destination="mdH-hn-KtF" eventType="touchUpInside" id="oeQ-qM-MCV"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kYz-Ad-bx9">
+                                        <rect key="frame" x="8" y="49" width="220" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="editingWebText:" destination="mdH-hn-KtF" eventType="editingChanged" id="kvl-Ux-UmF"/>
+                                            <action selector="enterAge:" destination="imH-cF-5jJ" eventType="editingChanged" id="lEe-Tp-Hqc"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="doneBtn" destination="2Db-gN-oX9" id="JCW-7C-RC9"/>
+                        <outlet property="webTextField" destination="kYz-Ad-bx9" id="iGc-Ru-KUc"/>
+                        <outlet property="websiteView" destination="qXx-Si-pEN" id="QPN-Qp-uGI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EQG-uE-ho0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3781.5999999999999" y="4029.5352323838083"/>
+        </scene>
+        <!--ExperienceVC-->
+        <scene sceneID="U5t-yl-68i">
+            <objects>
+                <viewController storyboardIdentifier="experiencePopup" id="e0F-iA-Aau" customClass="experienceVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WyG-So-yCz"/>
+                        <viewControllerLayoutGuide type="bottom" id="Gca-aO-TUv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="JiO-DM-3CS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ha2-Sc-qq3" userLabel="Age View">
+                                <rect key="frame" x="58" y="200" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Experience" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ni-MN-1mv">
+                                        <rect key="frame" x="16" y="8" width="72" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3xe-g2-7r2">
+                                        <rect key="frame" x="72" y="49" width="97" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                        <connections>
+                                            <action selector="enterAge:" destination="imH-cF-5jJ" eventType="editingChanged" id="jcb-R3-Mzr"/>
+                                            <action selector="textChanged:" destination="e0F-iA-Aau" eventType="editingChanged" id="urf-jx-683"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bQO-qn-eMW">
+                                        <rect key="frame" x="191" y="98" width="37" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Done"/>
+                                        <connections>
+                                            <action selector="updateAge:" destination="imH-cF-5jJ" eventType="touchUpInside" id="T7U-sa-tDt"/>
+                                            <action selector="updateExp:" destination="e0F-iA-Aau" eventType="touchUpInside" id="bZy-2t-rqz"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="doneBtn" destination="bQO-qn-eMW" id="ato-C3-iZR"/>
+                        <outlet property="expTextField" destination="3xe-g2-7r2" id="YLl-6B-BqY"/>
+                        <outlet property="expView" destination="ha2-Sc-qq3" id="tLh-CP-abk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O06-gC-7Sx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4406" y="4030"/>
         </scene>
     </scenes>
     <resources>

@@ -1,5 +1,5 @@
 //
-//  genderPopupView.swift
+//  websiteVC.swift
 //  Bromance
 //
 //  Created by Zhipeng Mei on 1/17/17.
@@ -10,32 +10,32 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class genderPopupView: UIViewController {
-    
-    @IBOutlet var genderView: UIView!
+class websiteVC: UIViewController {
+
+    @IBOutlet var webTextField: UITextField!
+    @IBOutlet var doneBtn: UIButton!
+    @IBOutlet var websiteView: UIView!
     
     var ref = FIRDatabase.database().reference()
     let user = FIRAuth.auth()?.currentUser
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         //add tapgesture to dissmiss view
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeAnimate))
         tapGesture.cancelsTouchesInView = true
         view.addGestureRecognizer(tapGesture)
-
-        self.genderView.layer.cornerRadius = 5
+        
+        webTextField.becomeFirstResponder()
+        
+        doneBtn.isHidden = true
+        self.websiteView.layer.cornerRadius = 5
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         showAnimate()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // *** gender ***
+    
     func showAnimate() {
         self.view.transform = CGAffineTransform.init(scaleX: 1.3, y:1.3)
         self.view.alpha = 0
@@ -44,7 +44,6 @@ class genderPopupView: UIViewController {
             self.view.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
         }
     }
-    
     func removeAnimate() {
         self.view.endEditing(true)
         UIView.animate(withDuration: 0.3, animations: {
@@ -54,16 +53,20 @@ class genderPopupView: UIViewController {
             self.view.removeFromSuperview()
         }
     }
-    @IBAction func man(_ sender: Any) {
-        self.ref.child("user_profile").child("\(user!.uid)/gender").setValue("Man")
-        removeAnimate()
-    }
-    @IBAction func woman(_ sender: Any) {
-        self.ref.child("user_profile").child("\(user!.uid)/gender").setValue("Woman")
-        removeAnimate()
-    }
-    // *** gender end ***
-    
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func editingWebText(_ sender: Any) {
+        doneBtn.isHidden = false
+    }
+
+    @IBAction func updateWebsite(_ sender: Any) {
+        self.ref.child("user_profile").child("\(user!.uid)/website").setValue(webTextField.text)
+        removeAnimate()
+    }
+   
 
 }

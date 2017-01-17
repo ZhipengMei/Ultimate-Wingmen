@@ -12,6 +12,8 @@
 		3A4ADB591E282A9B00F1DC77 /* observeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4ADB581E282A9B00F1DC77 /* observeHelper.swift */; };
 		3A4C5AD01E13AFD8007D897E /* NearbyUsersCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4C5ACF1E13AFD8007D897E /* NearbyUsersCollectionCell.swift */; };
 		3A58FEF61E2EBFBE00DDFF35 /* ageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A58FEF51E2EBFBE00DDFF35 /* ageVC.swift */; };
+		3A58FEF81E2ECAC800DDFF35 /* websiteVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A58FEF71E2ECAC800DDFF35 /* websiteVC.swift */; };
+		3A58FEFA1E2ECEEA00DDFF35 /* experienceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A58FEF91E2ECEEA00DDFF35 /* experienceVC.swift */; };
 		3A5ABD6B1E17B2B6000075E7 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5ABD6A1E17B2B6000075E7 /* ChatViewController.swift */; };
 		3A76A3AD1E063E7E00C69338 /* usernameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A76A3AC1E063E7E00C69338 /* usernameVC.swift */; };
 		3A7D84F71E03CAC500F7A4DB /* GMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7D84F61E03CAC500F7A4DB /* GMapViewController.swift */; };
@@ -40,6 +42,8 @@
 		3A4ADB581E282A9B00F1DC77 /* observeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = observeHelper.swift; sourceTree = "<group>"; };
 		3A4C5ACF1E13AFD8007D897E /* NearbyUsersCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyUsersCollectionCell.swift; sourceTree = "<group>"; };
 		3A58FEF51E2EBFBE00DDFF35 /* ageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ageVC.swift; sourceTree = "<group>"; };
+		3A58FEF71E2ECAC800DDFF35 /* websiteVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = websiteVC.swift; sourceTree = "<group>"; };
+		3A58FEF91E2ECEEA00DDFF35 /* experienceVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = experienceVC.swift; sourceTree = "<group>"; };
 		3A5ABD6A1E17B2B6000075E7 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		3A76A3AC1E063E7E00C69338 /* usernameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = usernameVC.swift; sourceTree = "<group>"; };
 		3A7D84F61E03CAC500F7A4DB /* GMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GMapViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +97,8 @@
 				3A2893641E13080100D67E6D /* EditProfileTableVC.swift */,
 				3A4272181E2EA2E50078A80F /* genderPopupView.swift */,
 				3A58FEF51E2EBFBE00DDFF35 /* ageVC.swift */,
+				3A58FEF71E2ECAC800DDFF35 /* websiteVC.swift */,
+				3A58FEF91E2ECEEA00DDFF35 /* experienceVC.swift */,
 			);
 			name = "Edit Basic Info";
 			sourceTree = "<group>";
@@ -379,6 +385,7 @@
 			files = (
 				3AC6A3CA1E11FACB00F2D624 /* ProfileVC.swift in Sources */,
 				3AEF31321E2661330081F514 /* Message.swift in Sources */,
+				3A58FEFA1E2ECEEA00DDFF35 /* experienceVC.swift in Sources */,
 				3AC7FC2C1E1DC36A001D371E /* ChatTableVC.swift in Sources */,
 				3AC7FC2F1E1DC395001D371E /* ChatTableCell.swift in Sources */,
 				3A5ABD6B1E17B2B6000075E7 /* ChatViewController.swift in Sources */,
@@ -391,6 +398,7 @@
 				3A4272191E2EA2E50078A80F /* genderPopupView.swift in Sources */,
 				3ABC2DB81DF0D970004E89E2 /* ViewController.swift in Sources */,
 				3AC6A3CC1E12026600F2D624 /* ProfileDetailViewController.swift in Sources */,
+				3A58FEF81E2ECAC800DDFF35 /* websiteVC.swift in Sources */,
 				3A58FEF61E2EBFBE00DDFF35 /* ageVC.swift in Sources */,
 				3ABC2DB61DF0D970004E89E2 /* AppDelegate.swift in Sources */,
 				3A4C5AD01E13AFD8007D897E /* NearbyUsersCollectionCell.swift in Sources */,

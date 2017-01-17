@@ -27,10 +27,10 @@ class EditProfileTableVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //add tapgesture and call hidekeyboard function
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(EditProfileTableVC.hideKeyboard))
-        tapGesture.cancelsTouchesInView = true
-        tableView.addGestureRecognizer(tapGesture)
+//        //add tapgesture and call hidekeyboard function
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(EditProfileTableVC.hideKeyboard))
+//        tapGesture.cancelsTouchesInView = true
+//        tableView.addGestureRecognizer(tapGesture)
         
         //retrieving user basic info data from firebase
         //function to download user profile or use existing
@@ -135,8 +135,21 @@ class EditProfileTableVC: UITableViewController {
         agePopupVC.didMove(toParentViewController: self)
     }
     
+    @IBAction func websitePopupAction(_ sender: Any) {
+        let webPopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "websitePopup") as! websiteVC
+        self.addChildViewController(webPopupVC)  //add new vc ontop of current vc
+        webPopupVC.view.frame = self.view.frame
+        self.view.addSubview(webPopupVC.view)
+        webPopupVC.didMove(toParentViewController: self)
+    }
     
-    
+    @IBAction func experiencePopupAction(_ sender: Any) {
+        let expPopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "experiencePopup") as! experienceVC
+        self.addChildViewController(expPopupVC)  //add new vc ontop of current vc
+        expPopupVC.view.frame = self.view.frame
+        self.view.addSubview(expPopupVC.view)
+        expPopupVC.didMove(toParentViewController: self)
+    }
     
     
     
@@ -149,10 +162,10 @@ class EditProfileTableVC: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    //dismiss keyboard
-    func hideKeyboard() {
-        self.tableView.endEditing(true)
-    }
+//    //dismiss keyboard
+//    func hideKeyboard() {
+//        self.tableView.endEditing(true)
+//    }
 
 
 

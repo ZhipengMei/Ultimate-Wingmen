@@ -21,6 +21,14 @@ class ageVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //add tapgesture to dissmiss view
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeAnimate))
+        tapGesture.cancelsTouchesInView = true
+        view.addGestureRecognizer(tapGesture)
+        
+        ageField.becomeFirstResponder() //keyboard auto shows
+        
         doneBtn.isHidden = true
         self.ageView.layer.cornerRadius = 5
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
@@ -38,6 +46,7 @@ class ageVC: UIViewController {
     }
     
     func removeAnimate() {
+        self.view.endEditing(true)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.transform = CGAffineTransform.init(scaleX: 1.3, y:1.3)
             self.view.alpha = 0
@@ -59,7 +68,6 @@ class ageVC: UIViewController {
     
     @IBAction func updateAge(_ sender: Any) {
         self.ref.child("user_profile").child("\(user!.uid)/age").setValue(ageField.text)
-        self.view.endEditing(true)
         removeAnimate()
     }
     
