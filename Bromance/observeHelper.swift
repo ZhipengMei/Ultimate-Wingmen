@@ -38,6 +38,12 @@ class observeHelper {
                 ref.observe(.value, with: { (snapshot) in
                     if let snapDict = snapshot.value as? NSDictionary{
                         let thisUser = User(dict: snapDict as! [String : NSObject])
+                        
+                        //find the older element
+                        if let cacheIndex = userProfileCache.index(forKey: thisUid) {
+                            userProfileCache.remove(at: cacheIndex) //delete it
+                        }
+                        //add the new one
                         userProfileCache[thisUid] = thisUser
                         userprofile = userProfileCache[thisUid]
                         completion(userprofile!, nil)

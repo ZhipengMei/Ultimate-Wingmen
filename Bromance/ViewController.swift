@@ -265,6 +265,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                 databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
                 databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("")
                 databaseRef.child("user_profile").child("\(user.uid)/website").setValue("")
+                databaseRef.child("user_profile").child("\(user.uid)/level").setValue("")
                 if let email = user.email {
                     databaseRef.child("user_profile").child("\(user.uid)/email").setValue(email)
                 } else {

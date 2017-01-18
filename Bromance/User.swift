@@ -17,6 +17,7 @@ class User: NSObject {
     var website: String?
     var years_in_game: String?
     var connections: NSDictionary?
+    var level: String?
     
     // 自定义构造函数,会覆盖init()函数
     init(dict : [String : NSObject]) {

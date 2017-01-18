@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A1310301E2F35B000387F40 /* levelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A13102F1E2F35B000387F40 /* levelPicker.swift */; };
 		3A2893651E13080100D67E6D /* EditProfileTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2893641E13080100D67E6D /* EditProfileTableVC.swift */; };
 		3A4272191E2EA2E50078A80F /* genderPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4272181E2EA2E50078A80F /* genderPopupView.swift */; };
 		3A4ADB591E282A9B00F1DC77 /* observeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4ADB581E282A9B00F1DC77 /* observeHelper.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		27CE281FC588E28D4FA168C3 /* Pods-Bromance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bromance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bromance/Pods-Bromance.debug.xcconfig"; sourceTree = "<group>"; };
+		3A13102F1E2F35B000387F40 /* levelPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = levelPicker.swift; sourceTree = "<group>"; };
 		3A2893641E13080100D67E6D /* EditProfileTableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileTableVC.swift; sourceTree = "<group>"; };
 		3A4272181E2EA2E50078A80F /* genderPopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = genderPopupView.swift; sourceTree = "<group>"; };
 		3A4ADB581E282A9B00F1DC77 /* observeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = observeHelper.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				3A58FEF71E2ECAC800DDFF35 /* websiteVC.swift */,
 				3A58FEF91E2ECEEA00DDFF35 /* experienceVC.swift */,
 				3A58FF001E2EDE9D00DDFF35 /* selectProfileImage.swift */,
+				3A13102F1E2F35B000387F40 /* levelPicker.swift */,
 			);
 			name = "Info Handlers";
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 				3AEF31321E2661330081F514 /* Message.swift in Sources */,
 				3A58FEFA1E2ECEEA00DDFF35 /* experienceVC.swift in Sources */,
 				3AC7FC2C1E1DC36A001D371E /* ChatTableVC.swift in Sources */,
+				3A1310301E2F35B000387F40 /* levelPicker.swift in Sources */,
 				3AC7FC2F1E1DC395001D371E /* ChatTableCell.swift in Sources */,
 				3A5ABD6B1E17B2B6000075E7 /* ChatViewController.swift in Sources */,
 				3A2893651E13080100D67E6D /* EditProfileTableVC.swift in Sources */,

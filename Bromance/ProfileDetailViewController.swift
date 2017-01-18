@@ -104,7 +104,8 @@ class ProfileDetailViewController: UITableViewController, MFMailComposeViewContr
     }
     
     // MARK: MFMailComposeViewControllerDelegate Method
-    private func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        // Dismiss the mail compose view controller.
         controller.dismiss(animated: true, completion: nil)
     }
     // *** send meial end ***

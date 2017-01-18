@@ -19,6 +19,7 @@ class EditProfileTableVC: UITableViewController {
     @IBOutlet var website: UILabel!
     @IBOutlet var yearsInGame: UILabel!
     @IBOutlet var age: UILabel!
+    @IBOutlet var level: UILabel!
     
     var myActivityIndicator: UIActivityIndicatorView! = UIActivityIndicatorView()
     
@@ -38,10 +39,26 @@ class EditProfileTableVC: UITableViewController {
                 self.yearsInGame.text = userprofile?.years_in_game
                 self.age.text = userprofile?.age
                 self.profileImage.loadImageUsingCache(urlString: (userprofile?.profile_pic_small)!)
-
+                self.level.text = userprofile?.level
             }//end if
         }//end observeHelper
         
+        //following code can be use in emergency
+//        let thisref = FIRDatabase.database().reference().child("user_profile").child((user?.uid)!)
+//        //keep observing
+//        thisref.observe(.value, with: { (snapshot) in
+//            if let snapDict = snapshot.value as? NSDictionary{
+//                self.username.text = snapDict["username"] as? String
+//                self.emailAddress.text = snapDict["email"] as? String
+//                self.gender.text = snapDict["gender"] as? String
+//                self.website.text = snapDict["website"] as? String
+//                self.yearsInGame.text = snapDict["years_in_game"] as? String
+//                self.age.text = snapDict["age"] as? String
+//                self.profileImage.loadImageUsingCache(urlString: (snapDict["profile_pic_small"])! as! String)
+//                self.level.text = snapDict["level"] as? String
+//            }
+//        }, withCancel: nil)
+//        
     }//end view did load
     
     //update the user profile and save it into cache
@@ -52,6 +69,11 @@ class EditProfileTableVC: UITableViewController {
         thisref.observe(.value, with: { (snapshot) in
             if let snapDict = snapshot.value as? NSDictionary{
                 let thisUser = User(dict: snapDict as! [String : NSObject])
+                
+                //find the older element
+                if let cacheIndex = userProfileCache.index(forKey: thisUid) {
+                    userProfileCache.remove(at: cacheIndex) //delete it
+                }
                 userProfileCache[thisUid] = thisUser    //update cache
                 self.userprofile = userProfileCache[thisUid]
                 completion(self.userprofile!, nil)
@@ -100,6 +122,14 @@ class EditProfileTableVC: UITableViewController {
         self.handleSelectProfileImageVie()
     }
     
+    //update user's level
+    @IBAction func chooseLevel(_ sender: Any) {
+        let pickerPopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "pickerPopup") as! levelPicker
+        self.addChildViewController(pickerPopupVC)  //add new vc ontop of current vc
+        pickerPopupVC.view.frame = self.view.frame
+        self.view.addSubview(pickerPopupVC.view)
+        pickerPopupVC.didMove(toParentViewController: self)
+    }
     
     
     

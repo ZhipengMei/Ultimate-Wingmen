@@ -18,13 +18,22 @@ class ProfileVC: UIViewController {
     @IBOutlet var messageBtn: UIButton!
     @IBOutlet var moreBtn: UIBarButtonItem!
     @IBOutlet var ageLabel: UILabel!
-    @IBOutlet var yearsinGameLabel: UILabel!
+    @IBOutlet var level: UILabel!
     @IBOutlet var websiteLabel: UILabel!
+    
+    @IBOutlet var bg: UIImageView!
+    @IBOutlet var ageView: UIView!
+    @IBOutlet var levelView: UIView!
+    @IBOutlet var websiteView: UIView!
     
     var userID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.ageView.isHidden = true
+        self.levelView.isHidden = true
+        self.websiteView.isHidden = true
         
         self.profilePic.layer.cornerRadius = self.profilePic.frame.size.width/2  //circular image
         self.profilePic.clipsToBounds = true
@@ -42,12 +51,27 @@ class ProfileVC: UIViewController {
                 } else {
                     // do something with the userprofile
                     self.username.text = userprofile?.username   //display username
-                    self.ageLabel.text = userprofile?.age
-                    self.yearsinGameLabel.text = userprofile?.years_in_game
-                    self.websiteLabel.text = userprofile?.website
+                    
+                    if userprofile?.age != "" {
+                        self.ageView.isHidden = false
+                        self.ageLabel.isHidden = false
+                        self.ageLabel.text = "Age: \((userprofile?.age)!)"
+                    }
+                    if userprofile?.website != "" {
+                        self.websiteView.isHidden = false
+                        self.websiteLabel.isHidden = false
+                        self.websiteLabel.text = userprofile?.website
+                    }
+                    if userprofile?.level != "" {
+                        self.levelView.isHidden = false
+                        self.level.isHidden = false
+                        self.level.text = "Level: \((userprofile?.level)!)"
+                    }
+
                     // do something with the userprofile
                     if let profileUrl = userprofile?.profile_pic_small {
                         self.profilePic.loadImageUsingCache(urlString: profileUrl)
+                        self.bg.loadImageUsingCache(urlString: profileUrl)
                     }
                 }
             }//end observeHelper
