@@ -12,7 +12,6 @@ import FirebaseAuth
 
 class EditProfileTableVC: UITableViewController {
     
-//    @IBOutlet var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var profileImage: UIImageView!
     @IBOutlet var username: UILabel!
     @IBOutlet var emailAddress: UILabel!
@@ -63,59 +62,6 @@ class EditProfileTableVC: UITableViewController {
             }
         }, withCancel: nil)
     }
-  
-    //updating user info to firebase
-    @IBAction func onUpdate(_ sender: Any) {
-
-//        self.activityIndicator.startAnimating()
-        
-//        var index = 0
-//        while index < about.count {
-//            
-//            let indexPath = NSIndexPath(row: index, section: 0)
-//            let cell: TextInputCell = self.tableView.cellForRow(at: indexPath as IndexPath) as! TextInputCell
-//            
-//            if (cell.myTextField.text != "") {
-//                let item:String = (cell.myTextField.text!)
-//
-//                switch (about[index]) {
-//                case "Username":
-//                    //self.ref.child("user_profile").child("\(user!.uid)/username").setValue(item)
-//                    
-//                    //changing current user's displayname
-//                    let changeRequest = FIRAuth.auth()?.currentUser?.profileChangeRequest()
-//                    changeRequest?.displayName = item
-//                    changeRequest?.commitChanges() { (error) in
-//                        print("Successfully updated username to \(self.user?.displayName)")
-//                    }
-//                    
-//                case "Age":
-//                    self.ref.child("user_profile").child("\(user!.uid)/age").setValue(item)
-//                case "Gender":
-//                    self.ref.child("user_profile").child("\(user!.uid)/gender").setValue(item)
-//                    
-//                case "Years in Game":
-//                    self.ref.child("user_profile").child("\(user!.uid)/years_in_game").setValue(item)
-//                    
-//                case "Website":
-//                    self.ref.child("user_profile").child("\(user!.uid)/website").setValue(item)
-//                    
-//                case "Email":
-//                    self.ref.child("user_profile").child("\(user!.uid)/email").setValue(item)
-//                    
-//                default:
-//                    print("Do not update")
-//                } //end switch
-//            }//end if
-//            index += 1
-//        }//end while
-        
-//        observeHelper.loadUserProfileUsingCache(thisUid: user!.uid) { (userprofile, error) in
-//            
-//        }
-
-//        self.activityIndicator.stopAnimating()
-    }
 
     //action to update gender
     @IBAction func genderPopupAction(_ sender: Any) {
@@ -151,6 +97,9 @@ class EditProfileTableVC: UITableViewController {
         expPopupVC.didMove(toParentViewController: self)
     }
     
+    @IBAction func chooseProfileAction(_ sender: Any) {
+        self.handleSelectProfileImageVie()
+    }
     
     
     
