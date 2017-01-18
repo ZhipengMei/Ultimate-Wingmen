@@ -213,7 +213,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                     let fbprofileImage = FBSDKGraphRequest(graphPath: "me/picture", parameters: ["height":300,"width":300,"redirect":false], httpMethod:"GET")
                     
                     fbprofileImage?.start(completionHandler: {(connection, result, error) -> Void in
-                        
+
                         if(error == nil) {
                             let dictionary = result as? NSDictionary        //store JSON result as a dictionary
                             let data = dictionary?.object(forKey: "data") //go inside the data node

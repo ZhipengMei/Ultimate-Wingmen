@@ -13,8 +13,8 @@ import FirebaseAuth
 class websiteVC: UIViewController {
 
     @IBOutlet var webTextField: UITextField!
-    @IBOutlet var doneBtn: UIButton!
     @IBOutlet var websiteView: UIView!
+    @IBOutlet var doneBtn: UIButton!
     
     var ref = FIRDatabase.database().reference()
     let user = FIRAuth.auth()?.currentUser
@@ -31,7 +31,8 @@ class websiteVC: UIViewController {
         webTextField.becomeFirstResponder()
         
         doneBtn.isHidden = true
-        self.websiteView.layer.cornerRadius = 5
+        self.websiteView.layer.cornerRadius = 10
+        self.websiteView.layer.masksToBounds = true
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         showAnimate()
     }
@@ -67,6 +68,7 @@ class websiteVC: UIViewController {
         self.ref.child("user_profile").child("\(user!.uid)/website").setValue(webTextField.text)
         removeAnimate()
     }
+
    
 
 }

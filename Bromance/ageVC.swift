@@ -30,7 +30,8 @@ class ageVC: UIViewController {
         ageField.becomeFirstResponder() //keyboard auto shows
         
         doneBtn.isHidden = true
-        self.ageView.layer.cornerRadius = 5
+        self.ageView.layer.cornerRadius = 10
+        self.ageView.layer.masksToBounds = true
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         showAnimate()
     }

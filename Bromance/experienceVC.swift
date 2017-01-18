@@ -13,8 +13,8 @@ import FirebaseAuth
 class experienceVC: UIViewController {
 
     @IBOutlet var expTextField: UITextField!
-    @IBOutlet var doneBtn: UIButton!
     @IBOutlet var expView: UIView!
+    @IBOutlet var doneBtn: UIButton!
     
     var ref = FIRDatabase.database().reference()
     let user = FIRAuth.auth()?.currentUser
@@ -30,7 +30,8 @@ class experienceVC: UIViewController {
         expTextField.becomeFirstResponder()
         
         doneBtn.isHidden = true
-        self.expView.layer.cornerRadius = 5
+        self.expView.layer.cornerRadius = 10
+        self.expView.layer.masksToBounds = true
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         showAnimate()
     }
@@ -75,5 +76,6 @@ class experienceVC: UIViewController {
         self.ref.child("user_profile").child("\(user!.uid)/years_in_game").setValue(expTextField.text)
         removeAnimate()
     }
+
 
 }

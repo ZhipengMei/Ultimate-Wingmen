@@ -27,6 +27,8 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()                   // Create a location manager object
     var geoFire: GeoFire? = nil                         //geo instance for upload and retrieve location data to firebase
     
+    var myActivityIndicator: UIActivityIndicatorView! = UIActivityIndicatorView()
+    
     //initialize coordinate instance, making sure app wont crash when location not turn on
     var locationLat: CLLocationDegrees = 0
     var locationLong: CLLocationDegrees = 0
@@ -64,11 +66,21 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         showCurrentLocationOnMap()
+        self.locationManager.stopMonitoringSignificantLocationChanges()
         self.locationManager.stopUpdatingLocation() //stop updating location
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.transform = CGAffineTransform.init(scaleX: 1.3, y:1.3)
+            self.view.alpha = 1
+        }) {(success: Bool) in
+            self.myActivityIndicator.stopAnimating()
+        }
+
     }
     func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
         // Stop significant-change location updates when they aren't needed anymore
         self.locationManager.stopMonitoringSignificantLocationChanges()
+        
     }
     
     //******Get current location End ******
@@ -126,6 +138,12 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     
     // refresh buttion trigger grab new user's current location
     @IBAction func refresh(_ sender: Any) {
+        self.view.transform = CGAffineTransform.init(scaleX: 1.3, y:1.3)
+        UIView.animate(withDuration: 0.25) {
+            self.view.alpha = 0.5
+            self.animateActivityIndicator()
+            self.view.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+        }        
         self.locationManager.startMonitoringSignificantLocationChanges()
     }
     
@@ -152,40 +170,30 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
             //print("All initial data has been loaded and events have been fired!")
             if(self.nearbyUIDSet.count > 0){
                 self.nearbyUIDArray = Array(self.nearbyUIDSet)  //convert set to array (contains a list of nearby users' uid)
-                print("done nearbyUIDArray")
-                print(self.nearbyUIDArray!)
             }
         })
     }
     // *** google map view end ***
-    
-    //download all nearby usersdata
-    private func getNearbyUsersData() {
-        
-    }
 
-    
     //checking/update users online status
     func manageConnections(userID: String) {
-    
         //create a reference to the database
         let myConnectionsRef = FIRDatabase.database().reference(withPath: "user_profile/\(userID)/connections/\(self.deviceID!)")
         //when user logged in, set value to true
         myConnectionsRef.child("online").setValue(true)
         myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
-        
-//        //observe which will moniter if the user is logged in or out
-//        myConnectionsRef.observe(.value, with: {
-//            snapshot in
-//            
-//            //guard statements only run if the conditions are not met
-//            guard let connected = snapshot.value as? Bool, connected else {
-//                return
-//            }
-//        })
     }//manageConnections end
 
-
+    //activity indicator
+    func animateActivityIndicator() {
+        self.myActivityIndicator.center = self.view.center
+        self.myActivityIndicator.hidesWhenStopped = true
+        self.myActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+        self.myActivityIndicator.color = UIColor.red
+        self.view.alpha = 0.8
+        self.view.addSubview(myActivityIndicator)
+        myActivityIndicator.startAnimating()
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if self.nearbyUIDArray != nil {

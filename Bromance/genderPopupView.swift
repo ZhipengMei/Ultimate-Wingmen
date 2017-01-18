@@ -25,7 +25,8 @@ class genderPopupView: UIViewController {
         tapGesture.cancelsTouchesInView = true
         view.addGestureRecognizer(tapGesture)
 
-        self.genderView.layer.cornerRadius = 5
+        self.genderView.layer.cornerRadius = 10
+        self.genderView.layer.masksToBounds = true
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         showAnimate()
     }

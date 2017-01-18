@@ -12,7 +12,9 @@ import FirebaseAuth
 
 class levelPicker: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
+    @IBOutlet var myview: UIView!
     @IBOutlet var pickerView: UIPickerView!
+    @IBOutlet var doneBtn: UIButton!
     var ref = FIRDatabase.database().reference()
     let user = FIRAuth.auth()?.currentUser
     
@@ -22,6 +24,8 @@ class levelPicker: UIViewController, UIPickerViewDelegate, UIPickerViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.myview.layer.cornerRadius = 10
+        self.myview.layer.masksToBounds = true
         self.pickerView.delegate = self
         self.pickerView.dataSource = self
 
@@ -30,7 +34,6 @@ class levelPicker: UIViewController, UIPickerViewDelegate, UIPickerViewDataSourc
         tapGesture.cancelsTouchesInView = true
         view.addGestureRecognizer(tapGesture)
     
-        self.pickerView.layer.cornerRadius = 5
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         showAnimate()
     }
