@@ -20,16 +20,12 @@ class EditProfileTableVC: UITableViewController {
     @IBOutlet var yearsInGame: UILabel!
     @IBOutlet var age: UILabel!
     
-    var ref = FIRDatabase.database().reference()
+    var myActivityIndicator: UIActivityIndicatorView! = UIActivityIndicatorView()
+    
     var user = FIRAuth.auth()?.currentUser
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        //add tapgesture and call hidekeyboard function
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(EditProfileTableVC.hideKeyboard))
-//        tapGesture.cancelsTouchesInView = true
-//        tableView.addGestureRecognizer(tapGesture)
         
         //retrieving user basic info data from firebase
         //function to download user profile or use existing
@@ -72,7 +68,7 @@ class EditProfileTableVC: UITableViewController {
         genderPopupVC.didMove(toParentViewController: self)
     }
     
-    
+    //update age
     @IBAction func agePopupAction(_ sender: Any) {
         let agePopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "agePopup") as! ageVC
         self.addChildViewController(agePopupVC)  //add new vc ontop of current vc
@@ -81,6 +77,7 @@ class EditProfileTableVC: UITableViewController {
         agePopupVC.didMove(toParentViewController: self)
     }
     
+    //update website
     @IBAction func websitePopupAction(_ sender: Any) {
         let webPopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "websitePopup") as! websiteVC
         self.addChildViewController(webPopupVC)  //add new vc ontop of current vc
@@ -89,6 +86,7 @@ class EditProfileTableVC: UITableViewController {
         webPopupVC.didMove(toParentViewController: self)
     }
     
+    //update experience
     @IBAction func experiencePopupAction(_ sender: Any) {
         let expPopupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "experiencePopup") as! experienceVC
         self.addChildViewController(expPopupVC)  //add new vc ontop of current vc
@@ -97,6 +95,7 @@ class EditProfileTableVC: UITableViewController {
         expPopupVC.didMove(toParentViewController: self)
     }
     
+    //update user profile image
     @IBAction func chooseProfileAction(_ sender: Any) {
         self.handleSelectProfileImageVie()
     }
@@ -111,12 +110,5 @@ class EditProfileTableVC: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-//    //dismiss keyboard
-//    func hideKeyboard() {
-//        self.tableView.endEditing(true)
-//    }
-
-
-
 
 }
