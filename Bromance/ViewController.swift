@@ -14,18 +14,18 @@ import TwitterKit
 
 class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate {
     
-    @IBOutlet var emailField: UITextField!
-    @IBOutlet var passwordField: UITextField!
+//    @IBOutlet var emailField: UITextField!
+//    @IBOutlet var passwordField: UITextField!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var myView: UIView!   //myView holds login buttons
 
     override func viewDidLoad() {
         super.viewDidLoad()
         myView.isHidden = false
+        //display social media login views
         self.setupFacebookButtons()
         self.setupGoogleButtons()
         self.setupaTwitterButtons()
-
     }
 
 
@@ -68,11 +68,19 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                 }
                 self.storeInfoFirstLogin()   //store new user's data
                 print("successfully created a firebase twitter user", user?.uid ?? "")
+                self.activityIndicator.stopAnimating()
+                self.performSegue(withIdentifier: "toTab", sender: nil)
             })
         }
         myView.addSubview(twitterButton)    //added button to myView
         twitterButton.frame = CGRect(x: 16, y: 332 , width: view.frame.width - 32, height: 50)
     }
+    
+    
+    
+    
+    
+    
     
     
     //facebook button
@@ -104,6 +112,8 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
             self.myView.isHidden = false
         }
         showEmailAddress()
+        self.activityIndicator.stopAnimating()
+        self.performSegue(withIdentifier: "toTab", sender: nil)
     }
     
     // get facebook user's basic info from social media account
@@ -123,7 +133,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
             print("Successfully logged in with our user: ", user ?? "")
         })
         
-        
+// --->        //Did not do anthing with this user's data
         // using credential to grab user's data
         FBSDKGraphRequest(graphPath: "/me", parameters: ["fields": "id, name, email"]).start { (connection, result, err) in
             if err != nil {
@@ -189,9 +199,8 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     //store user's basic info on the very first login
     func storeInfoFirstLogin() {
         print("inside first login in")
+        
         if let user = FIRAuth.auth()?.currentUser {
-            print("inside first login in/ current user")
-
             //firebase storage to store media files
             let storageRef = FIRStorage.storage().reference(forURL: "gs://bromance-e91d8.appspot.com")
             let profilePicRef = storageRef.child(user.uid + "/profile_pic_small.jpg")
@@ -261,11 +270,11 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                 } //end if
                 
                 databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName)
-                databaseRef.child("user_profile").child("\(user.uid)/age").setValue("")
+                databaseRef.child("user_profile").child("\(user.uid)/age").setValue("18")
                 databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
-                databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("")
+                databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("0")
                 databaseRef.child("user_profile").child("\(user.uid)/website").setValue("")
-                databaseRef.child("user_profile").child("\(user.uid)/level").setValue("")
+                databaseRef.child("user_profile").child("\(user.uid)/level").setValue("AFC")
                 if let email = user.email {
                     databaseRef.child("user_profile").child("\(user.uid)/email").setValue(email)
                 } else {
@@ -275,6 +284,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
             })//end databaseRef.child("user_profile")
         }//end if FIRAuth.auth()?.currentUser
     }//end storeInfoFirstLogin
+    
   
 }
 

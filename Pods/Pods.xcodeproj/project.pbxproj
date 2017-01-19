@@ -118,7 +118,7 @@
 		388535BAC4CD5EB3E9B75C0A051BE5B5 /* FBSDKVideoUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = EDF6C25430E197974F9EC6B7C043B438 /* FBSDKVideoUploader.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		39D7C670879E236D85F82657BB4DAD2A /* UIDevice+JSQMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = FB3BA8F57C15F802C06F14A2CCD4583C /* UIDevice+JSQMessages.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A34D865015EC4111D69150C84B19E67 /* FBSDKApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F7686AA4E8CE4F92DFEA0F1519EF2 /* FBSDKApplicationDelegate.m */; };
-		3A66E8EA1E217DD90069A822 /* FirebaseDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4128740F7353EDAB1F393E80206C5BA /* FirebaseDatabase.framework */; };
+		3ADC9A8A1E303A6C009BB4A7 /* FirebaseDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4128740F7353EDAB1F393E80206C5BA /* FirebaseDatabase.framework */; };
 		3AE399BC7EEED91335666803DBF27D2F /* FBSDKBridgeAPIProtocolWebV2.h in Headers */ = {isa = PBXBuildFile; fileRef = B92A34CBC6FB9D210E5C6702E530E65A /* FBSDKBridgeAPIProtocolWebV2.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		3AE5C5C51ADABC338D7AEF33F46596D0 /* JSQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AA8085CF1539CF3F14BB6CB2BDCEE3A /* JSQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3B41754212C34819A299F3B4D5978099 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2174BF89DF87DA3FE173105CA8DA7187 /* Foundation.framework */; };
@@ -1303,7 +1303,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A66E8EA1E217DD90069A822 /* FirebaseDatabase.framework in Frameworks */,
+				3ADC9A8A1E303A6C009BB4A7 /* FirebaseDatabase.framework in Frameworks */,
 				1FA375816005BD73DC57C12C9D40E516 /* CoreLocation.framework in Frameworks */,
 				A83EEEDEDD3140EE175D2C85B3689135 /* Foundation.framework in Frameworks */,
 				735B1005CF6967A0B2224C691D8DAB4F /* GoogleToolboxForMac.framework in Frameworks */,

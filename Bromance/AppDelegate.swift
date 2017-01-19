@@ -24,16 +24,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-        Fabric.with([Twitter.self])
-        
-        FIRApp.configure()
-
+        Fabric.with([Twitter.self]) //twitter fabric
+        FIRApp.configure()  //firebase
+        //google sign in
         GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
-        
+        //facebook sign in
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
 
         
+        
+        //load onboarding screen only once
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: "onboarding")
+        //checking onboardingComplete or not
+        let userDefaults = UserDefaults.standard
+        if userDefaults.bool(forKey: "onboardingComplete") {
+            userpersist()
+        } else {
+            //otherwise show onboarding view
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+        }
+
+
+        
+        return true
+    }
+    
+    func userpersist() {
         //user persist *** important ***
         FIRAuth.auth()!.addStateDidChangeListener() { auth, user in
             //check user existence
@@ -46,6 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 } else { //else set up a new username
                     print("***logged in as \(user?.displayName)***")
                     //transition to tab bar when username is found
+                    GMSServices.provideAPIKey("AIzaSyCAnbg9kemfC5bWugXYsDllQeeAJXqs_pc")    //google map api key
                     let tabVC = self.storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
                     self.window?.rootViewController = tabVC
                 }
@@ -55,11 +74,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 self.window?.rootViewController = tabVC
             }
         }
-        
-        GMSServices.provideAPIKey("AIzaSyCAnbg9kemfC5bWugXYsDllQeeAJXqs_pc")    //google map api key
-
-        return true
     }
+    
+    
+    
+    
+    
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let err = error {
@@ -82,7 +102,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             guard let uid = user?.uid else { return }
             ViewController().storeInfoFirstLogin()          //calling function from another class
             print("Successfully logged into Firebase with Google", uid)
+
         })
+
     }
 
 

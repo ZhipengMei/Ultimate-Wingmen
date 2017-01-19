@@ -28,6 +28,4 @@ pod 'GooglePlaces'
 # chat feature
 pod 'JSQMessagesViewController'
 
-
-
 end

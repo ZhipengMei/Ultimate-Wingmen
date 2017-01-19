@@ -31,11 +31,30 @@
 		3AC7FC2A1E1CD6C5001D371E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AC7FC291E1CD6C5001D371E /* Main.storyboard */; };
 		3AC7FC2C1E1DC36A001D371E /* ChatTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC7FC2B1E1DC369001D371E /* ChatTableVC.swift */; };
 		3AC7FC2F1E1DC395001D371E /* ChatTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC7FC2E1E1DC395001D371E /* ChatTableCell.swift */; };
+		3ADC9A871E3034ED009BB4A7 /* onboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADC9A861E3034ED009BB4A7 /* onboardingViewController.swift */; };
+		3ADC9A891E303989009BB4A7 /* PaperOnboarding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADC9A881E303989009BB4A7 /* PaperOnboarding.framework */; };
 		3ADFEC261DF4E20F002C9433 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3ADFEC251DF4E20F002C9433 /* GoogleService-Info.plist */; };
 		3AEF31301E2614350081F514 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF312F1E2614350081F514 /* User.swift */; };
 		3AEF31321E2661330081F514 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF31311E2661330081F514 /* Message.swift */; };
+		3AF1AFD91E303DE3007D8FB8 /* handleOnboardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1AFD81E303DE3007D8FB8 /* handleOnboardingVC.swift */; };
+		3AF1AFDA1E304434007D8FB8 /* PaperOnboarding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADC9A881E303989009BB4A7 /* PaperOnboarding.framework */; };
+		3AF1AFDB1E304434007D8FB8 /* PaperOnboarding.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADC9A881E303989009BB4A7 /* PaperOnboarding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F7C5A6771E23BEB009B4B9BA /* Pods_Bromance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D58092EB9E5C445312805FCC /* Pods_Bromance.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3AF1AFDC1E304434007D8FB8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3AF1AFDB1E304434007D8FB8 /* PaperOnboarding.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		27CE281FC588E28D4FA168C3 /* Pods-Bromance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bromance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bromance/Pods-Bromance.debug.xcconfig"; sourceTree = "<group>"; };
@@ -65,10 +84,13 @@
 		3AC7FC291E1CD6C5001D371E /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		3AC7FC2B1E1DC369001D371E /* ChatTableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTableVC.swift; sourceTree = "<group>"; };
 		3AC7FC2E1E1DC395001D371E /* ChatTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTableCell.swift; sourceTree = "<group>"; };
+		3ADC9A861E3034ED009BB4A7 /* onboardingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = onboardingViewController.swift; sourceTree = "<group>"; };
+		3ADC9A881E303989009BB4A7 /* PaperOnboarding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PaperOnboarding.framework; path = Carthage/Build/iOS/PaperOnboarding.framework; sourceTree = "<group>"; };
 		3ADFEC241DF4DA87002C9433 /* Bromance.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bromance.entitlements; sourceTree = "<group>"; };
 		3ADFEC251DF4E20F002C9433 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3AEF312F1E2614350081F514 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3AEF31311E2661330081F514 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		3AF1AFD81E303DE3007D8FB8 /* handleOnboardingVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = handleOnboardingVC.swift; sourceTree = "<group>"; };
 		D58092EB9E5C445312805FCC /* Pods_Bromance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bromance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBBF6032F2BEE2B574B866BB /* Pods-Bromance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bromance.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bromance/Pods-Bromance.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,8 +100,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AF1AFDA1E304434007D8FB8 /* PaperOnboarding.framework in Frameworks */,
 				3A7D84F91E03CECE00F7A4DB /* CoreLocation.framework in Frameworks */,
 				F7C5A6771E23BEB009B4B9BA /* Pods_Bromance.framework in Frameworks */,
+				3ADC9A891E303989009BB4A7 /* PaperOnboarding.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +209,7 @@
 		3ABC2DB41DF0D970004E89E2 /* Bromance */ = {
 			isa = PBXGroup;
 			children = (
+				3ADC9A851E3034D7009BB4A7 /* onboarding */,
 				3A8DB1E21E23F39A00AF3889 /* Models */,
 				3AC7FC291E1CD6C5001D371E /* Main.storyboard */,
 				3ABC2DB51DF0D970004E89E2 /* AppDelegate.swift */,
@@ -227,8 +252,8 @@
 		3AC6A3CD1E12147A00F2D624 /* Core Features */ = {
 			isa = PBXGroup;
 			children = (
-				3AC7FC2D1E1DC374001D371E /* ChatTableVC */,
 				3AC6A3C61E106E6800F2D624 /* Login */,
+				3AC7FC2D1E1DC374001D371E /* ChatTableVC */,
 				3AC6A3C71E106E7E00F2D624 /* Map/Users */,
 				3AC6A3C81E11FA9F00F2D624 /* Profile */,
 			);
@@ -244,9 +269,19 @@
 			name = ChatTableVC;
 			sourceTree = "<group>";
 		};
+		3ADC9A851E3034D7009BB4A7 /* onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				3AF1AFD81E303DE3007D8FB8 /* handleOnboardingVC.swift */,
+				3ADC9A861E3034ED009BB4A7 /* onboardingViewController.swift */,
+			);
+			name = onboarding;
+			sourceTree = "<group>";
+		};
 		B1C76ACCC4515AEEFC2FB0CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3ADC9A881E303989009BB4A7 /* PaperOnboarding.framework */,
 				3A7D84F81E03CECE00F7A4DB /* CoreLocation.framework */,
 				D58092EB9E5C445312805FCC /* Pods_Bromance.framework */,
 			);
@@ -267,6 +302,7 @@
 				7492D980E58C5BC16798AE5C /* [CP] Embed Pods Frameworks */,
 				5DED7E22BB786118280BFA56 /* [CP] Copy Pods Resources */,
 				3A86EE931DF507C000CF8A63 /* ShellScript */,
+				3AF1AFDC1E304434007D8FB8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -408,12 +444,14 @@
 				3AC7FC251E1CAC65001D371E /* NearbyUserCollection.swift in Sources */,
 				3A76A3AD1E063E7E00C69338 /* usernameVC.swift in Sources */,
 				3A4ADB591E282A9B00F1DC77 /* observeHelper.swift in Sources */,
+				3AF1AFD91E303DE3007D8FB8 /* handleOnboardingVC.swift in Sources */,
 				3AEF31301E2614350081F514 /* User.swift in Sources */,
 				3A7D84F71E03CAC500F7A4DB /* GMapViewController.swift in Sources */,
 				3A4272191E2EA2E50078A80F /* genderPopupView.swift in Sources */,
 				3ABC2DB81DF0D970004E89E2 /* ViewController.swift in Sources */,
 				3A58FF011E2EDE9D00DDFF35 /* selectProfileImage.swift in Sources */,
 				3AC6A3CC1E12026600F2D624 /* ProfileDetailViewController.swift in Sources */,
+				3ADC9A871E3034ED009BB4A7 /* onboardingViewController.swift in Sources */,
 				3A58FEF81E2ECAC800DDFF35 /* websiteVC.swift in Sources */,
 				3A58FEF61E2EBFBE00DDFF35 /* ageVC.swift in Sources */,
 				3ABC2DB61DF0D970004E89E2 /* AppDelegate.swift in Sources */,
@@ -538,6 +576,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Bromance/Bromance.entitlements;
 				DEVELOPMENT_TEAM = 2539R9VP4A;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Bromance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.teamgrit.Bromance;
@@ -553,6 +595,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Bromance/Bromance.entitlements;
 				DEVELOPMENT_TEAM = 2539R9VP4A;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Bromance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.teamgrit.Bromance;
