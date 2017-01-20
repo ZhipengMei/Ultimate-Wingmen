@@ -105,15 +105,15 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
         if error != nil {
             print(error)
             self.myView.isHidden = false
-            activityIndicator.stopAnimating()
+            showEmailAddress()
+            self.activityIndicator.stopAnimating()
+            self.performSegue(withIdentifier: "toTab", sender: nil)
             return
         } else if(result.isCancelled){
             activityIndicator.stopAnimating()
             self.myView.isHidden = false
         }
-        showEmailAddress()
-        self.activityIndicator.stopAnimating()
-        self.performSegue(withIdentifier: "toTab", sender: nil)
+
     }
     
     // get facebook user's basic info from social media account

@@ -22,6 +22,9 @@ class ChatTableVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("\n\n\n\n")
+        
+//        self.navigationController?.navigationBar.tintColor = UIColor.white
+//        self.navigationController?.navigationBar.barStyle = UIBarStyle.black
     }
     
     override func viewWillAppear(_ animated: Bool) {

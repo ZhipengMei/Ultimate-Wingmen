@@ -47,6 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         }
 
 
+        //change tab bar tint clor
+        UITabBar.appearance().tintColor = UIColor(red: 123/255, green: 179/255, blue: 46/255, alpha: 1)
+        UINavigationBar.appearance().barStyle = UIBarStyle.black
+        UINavigationBar.appearance().tintColor = UIColor.white
         
         return true
     }

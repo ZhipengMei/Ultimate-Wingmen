@@ -28,9 +28,13 @@ class ProfileDetailViewController: UITableViewController, MFMailComposeViewContr
         
         //update user online status
         let userID = FIRAuth.auth()?.currentUser?.uid
-        let myConnectionsRef = FIRDatabase.database().reference(withPath: "user_profile/\(userID!)/connections/\(self.deviceID!)")
+        let ref = FIRDatabase.database().reference()
+        let myConnectionsRef = ref.child("user_profile").child("\(userID!)").child("connections").child("\(self.deviceID!)")
         myConnectionsRef.child("online").setValue(false)
         myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
+        
+        
+
 
         
         //signs the user out of the Firebase app
