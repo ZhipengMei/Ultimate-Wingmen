@@ -102,18 +102,21 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         self.myView.isHidden = true
         activityIndicator.startAnimating()  //shows spinner animation
+        
         if error != nil {
             print(error)
             self.myView.isHidden = false
+            return
+        } else if(result.isCancelled){
+            self.activityIndicator.stopAnimating()
+            self.myView.isHidden = false
+        }
+        else if error == nil {
             showEmailAddress()
             self.activityIndicator.stopAnimating()
             self.performSegue(withIdentifier: "toTab", sender: nil)
-            return
-        } else if(result.isCancelled){
-            activityIndicator.stopAnimating()
-            self.myView.isHidden = false
         }
-
+        
     }
     
     // get facebook user's basic info from social media account

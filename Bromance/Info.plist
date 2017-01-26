@@ -2,31 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Our App is Using Location Services </string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Our App is Using Location Services </string>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>e847695a6ba9779e063c0a3d2963b8c50c4968f6</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict>
-					<key>consumerKey</key>
-					<string>a6mq76UQT1pfFAkGJenIpgy8n</string>
-					<key>consumerSecret</key>
-					<string>f55t4yS15KpMGbr59LlsAaKeDX73enH4lweZpeHhahbI0vkDGl</string>
-				</dict>
-				<key>KitName</key>
-				<string>Twitter</string>
-			</dict>
-		</array>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -60,6 +35,25 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>e847695a6ba9779e063c0a3d2963b8c50c4968f6</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict>
+					<key>consumerKey</key>
+					<string>a6mq76UQT1pfFAkGJenIpgy8n</string>
+					<key>consumerSecret</key>
+					<string>f55t4yS15KpMGbr59LlsAaKeDX73enH4lweZpeHhahbI0vkDGl</string>
+				</dict>
+				<key>KitName</key>
+				<string>Twitter</string>
+			</dict>
+		</array>
+	</dict>
 	<key>FacebookAppID</key>
 	<string>1698920893752598</string>
 	<key>FacebookDisplayName</key>
@@ -73,6 +67,17 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Our App is Using Location Services </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Our App is Using Location Services </string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string></string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -94,10 +99,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 </dict>
 </plist>
