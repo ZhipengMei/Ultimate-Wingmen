@@ -52,7 +52,8 @@ class ChatViewController: JSQMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
                 
-        title = senderDisplayName
+//        title = senderDisplayName
+        self.setupNavBarWithUser()
         
         //setup bubbles
         setupIncomingBubble()
@@ -327,6 +328,86 @@ class ChatViewController: JSQMessagesViewController {
                 }
                 self.photoMessageMap.removeValue(forKey: key!)
             })
+        }
+    }
+    
+    //image pic on nav title
+    func setupNavBarWithUser() {
+        
+        //creating title view to hold container view
+        let titleView = UIView()
+        titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+//        titleView.backgroundColor = UIColor.red
+        
+        let containerView = UIView() //container view to hold image view and name label
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        titleView.addSubview(containerView)
+        
+        let profileView = UIImageView()
+        profileView.translatesAutoresizingMaskIntoConstraints = false
+        profileView.contentMode = .scaleAspectFill
+        profileView.layer.cornerRadius = 20
+        profileView.clipsToBounds = true
+        
+        //function to download user profile
+        observeHelper.loadUserProfileUsingCache(thisUid: self.receiverId) { (userprofile, error) in
+            if error != nil {
+                print("observeHelper error: \(error!)")
+            } else {
+                //check cached image
+                if let profileImageUrl = userprofile?.profile_pic_small {
+                    profileView.loadImageUsingCache(urlString: profileImageUrl)
+                }
+                containerView.addSubview(profileView)   //add image view to title view
+                
+                //ios9 constraint (image view stick to title view)
+                profileView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+                profileView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+                profileView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                profileView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                
+                
+                //username label
+                let nameLabel = UILabel()
+                nameLabel.text = userprofile?.username
+                nameLabel.textColor = UIColor.white
+                nameLabel.translatesAutoresizingMaskIntoConstraints = false
+                containerView.addSubview(nameLabel)
+                
+                //ios9 constraint (label stick to title view)
+                nameLabel.leftAnchor.constraint(equalTo: profileView.rightAnchor, constant: 8).isActive = true
+                nameLabel.centerYAnchor.constraint(equalTo: profileView.centerYAnchor).isActive = true
+                nameLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+                nameLabel.heightAnchor.constraint(equalTo: profileView.heightAnchor).isActive = true
+                
+                
+                //center container view with constraint
+                containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
+                containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
+                
+                self.navigationItem.titleView = titleView
+                
+                
+                //add tapgesture to title view
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+                tapGesture.cancelsTouchesInView = true
+                titleView.addGestureRecognizer(tapGesture)
+
+            }
+        }//end observeHelper
+        
+    }//end setupnavtitlebar
+    
+    //segue to user info page
+    func handleTap() {
+        if let profile = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "profileVC") as? ProfileVC {
+            
+            self.tabBarController?.tabBar.isHidden = true
+            profile.userID = self.receiverId
+            
+            if let navigator = self.navigationController {
+                navigator.pushViewController(profile, animated: true)
+            }
         }
     }
     

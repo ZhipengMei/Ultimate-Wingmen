@@ -13,7 +13,7 @@
         <!--Handle OnboardingVC-->
         <scene sceneID="Y7d-Al-meb">
             <objects>
-                <viewController storyboardIdentifier="onboarding" id="a09-XK-51Z" customClass="handleOnboardingVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="onboarding" id="a09-XK-51Z" customClass="handleOnboardingVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9BV-SG-HX0"/>
                         <viewControllerLayoutGuide type="bottom" id="liS-zY-lVB"/>
@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p1y-eo-lbR" customClass="onboardingViewController" customModule="Bromance" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p1y-eo-lbR" customClass="onboardingViewController" customModule="WingMe" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -64,7 +64,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="loginStoryboard" id="BYZ-38-t0r" customClass="ViewController" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="loginStoryboard" id="BYZ-38-t0r" customClass="ViewController" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -103,7 +103,7 @@
         <!--UsernameVC-->
         <scene sceneID="yCC-TM-NQT">
             <objects>
-                <viewController storyboardIdentifier="setupUsernamceVC" id="MhT-mW-I4C" customClass="usernameVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="setupUsernamceVC" id="MhT-mW-I4C" customClass="usernameVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Kxm-cP-mt7"/>
                         <viewControllerLayoutGuide type="bottom" id="NR9-EW-qKZ"/>
@@ -157,7 +157,7 @@
         <!--Chat View Controller-->
         <scene sceneID="pKX-Vb-g33">
             <objects>
-                <viewController storyboardIdentifier="chatVC" hidesBottomBarWhenPushed="YES" id="1Bi-VN-7D5" customClass="ChatViewController" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="chatVC" hidesBottomBarWhenPushed="YES" id="1Bi-VN-7D5" customClass="ChatViewController" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pof-gW-VHG"/>
                         <viewControllerLayoutGuide type="bottom" id="93g-ba-baz"/>
@@ -166,15 +166,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
+                    <navigationItem key="navigationItem" id="lDS-HD-or3"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r7z-54-rea" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="252" y="3205"/>
+            <point key="canvasLocation" x="252" y="3900"/>
         </scene>
         <!--ProfileVC-->
         <scene sceneID="fje-wk-mvK">
             <objects>
-                <viewController storyboardIdentifier="profileVC" id="BcD-dI-swM" customClass="ProfileVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="profileVC" id="BcD-dI-swM" customClass="ProfileVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iSF-Xf-9E6"/>
                         <viewControllerLayoutGuide type="bottom" id="PNa-i3-kT3"/>
@@ -444,7 +445,7 @@
         <!--Profile Detail View Controller-->
         <scene sceneID="Yo4-Vg-poI">
             <objects>
-                <tableViewController id="vkd-XX-fO4" userLabel="Profile Detail View Controller" customClass="ProfileDetailViewController" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="vkd-XX-fO4" userLabel="Profile Detail View Controller" customClass="ProfileDetailViewController" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="6Fb-Kk-GPs">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -453,10 +454,10 @@
                             <tableViewSection headerTitle="ACCOUNT" id="LtB-RI-20t">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Switch Cell" id="9fv-QB-Rol" userLabel="Translucent Cell">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9fv-QB-Rol" id="WuE-lx-k7F">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SoC-QN-Cvj">
@@ -475,10 +476,10 @@
                             <tableViewSection headerTitle="SUPPORT" id="WzQ-fl-iTl">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Switch Cell" id="Uag-eJ-CSx" userLabel="Translucent Cell">
-                                        <rect key="frame" x="0.0" y="157" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="155.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uag-eJ-CSx" id="FFY-Vs-rBX">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eU0-Hz-Y9Z">
@@ -493,10 +494,10 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Switch Cell" id="JgK-Fu-SU6" userLabel="Translucent Cell">
-                                        <rect key="frame" x="0.0" y="201" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="199.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JgK-Fu-SU6" id="RR6-lb-3pm">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AC4-7z-mEL">
@@ -515,10 +516,10 @@
                             <tableViewSection headerTitle="" id="ddR-rn-a0i">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Switch Cell" id="NaZ-S6-Vl3" userLabel="Translucent Cell">
-                                        <rect key="frame" x="0.0" y="281" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="279.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NaZ-S6-Vl3" id="SfW-yt-Rl2">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OgZ-2N-ZuF">
@@ -547,7 +548,7 @@
         <!--Search-->
         <scene sceneID="uu6-EK-JXG">
             <objects>
-                <viewController storyboardIdentifier="MapViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y2o-NS-WtP" customClass="GMapViewController" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y2o-NS-WtP" customClass="GMapViewController" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mLS-le-IW7"/>
                         <viewControllerLayoutGuide type="bottom" id="Lha-4y-ivZ"/>
@@ -604,17 +605,17 @@
         <!--WingMe-->
         <scene sceneID="pbq-dm-SkE">
             <objects>
-                <tableViewController storyboardIdentifier="chattablevc" id="uNb-vT-AEn" customClass="ChatTableVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="chattablevc" id="uNb-vT-AEn" customClass="ChatTableVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="71" sectionHeaderHeight="28" sectionFooterHeight="28" id="sbF-at-OcL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="tablecell" rowHeight="71" id="Vfc-jj-WDl" customClass="ChatTableCell" customModule="Bromance" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="tablecell" rowHeight="71" id="Vfc-jj-WDl" customClass="ChatTableCell" customModule="WingMe" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="71"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Vfc-jj-WDl" id="6cn-fG-Yh9">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="70.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N0P-pI-rdF">
@@ -666,7 +667,7 @@
         <!--Nearby User Collection-->
         <scene sceneID="1Qr-iq-hyW">
             <objects>
-                <collectionViewController storyboardIdentifier="NearbyUserCollection" id="qbK-0q-d9i" customClass="NearbyUserCollection" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="NearbyUserCollection" id="qbK-0q-d9i" customClass="NearbyUserCollection" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="mTl-Fu-ckf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -678,7 +679,7 @@
                             <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectionViewCell" id="nM3-sI-GxB" customClass="NearbyUsersCollectionCell" customModule="Bromance" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectionViewCell" id="nM3-sI-GxB" customClass="NearbyUsersCollectionCell" customModule="WingMe" customModuleProvider="target">
                                 <rect key="frame" x="10" y="10" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -728,7 +729,7 @@
         <!--Edit Profile TableVC-->
         <scene sceneID="jxX-bH-zxy">
             <objects>
-                <tableViewController id="zBz-VD-256" userLabel="Edit Profile TableVC" customClass="EditProfileTableVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="zBz-VD-256" userLabel="Edit Profile TableVC" customClass="EditProfileTableVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="2nX-iJ-HiC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -740,7 +741,7 @@
                                         <rect key="frame" x="0.0" y="35" width="375" height="86"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="I3G-cH-IYs" id="Sqc-rm-ovA">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="85.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eMZ-w6-HfU">
@@ -783,7 +784,7 @@
                                         <rect key="frame" x="0.0" y="121" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ERC-R0-SaA" id="Wnb-3t-Crf">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Display Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gIy-EC-9WF">
@@ -819,7 +820,7 @@
                                         <rect key="frame" x="0.0" y="165" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="I3I-AK-Pa4" id="3zG-pE-8ez">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email address" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ngI-se-bbb">
@@ -859,7 +860,7 @@
                                         <rect key="frame" x="0.0" y="245" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JMC-hO-Huz" id="1Zq-cx-Glb">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gender" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R1A-PY-LQO">
@@ -905,7 +906,7 @@
                                         <rect key="frame" x="0.0" y="289" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IiS-vJ-qzz" id="c2b-rq-vi6">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Age" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y8F-Qx-rFw">
@@ -951,7 +952,7 @@
                                         <rect key="frame" x="0.0" y="333" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5NY-2u-zGI" id="PRK-0M-zMW">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Website" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vuP-MZ-zbJ">
@@ -997,7 +998,7 @@
                                         <rect key="frame" x="0.0" y="377" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wEp-0R-lFc" id="o1e-a8-7g1">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Years In Game" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ear-N3-9zB">
@@ -1043,7 +1044,7 @@
                                         <rect key="frame" x="0.0" y="421" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lev-ro-GEa" id="CRC-se-9jk">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Level" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dub-1n-W7d" userLabel="Level">
@@ -1110,7 +1111,7 @@
         <!--Gender Popup View-->
         <scene sceneID="UPi-FJ-CuE">
             <objects>
-                <viewController storyboardIdentifier="genderPopup" id="KqT-s0-ue0" customClass="genderPopupView" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="genderPopup" id="KqT-s0-ue0" customClass="genderPopupView" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="gwJ-wc-Mgc"/>
                         <viewControllerLayoutGuide type="bottom" id="eGO-IB-6ks"/>
@@ -1182,7 +1183,7 @@
         <!--AgeVC-->
         <scene sceneID="zPJ-jY-t1A">
             <objects>
-                <viewController storyboardIdentifier="agePopup" id="imH-cF-5jJ" customClass="ageVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="agePopup" id="imH-cF-5jJ" customClass="ageVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HRu-mL-z7c"/>
                         <viewControllerLayoutGuide type="bottom" id="qBD-42-0dD"/>
@@ -1265,7 +1266,7 @@
         <!--WebsiteVC-->
         <scene sceneID="QAj-ds-LGf">
             <objects>
-                <viewController storyboardIdentifier="websitePopup" id="mdH-hn-KtF" customClass="websiteVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="websitePopup" id="mdH-hn-KtF" customClass="websiteVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="nn7-wa-EgU"/>
                         <viewControllerLayoutGuide type="bottom" id="Ljg-Pt-zVn"/>
@@ -1349,7 +1350,7 @@
         <!--ExperienceVC-->
         <scene sceneID="U5t-yl-68i">
             <objects>
-                <viewController storyboardIdentifier="experiencePopup" id="e0F-iA-Aau" customClass="experienceVC" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="experiencePopup" id="e0F-iA-Aau" customClass="experienceVC" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WyG-So-yCz"/>
                         <viewControllerLayoutGuide type="bottom" id="Gca-aO-TUv"/>
@@ -1445,7 +1446,7 @@
         <!--Level Picker-->
         <scene sceneID="kvE-tk-hrA">
             <objects>
-                <viewController storyboardIdentifier="pickerPopup" id="BO0-zH-VeT" customClass="levelPicker" customModule="Bromance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="pickerPopup" id="BO0-zH-VeT" customClass="levelPicker" customModule="WingMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7Bd-cY-Aw8"/>
                         <viewControllerLayoutGuide type="bottom" id="dRp-o1-PLl"/>
@@ -1504,6 +1505,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ldx-3t-PS7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5082" y="4019"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Suj-n3-dbZ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="I4H-N5-5C4" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="RD2-l4-KJa">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="1Bi-VN-7D5" kind="relationship" relationship="rootViewController" id="OT6-lJ-0Ei"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cdc-53-m86" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="252" y="3204.6476761619192"/>
         </scene>
     </scenes>
     <resources>

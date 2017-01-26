@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3ABC2DB11DF0D970004E89E2"
-               BuildableName = "Bromance.app"
+               BuildableName = "WingMe.app"
                BlueprintName = "Bromance"
                ReferencedContainer = "container:Bromance.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3ABC2DB11DF0D970004E89E2"
-            BuildableName = "Bromance.app"
+            BuildableName = "WingMe.app"
             BlueprintName = "Bromance"
             ReferencedContainer = "container:Bromance.xcodeproj">
          </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3ABC2DB11DF0D970004E89E2"
-            BuildableName = "Bromance.app"
+            BuildableName = "WingMe.app"
             BlueprintName = "Bromance"
             ReferencedContainer = "container:Bromance.xcodeproj">
          </BuildableReference>
@@ -82,7 +82,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3ABC2DB11DF0D970004E89E2"
-            BuildableName = "Bromance.app"
+            BuildableName = "WingMe.app"
             BlueprintName = "Bromance"
             ReferencedContainer = "container:Bromance.xcodeproj">
          </BuildableReference>

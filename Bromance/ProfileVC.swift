@@ -26,7 +26,7 @@ class ProfileVC: UIViewController {
     @IBOutlet var levelView: UIView!
     @IBOutlet var websiteView: UIView!
     
-    var userID: String?
+    var userID: String? //target user's id
     
     override func viewDidLoad() {
         super.viewDidLoad()
