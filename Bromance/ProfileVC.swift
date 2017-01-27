@@ -11,29 +11,21 @@ import FirebaseAuth
 import FirebaseStorage
 import FBSDKCoreKit
 
-class ProfileVC: UIViewController {
+class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
 
     @IBOutlet var profilePic: UIImageView!
     @IBOutlet var username: UILabel!
     @IBOutlet var messageBtn: UIButton!
     @IBOutlet var moreBtn: UIBarButtonItem!
-    @IBOutlet var ageLabel: UILabel!
-    @IBOutlet var level: UILabel!
-    @IBOutlet var websiteLabel: UILabel!
-    
+
     @IBOutlet var bg: UIImageView!
-    @IBOutlet var ageView: UIView!
-    @IBOutlet var levelView: UIView!
-    @IBOutlet var websiteView: UIView!
+
+    let transition = CircularTransition() //custom animation
     
     var userID: String? //target user's id
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.ageView.isHidden = true
-        self.levelView.isHidden = true
-        self.websiteView.isHidden = true
         
         self.profilePic.layer.cornerRadius = self.profilePic.frame.size.width/2  //circular image
         self.profilePic.clipsToBounds = true
@@ -51,22 +43,6 @@ class ProfileVC: UIViewController {
                 } else {
                     // do something with the userprofile
                     self.username.text = userprofile?.username   //display username
-                    
-                    if userprofile?.age != "" {
-                        self.ageView.isHidden = false
-                        self.ageLabel.isHidden = false
-                        self.ageLabel.text = "Age: \((userprofile?.age)!)"
-                    }
-                    if userprofile?.website != "" {
-                        self.websiteView.isHidden = false
-                        self.websiteLabel.isHidden = false
-                        self.websiteLabel.text = userprofile?.website
-                    }
-                    if userprofile?.level != "" {
-                        self.levelView.isHidden = false
-                        self.level.isHidden = false
-                        self.level.text = "Level: \((userprofile?.level)!)"
-                    }
 
                     // do something with the userprofile
                     if let profileUrl = userprofile?.profile_pic_small {
@@ -75,10 +51,33 @@ class ProfileVC: UIViewController {
                     }
                 }
             }//end observeHelper
-        }
+        }//end if
+        
+
+        //add tapgesture to title view
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.detailInfo))
+        tapGesture.cancelsTouchesInView = true
+        profilePic.isUserInteractionEnabled = true
+        profilePic.addGestureRecognizer(tapGesture)
 
     }//end view did load
 
+    
+
+    
+    //animate to detail info view
+    func detailInfo() {
+        if let detailInfoprofile = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "detailInfo") as? detailInfoVC {
+            
+            detailInfoprofile.transitioningDelegate = self
+            detailInfoprofile.modalPresentationStyle = .custom
+            detailInfoprofile.userID = self.userID //passing the profile user id
+            
+            if let navigator = self.navigationController {
+                navigator.present(detailInfoprofile, animated: true, completion: nil)
+            }
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -89,7 +88,6 @@ class ProfileVC: UIViewController {
         } else {
             self.messageBtn.isHidden = true
         }
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -125,11 +123,24 @@ class ProfileVC: UIViewController {
             }
         }//end observeHelper
     }
+
     
+    // custom animation code
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .present
+        transition.startingPoint = profilePic.center
+        transition.circleColor = profilePic.backgroundColor!
+        
+        return transition
+    }
     
-    
-    
-    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .dismiss
+        transition.startingPoint = profilePic.center
+        transition.circleColor = profilePic.backgroundColor!
+        
+        return transition
+    }
     
     
     
@@ -138,100 +149,3 @@ class ProfileVC: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 }
-
-//                //*** getting picture from facebook ***
-//                let fbprofileImage = FBSDKGraphRequest(graphPath: "me/picture", parameters: ["height":300,"width":300,"redirect":false], httpMethod:"GET")
-//                fbprofileImage?.start(completionHandler: {(connection, result, error) -> Void in
-//
-//                    print(result!)
-//                    print(connection!)
-//
-//                    if(error == nil) {
-//                        let dictionary = result as? NSDictionary        //store JSON result as a dictionary
-//                        let data = dictionary?.object(forKey: "data") //go inside the data node
-//                        let urlPic = ((data as AnyObject).object(forKey:"url"))! as! String//get the image url
-//
-//                        if let imageData = NSData(contentsOf: NSURL(string: urlPic)! as URL){
-//                            profileRef.put(imageData as Data, metadata: nil){  //upload profile image into firebase
-//                                metadata,error in
-//                                if(error == nil) {
-//                                    //size, content type or the download url
-//                                    //let downloadUrl = metadata!.downloadURL
-//                                } else {
-//                                    print("Error in downloading image")
-//                                }
-//                            }
-//                            //check cache, else download
-//                            self.profilePic.loadImageUsingCache(urlString: urlPic)
-//                        }//end if
-//                    }//end if
-//                })// *** getting picture from facebook end ***
-//
-//            } //end if
-//
-//        } else {
-//
-//        }
-
-
-
-//download image from firebase storage example
-//            // Download from firebase storage in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-//            profileRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
-//                if error != nil {
-//                    print("Unable to download image")
-//                } else {
-//                    if(data != nil){
-//                        self.profilePic.image = UIImage(data:data!)
-//                    }
-//                }
-//            }
-
-
-
-//upload to firebase storage example
-//        //download image from facebook only when profile image does not exist
-//        if(self.profilePic.image == nil) {
-//            print("profile image is nil inside prifile VC")
-//            //*** getting picture from facebook ***
-//            let fbprofileImage = FBSDKGraphRequest(graphPath: "me/picture", parameters: ["height":300,"width":300,"redirect":false], httpMethod:"GET")
-//            fbprofileImage?.start(completionHandler: {(connection, result, error) -> Void in
-//
-//                print(result!)
-//                print(connection!)
-//
-//                if(error == nil) {
-//                    let dictionary = result as? NSDictionary        //store JSON result as a dictionary
-//                    let data = dictionary?.object(forKey: "data") //go inside the data node
-//                    let urlPic = ((data as AnyObject).object(forKey:"url"))! as! String//get the image url
-//
-//                    if let imageData = NSData(contentsOf: NSURL(string: urlPic)! as URL){
-//                        profileRef.put(imageData as Data, metadata: nil){  //upload profile image into firebase
-//                            metadata,error in
-//                            if(error == nil) {
-//                                //size, content type or the download url
-//                                //let downloadUrl = metadata!.downloadURL
-//                            } else {
-//                                print("Error in downloading image")
-//                            }
-//                        }
-//                        //check cache, else download
-//                        self.profilePic.loadImageUsingCache(urlString: urlPic)
-//                    }//end if
-//                }//end if
-//            })// *** getting picture from facebook end ***
-//
-//        } //end if
-
-
-
-
-/*
- // MARK: - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
- // Get the new view controller using segue.destinationViewController.
- // Pass the selected object to the new view controller.
- }
- */

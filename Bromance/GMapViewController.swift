@@ -30,19 +30,30 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     var myActivityIndicator: UIActivityIndicatorView! = UIActivityIndicatorView()
     
     //initialize coordinate instance, making sure app wont crash when location not turn on
-    var locationLat: CLLocationDegrees = 0
-    var locationLong: CLLocationDegrees = 0
+//    var locationLat: CLLocationDegrees = 0
+//    var locationLong: CLLocationDegrees = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("\n\n\n\n")
-        manageConnections(userID: (user?.uid)!)
-        startSignificantChangeLocationUpdates()
+
+        //update user connections status
+        let myConnectionsRef = rootRef.child("user_profile").child("\((user?.uid)!)").child("connections").child("\(self.deviceID!)")
+        myConnectionsRef.child("online").setValue(true) //when user logged in, set value to true
+        myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
+        
+        
+        //get current location
+        // Ask for authorization from the User.
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.requestAlwaysAuthorization()           // Request location authorization
+        
+        if CLLocationManager.locationServicesEnabled() {
+            self.locationManager.delegate = self         // Set the delegate
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers //less accurate to save power
+            self.locationManager.startUpdatingLocation()
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -52,21 +63,25 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     //******Get current location******
-    func startSignificantChangeLocationUpdates() {
-        // Ask for authorization from the User.
-        self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.requestAlwaysAuthorization()           // Request location authorization
-        
-        if CLLocationManager.locationServicesEnabled() {
-            self.locationManager.delegate = self         // Set the delegate
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers //less accurate to save power
-            self.locationManager.startMonitoringSignificantLocationChanges()
-        }
-    }
+//    func startSignificantChangeLocationUpdates() {
+//        // Ask for authorization from the User.
+//        self.locationManager.requestWhenInUseAuthorization()
+//        self.locationManager.requestAlwaysAuthorization()           // Request location authorization
+//        
+//        if CLLocationManager.locationServicesEnabled() {
+//            self.locationManager.delegate = self         // Set the delegate
+//            self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers //less accurate to save power
+//            self.locationManager.startUpdatingLocation()
+//        }
+//    }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        showCurrentLocationOnMap()
-        self.locationManager.stopMonitoringSignificantLocationChanges()
+
+        //setup user's current latitude and longitude
+        let locationLat = (locationManager.location?.coordinate.latitude)!
+        let locationLong = (locationManager.location?.coordinate.longitude)!
+
+        showCurrentLocationOnMap(lat: locationLat, long: locationLong)
         self.locationManager.stopUpdatingLocation() //stop updating location
         
         UIView.animate(withDuration: 0.3, animations: {
@@ -77,6 +92,7 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
         }
 
     }
+
     func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
         // Stop significant-change location updates when they aren't needed anymore
         self.locationManager.stopMonitoringSignificantLocationChanges()
@@ -90,16 +106,13 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     // *** google map view ***
     
     //disllaying the user's current location with marker
-    func showCurrentLocationOnMap(){
+    func showCurrentLocationOnMap(lat: CLLocationDegrees, long: CLLocationDegrees){
         
-        //setup user's current latitude and longitude
-        locationLat = (locationManager.location?.coordinate.latitude)!
-        locationLong = (locationManager.location?.coordinate.longitude)!
         //saving location data onto firebase
-        saveGeoData(latitude: (self.locationManager.location?.coordinate.latitude)!, longitude: (self.locationManager.location?.coordinate.longitude)!)
-        
+        saveGeoData(latitude: lat, longitude: long)
+
         //getting current position to map
-        let camera = GMSCameraPosition.camera(withLatitude: locationLat, longitude: locationLong, zoom: 9.5)
+        let camera = GMSCameraPosition.camera(withLatitude: lat, longitude: long, zoom: 9.5)
         mapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: self.myView.frame.size.width, height: self.myView.frame.size.height), camera: camera)
         
         //setting up transparent blue color for radius range
@@ -176,13 +189,13 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     // *** google map view end ***
 
     //checking/update users online status
-    func manageConnections(userID: String) {
-        //create a reference to the database
-        let myConnectionsRef = FIRDatabase.database().reference(withPath: "user_profile/\(userID)/connections/\(self.deviceID!)")
-        //when user logged in, set value to true
-        myConnectionsRef.child("online").setValue(true)
-        myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
-    }//manageConnections end
+//    func manageConnections(userID: String) {
+//        //create a reference to the database
+//        let myConnectionsRef = rootRef.child("user_profile").child("\(userID)").child("connections").child("\(self.deviceID!)")
+//        //when user logged in, set value to true
+//        myConnectionsRef.child("online").setValue(true)
+//        myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
+//    }//manageConnections end
 
     //activity indicator
     func animateActivityIndicator() {
@@ -212,51 +225,4 @@ class GMapViewController: UIViewController, CLLocationManagerDelegate {
     
 }
 
-//    //*** getting specific users' data function ***
-//    func getNearbyUsersData(userIDset: Set<String>) {
-//
-//        self.loggedInUser = FIRAuth.auth()?.currentUser
-//
-//        self.rootRef.child("user_profile").observe(.value, with: {
-//            (snapshot) in
-//
-//            self.usersDict = (snapshot.value as? NSDictionary)! //store JSON in userDict
-//            self.nearbyUIDArray = Array(userIDset)  //convert set to array
-//            //clear up arrays
-//            self.usersArray = []
-//
-//            //outter loop to match nearby users
-//            for index in 0...(self.nearbyUIDArray.count - 1) {
-//
-//                //inner gets all data from dictionary
-//                for(userID, details) in self.usersDict {        //key-value for loop
-//
-//                    //match nearby users with all users dictionary
-//                    if(userID as? String == self.nearbyUIDArray[index]) {
-//
-//                        //**********
-//                        let connections = (details as! NSDictionary).object(forKey: "connections") as! NSDictionary
-//
-//                        for(deviceID, connection) in connections {
-//                            if((connection as! NSDictionary).object(forKey: "online") as! Bool)
-//                            {
-//                                (details as! NSDictionary).setValue(true, forKey:"online")
-//                            }
-//                        }
-//
-//                        //store nearby users ID
-//                        if(self.loggedInUser?.uid != userID as? String)
-//                        {
-//                            (details as! NSDictionary).setValue(userID, forKey:"uID")
-//                            self.usersArray.append(details as! NSDictionary)
-//                        }
-//                        //**********
-//
-//                    }//end if
-//
-//                }//end inner for
-//            }//end outter for
-//        })//end observe
-//
-//    }//*** getting all users' info function end ***
 

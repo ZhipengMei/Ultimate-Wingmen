@@ -72,11 +72,12 @@ class ChatViewController: JSQMessagesViewController {
             self.conversationID = receiverIdFive + senderIdFive
         }
   
+        observeMessages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.view.backgroundColor = UIColor.white
-        observeMessages()
+//        observeMessages()
 
     }
     

@@ -47,8 +47,8 @@ class NearbyUsersCollectionCell: UICollectionViewCell {
                 self.userImage.layer.borderWidth = 1.5
                 
                 let connections = userprofile?.connections
-//                for(deviceID, connection) in connections! { //goes through each deviceID and set connections
-                for(_, connection) in connections! { //goes through each deviceID and set connections
+                for(deviceID, connection) in connections! { //goes through each deviceID and set connections
+//                for(_, connection) in connections! { //goes through each deviceID and set connections
                     if((connection as! NSDictionary).object(forKey: "online") as! Bool)
                     {
                         self.userImage.layer.borderColor = UIColor.green.cgColor    //display as online

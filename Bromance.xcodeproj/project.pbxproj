@@ -22,6 +22,8 @@
 		3A7D84F91E03CECE00F7A4DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7D84F81E03CECE00F7A4DB /* CoreLocation.framework */; };
 		3A8DB1E61E23F44E00AF3889 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8DB1E51E23F44E00AF3889 /* Extensions.swift */; };
 		3AA993931E3AA72D0048CCB2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AA993921E3AA72D0048CCB2 /* GoogleService-Info.plist */; };
+		3AA993951E3BD5260048CCB2 /* detailInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA993941E3BD5260048CCB2 /* detailInfoVC.swift */; };
+		3AA993971E3BD85C0048CCB2 /* CircularTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA993961E3BD85C0048CCB2 /* CircularTransition.swift */; };
 		3ABC2DB61DF0D970004E89E2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ABC2DB51DF0D970004E89E2 /* AppDelegate.swift */; };
 		3ABC2DB81DF0D970004E89E2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ABC2DB71DF0D970004E89E2 /* ViewController.swift */; };
 		3ABC2DBD1DF0D970004E89E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3ABC2DBC1DF0D970004E89E2 /* Assets.xcassets */; };
@@ -74,6 +76,8 @@
 		3A7D84F81E03CECE00F7A4DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		3A8DB1E51E23F44E00AF3889 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3AA993921E3AA72D0048CCB2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3AA993941E3BD5260048CCB2 /* detailInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = detailInfoVC.swift; sourceTree = "<group>"; };
+		3AA993961E3BD85C0048CCB2 /* CircularTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularTransition.swift; sourceTree = "<group>"; };
 		3ABC2DB21DF0D970004E89E2 /* WingMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WingMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ABC2DB51DF0D970004E89E2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3ABC2DB71DF0D970004E89E2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -244,9 +248,11 @@
 		3AC6A3C81E11FA9F00F2D624 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				3AA993961E3BD85C0048CCB2 /* CircularTransition.swift */,
 				3A2893661E1309DE00D67E6D /* Edit Basic Info */,
 				3AC6A3C91E11FACB00F2D624 /* ProfileVC.swift */,
 				3AC6A3CB1E12026600F2D624 /* ProfileDetailViewController.swift */,
+				3AA993941E3BD5260048CCB2 /* detailInfoVC.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -335,7 +341,7 @@
 								enabled = 1;
 							};
 							com.apple.Push = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -443,6 +449,7 @@
 				3AEF31321E2661330081F514 /* Message.swift in Sources */,
 				3A58FEFA1E2ECEEA00DDFF35 /* experienceVC.swift in Sources */,
 				3AC7FC2C1E1DC36A001D371E /* ChatTableVC.swift in Sources */,
+				3AA993971E3BD85C0048CCB2 /* CircularTransition.swift in Sources */,
 				3A1310301E2F35B000387F40 /* levelPicker.swift in Sources */,
 				3AC7FC2F1E1DC395001D371E /* ChatTableCell.swift in Sources */,
 				3A5ABD6B1E17B2B6000075E7 /* ChatViewController.swift in Sources */,
@@ -464,6 +471,7 @@
 				3A4C5AD01E13AFD8007D897E /* NearbyUsersCollectionCell.swift in Sources */,
 				3AF1AFDE1E307E86007D8FB8 /* UIImage+Gif.swift in Sources */,
 				3A8DB1E61E23F44E00AF3889 /* Extensions.swift in Sources */,
+				3AA993951E3BD5260048CCB2 /* detailInfoVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
