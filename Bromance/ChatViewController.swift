@@ -12,57 +12,50 @@ import FirebaseDatabase
 import FirebaseAuth
 import Photos
 import FirebaseStorage
+import MobileCoreServices
+import AVKit
+import Kingfisher
+import SVProgressHUD
 
-class ChatViewController: JSQMessagesViewController {
-
+class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     var messages = [JSQMessage]()
-    lazy var outgoingBubbleImageView: JSQMessagesBubbleImage = self.setupOutgoingBubble()
-    lazy var incomingBubbleImageView: JSQMessagesBubbleImage = self.setupIncomingBubble()
+
+    var incomingBubble: JSQMessagesBubbleImage!
+    var outgoingBubble: JSQMessagesBubbleImage!
+    var incomingAvatar: JSQMessagesAvatarImage!
+    var outgoingAvatar: JSQMessagesAvatarImage!
     
     var receiverId: String!
     var conversationID: String?
+    
     var rootRef = FIRDatabase.database().reference()    //reference to firebase database
     
     private lazy var messageRef: FIRDatabaseReference = self.rootRef.child("messages")
     private var newMessageRefHandle: FIRDatabaseHandle?
-    
-    
-//    private var userIsTypingRef: AnyObject?// 1
-//    private var localTyping = false // 2
-//    var isTyping: Bool {
-//        get {
-//            return localTyping
-//        }
-//        set {
-//            // 3
-//            localTyping = newValue
-//            self.userIsTypingRef!.setValue(newValue)
-//        }
-//    }
-    
+
     //firebase storage reference
     lazy var storageRef = FIRStorage.storage().reference()
     private let imageURLNotSetKey = "NOTSET"
     //display images
     private var photoMessageMap = [String: JSQPhotoMediaItem]()
     private var updatedMessageRefHandle: FIRDatabaseHandle?
-
     
+    let picker = UIImagePickerController() //pick image
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
-//        title = senderDisplayName
+        
+        picker.delegate = self
+        
         self.setupNavBarWithUser()
-        
-        //setup bubbles
-        setupIncomingBubble()
-        setupOutgoingBubble()
-        
-        // No avatars
-        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSize.zero
-        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
+        self.loadCurrentUserChatAvatar()
 
+        //吹き出しの設定
+        let bubbleFactory = JSQMessagesBubbleImageFactory()
+        self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
+        self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
+        
         let receiverIdFive = String(receiverId.characters.prefix(5))
         let senderIdFive = String(senderId.characters.prefix(5))
         //setting up conversation id
@@ -77,8 +70,28 @@ class ChatViewController: JSQMessagesViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.view.backgroundColor = UIColor.white
-//        observeMessages()
-
+    }
+    
+    //load the image
+    func loadCurrentUserChatAvatar(){
+        //get current user photo
+        guard let userUid = FIRAuth.auth()?.currentUser?.uid else { return }
+        observeHelper.loadUserProfileUsingCache(thisUid: userUid) { (userprofile, error) in
+            if error != nil {
+                print("observeHelper error: \(error!)")
+            } else {
+                //check cached image
+                if let ImageUrl = userprofile?.profile_pic_small {
+                    //アバターの設定
+                    let imageView = UIImageView()
+                    imageView.loadImageUsingCache(urlString: URL(string:ImageUrl)!)
+                    if imageView.image != nil {
+                        self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: imageView.image, diameter: 64)
+                    }
+                    
+                }
+            }
+        }//end observeHelper
     }
     
     //clean up observe when view disappear
@@ -98,6 +111,20 @@ class ChatViewController: JSQMessagesViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
+        let msg = messages[indexPath.item]
+        
+        //do not support video so far
+        if msg.isMediaMessage {
+            //check if the media item a video
+//            if let mediaItem = msg.media as? JSQVideoMediaItem {
+//                let player = AVPlayer(url: mediaItem.fileURL)
+//                let playerController = AVPlayerViewController()
+//                playerController.player = player
+//                self.present(playerController, animated: true, completion: nil)
+//            }
+        }
+    }
 
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
         return messages[indexPath.item]
@@ -107,27 +134,25 @@ class ChatViewController: JSQMessagesViewController {
         return messages.count
     }
     
-    private func setupOutgoingBubble() -> JSQMessagesBubbleImage {
-        let bubbleImageFactory = JSQMessagesBubbleImageFactory()
-        return bubbleImageFactory!.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleBlue())
-    }
-    
-    private func setupIncomingBubble() -> JSQMessagesBubbleImage {
-        let bubbleImageFactory = JSQMessagesBubbleImageFactory()
-        return bubbleImageFactory!.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
-    }
-    
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
         let message = messages[indexPath.item] // 1
+
         if message.senderId == senderId { // 2
-            return outgoingBubbleImageView
+            return outgoingBubble
         } else { // 3
-            return incomingBubbleImageView
+            return incomingBubble
         }
+        
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
-        return nil
+//        return nil
+        let message = self.messages[indexPath.item]
+        if message.senderId == self.senderId {
+            return self.outgoingAvatar
+        } else {
+            return self.incomingAvatar
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -142,21 +167,57 @@ class ChatViewController: JSQMessagesViewController {
         return cell
     }
     
+    
+    
+    
+    // ****** Loading messages Begin ******
+    //using fan-out method to create reference to the conversation id
+    func updateUserMessageId() {
+        let senderMegRef = rootRef.child("user_messagesId").child(senderId!).child(receiverId!)
+        let receiverMegRef = rootRef.child("user_messagesId").child(receiverId!).child(senderId!)
+        senderMegRef.updateChildValues([self.conversationID!:1])
+        receiverMegRef.updateChildValues([self.conversationID!:1])
+    }
+
+    private func observeMessages() {
+        let messageRef = rootRef.child("messages/\(self.conversationID!)")
+        let messageQuery = messageRef.queryLimited(toLast:25)
+        
+        // 2. We can use the observe method to listen for new
+        // messages being written to the Firebase DB
+        messageQuery.observe(.childAdded, with: { (snapshot) in
+            let messageData = snapshot.value as! NSDictionary
+            if let id = messageData["senderId"] as! String!, let name = messageData["senderName"] as! String!, let text = messageData["text"] as! String!, text.characters.count > 0 {
+                SVProgressHUD.show()
+                self.addMessage(withId: id, name: name, text: text)
+                self.finishReceivingMessage()
+                SVProgressHUD.dismiss()
+                self.collectionView.reloadData()
+            }
+            
+            else if let id = messageData["senderId"] as! String!, let name = messageData["senderName"] as! String!, let mediaURL = messageData["mediaURL"] as! String! {
+                SVProgressHUD.show()
+                let photo = AsyncPhotoMediaItem.init(withURL: NSURL(string: mediaURL)!)
+                self.messages.append(JSQMessage(senderId: id, displayName: name, media: photo))
+                self.finishReceivingMessage()
+                SVProgressHUD.dismiss()
+                self.collectionView.reloadData()
+            }
+        })//end message query
+    }//end observe message
+    // ****** Loading messages END ******
+
+
+    
+    
+    
+    // ****** Sending messages Begin ******
     //add a new message
     private func addMessage(withId id: String, name: String, text: String) {
         if let message = JSQMessage(senderId: id, displayName: name, text: text) {
             messages.append(message)
+            
             //try append name
-        }
-    }
-    private func addPhotoMessage(withId id: String, key: String, mediaItem: JSQPhotoMediaItem) {
-        if let message = JSQMessage(senderId: id, displayName: "", media: mediaItem) {
-            messages.append(message)
-            
-            if (mediaItem.image == nil) {
-                photoMessageMap[key] = mediaItem
-            }
-            
             collectionView.reloadData()
         }
     }
@@ -172,136 +233,116 @@ class ChatViewController: JSQMessagesViewController {
             "text": text!,
             "timestamp": timeStamp,
             "receiverId": receiverId!
+            //            "unread": "true"
             ] as [String : Any]
         
         itemRef.setValue(messageItem) // 3
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
         updateUserMessageId()
         finishSendingMessage() // 5
-        
-        
-//        isTyping = false
     }
     
-    //using fan-out method to create reference to the conversation id 
-    func updateUserMessageId() {
-        let senderMegRef = rootRef.child("user_messagesId").child(senderId!).child(receiverId!)
-        let receiverMegRef = rootRef.child("user_messagesId").child(receiverId!).child(senderId!)
-        senderMegRef.updateChildValues([self.conversationID!:1])
-        receiverMegRef.updateChildValues([self.conversationID!:1])
-    }
-
-    private func observeMessages() {
-        let messageRef = rootRef.child("messages/\(self.conversationID!)")
-        // 1.
-        let messageQuery = messageRef.queryLimited(toLast:25)
-        
-        // 2. We can use the observe method to listen for new
-        // messages being written to the Firebase DB
-        messageQuery.observe(.childAdded, with: { (snapshot) in
-            // 3
-            let messageData = snapshot.value as! Dictionary<String, AnyObject>
-            //print(messageData)
-
-            if let id = messageData["senderId"] as! String!, let name = messageData["senderName"] as! String!, let text = messageData["text"] as! String!, text.characters.count > 0 {
-                // 4
-                self.addMessage(withId: id, name: name, text: text)
-                
-                // 5
-                self.finishReceivingMessage()
-            } else if let id = messageData["senderId"] as! String!,
-                let photoURL = messageData["photoURL"] as! String! { // 1
-                // 2
-                if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
-                    // 3
-                    self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
-                    // 4
-                    if photoURL.hasPrefix("gs://") {
-                        self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
-                    }
-                }
-            } else {
-                print("Error! Could not decode message data")
-            }
-        })//end message query
-        
-        
-        // We can also use the observer method to listen for
-        // changes to existing messages.
-        // We use this to be notified when a photo has been stored
-        // to the Firebase Storage, so we can update the message data
-        updatedMessageRefHandle = messageRef.observe(.childChanged, with: { (snapshot) in
-            let key = snapshot.key
-            let messageData = snapshot.value as! Dictionary<String, String> // 1
-            
-            if let photoURL = messageData["photoURL"] as String! { // 2
-                // The photo has been updated.
-                if let mediaItem = self.photoMessageMap[key] { // 3
-                    self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: key) // 4
-                }
-            }
-        })
-    }
-    
-//    override func textViewDidChange(_ textView: UITextView) {
-//        super.textViewDidChange(textView)
-//        // If the text is not empty, the user is typing
-//        isTyping = textView.text != ""
-//    }
-//    
-//    private func observeTyping() {
-//        let typingIndicatorRef = rootRef.child("messages/\(self.conversationID!)").child("typingIndicator")
-//        userIsTypingRef = typingIndicatorRef.child(senderId)
-//        userIsTypingRef?.onDisconnectRemoveValue()
-//        
-//        let userTypingQuery = typingIndicatorRef.queryOrderedByValue().queryEqual(toValue: true)
-//        
-//        userTypingQuery.observe(.value, with: {(snapshot: FIRDataSnapshot) in
-//        
-//            if (snapshot.childrenCount == 1 && self.isTyping) {
-//                return
-//            }
-//            
-//            self.showTypingIndicator = snapshot.childrenCount > 0
-//            self.scrollToBottom(animated: true)
-//        
-//        })
-//    }
-    
-    
-    // sending images
-    func sendPhotoMessage() -> String? {
-        let itemRef = messageRef.childByAutoId()
-        
-        let messageItem = [
-            "photoURL": imageURLNotSetKey,
-            "senderId": senderId!,
-            ]
-        
-        itemRef.setValue(messageItem)
-        
-        JSQSystemSoundPlayer.jsq_playMessageSentSound()
-        
-        finishSendingMessage()
-        return itemRef.key
-    }
-    
-    func setImageURL(_ url: String, forPhotoMessageWithKey key: String) {
-        let itemRef = messageRef.child(key)
-        itemRef.updateChildValues(["photoURL": url])
-    }
-    
+    //pick media files
     override func didPressAccessoryButton(_ sender: UIButton) {
-        let picker = UIImagePickerController()
-        picker.delegate = self
-        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
-            picker.sourceType = UIImagePickerControllerSourceType.camera
-        } else {
-            picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        let alert = UIAlertController(title: "Media Message", message: "Please Select A Media", preferredStyle: .actionSheet)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let photos = UIAlertAction(title: "Photos", style: .default, handler: {
+            (alert: UIAlertAction) in
+            self.chooseMedia(type: kUTTypeImage)
+        })
+        
+        //do not support video so far
+//        let videos = UIAlertAction(title: "Videos", style: .default, handler: {
+//            (alert: UIAlertAction) in
+//            self.chooseMedia(type: kUTTypeMovie)
+//        })
+        
+        alert.addAction(photos)
+//        alert.addAction(videos)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+    }
+    //picker functions for picking media files
+    private func chooseMedia(type: CFString) {
+        picker.mediaTypes = [type as String]
+        present(picker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        if let pic = info[UIImagePickerControllerOriginalImage] as? UIImage {
+
+            let data = UIImageJPEGRepresentation(pic, 0.01) //check image quality
+            self.sendMedia(image: data, video: nil, senderID: senderId, senderName: senderDisplayName)
+            
+        }
+//        else if let vidUrl = info[UIImagePickerControllerMediaURL] as? URL {
+//            
+//            self.sendMedia(image: nil, video: vidUrl, senderID: senderId, senderName: senderDisplayName)
+//        
+//        }
+        
+        //dismiss picker and reload data
+        self.dismiss(animated: true, completion: nil)
+        self.collectionView.reloadData()
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion:nil)
+    }
+
+    
+    func sendMediaMessage(senderID: String, senderName: String, url:String) {
+        let timeStamp = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+        let itemRef = rootRef.child("messages").child("\(self.conversationID!)").childByAutoId() // 1
+        let messageItem = [
+            "senderId": senderId!,
+            "senderName": senderName,
+            "mediaURL": url,
+            "timestamp": timeStamp,
+            "receiverId": receiverId!
+            ] as [String : Any]
+        itemRef.setValue(messageItem) // 3
+        JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
+        updateUserMessageId()
+    }
+    //upload media to firebase
+    func sendMedia(image:Data?, video:URL?, senderID:String, senderName: String) {
+        if image != nil {
+            SVProgressHUD.show()
+            self.storageRef.child("imageStorage").child(senderID + "\(NSUUID().uuidString).jpg").put(image!, metadata: nil){(metadata: FIRStorageMetadata?,   err: Error?) in
+                
+                if err != nil {
+                    //TO DO inform the user that there was a problem uploading his image
+                } else {
+                    self.sendMediaMessage(senderID: senderID, senderName: senderName, url: String(describing: metadata!.downloadURL()!))
+                    SVProgressHUD.dismiss()
+                }
+            }
         }
         
-        present(picker, animated: true, completion:nil)
+//        else {
+//            //video
+//            self.storageRef.child("videoStorage").child(senderID + "\(NSUUID().uuidString).jpg").putFile(video!, metadata: nil){(metadata: FIRStorageMetadata?, err: Error?) in
+//
+//                if err != nil {
+//                    //TO DO inform the user that there was a problem uploading his video
+//                } else {
+//                    self.sendMediaMessage(senderID: senderID, senderName: senderName, url: String(describing: metadata!.downloadURL()!))
+//                    
+//                }
+//            }
+//        }
     }
+    // ****** Sending media messages END ******
+    
+    
+    
+    
+    
+    
+    
+    
     
     private func fetchImageDataAtURL(_ photoURL: String, forMediaItem mediaItem: JSQPhotoMediaItem, clearsPhotoMessageMapOnSuccessForKey key: String?) {
         let storageRef = FIRStorage.storage().reference(forURL: photoURL)
@@ -357,7 +398,10 @@ class ChatViewController: JSQMessagesViewController {
             } else {
                 //check cached image
                 if let profileImageUrl = userprofile?.profile_pic_small {
-                    profileView.loadImageUsingCache(urlString: profileImageUrl)
+                    //print(profileImageUrl)
+                    profileView.loadImageUsingCache(urlString: URL(string: profileImageUrl)!)
+                    //set up in coming avatar
+                    self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: profileView.image, diameter: 64)
                 }
                 containerView.addSubview(profileView)   //add image view to title view
                 
@@ -370,7 +414,7 @@ class ChatViewController: JSQMessagesViewController {
                 
                 //username label
                 let nameLabel = UILabel()
-                nameLabel.text = userprofile?.username
+                nameLabel.text = userprofile?.username?.components(separatedBy: " ")[0] //first name
                 nameLabel.textColor = UIColor.white
                 nameLabel.translatesAutoresizingMaskIntoConstraints = false
                 containerView.addSubview(nameLabel)
@@ -396,6 +440,7 @@ class ChatViewController: JSQMessagesViewController {
 
             }
         }//end observeHelper
+
         
     }//end setupnavtitlebar
     
@@ -413,70 +458,7 @@ class ChatViewController: JSQMessagesViewController {
     }
     
 
+
 }
 
 
-// MARK: Image Picker Delegate
-extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        picker.dismiss(animated: true, completion:nil)
-        
-        // 1
-        if let photoReferenceUrl = info[UIImagePickerControllerReferenceURL] as? URL {
-            // Handle picking a Photo from the Photo Library
-            // 2
-            let assets = PHAsset.fetchAssets(withALAssetURLs: [photoReferenceUrl], options: nil)
-            let asset = assets.firstObject
-            
-            // 3
-            if let key = sendPhotoMessage() {
-                // 4
-                asset?.requestContentEditingInput(with: nil, completionHandler: { (contentEditingInput, info) in
-                    let imageFileURL = contentEditingInput?.fullSizeImageURL
-                    
-                    // 5
-                    let path = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\(photoReferenceUrl.lastPathComponent)"
-                    
-                    // 6
-                    self.storageRef.child(path).putFile(imageFileURL!, metadata: nil) { (metadata, error) in
-                        if let error = error {
-                            print("Error uploading photo: \(error.localizedDescription)")
-                            return
-                        }
-                        // 7
-                        self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
-                    }
-                })
-            }
-        } else {
-            // Handle picking a Photo from the Camera
-            // 1
-            let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-            // 2
-            if let key = sendPhotoMessage() {
-                // 3
-                let imageData = UIImageJPEGRepresentation(image, 1.0)
-                // 4
-                let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
-                // 5
-                let metadata = FIRStorageMetadata()
-                metadata.contentType = "image/jpeg"
-                // 6
-                storageRef.child(imagePath).put(imageData!, metadata: metadata) { (metadata, error) in
-                    if let error = error {
-                        print("Error uploading photo: \(error)")
-                        return
-                    }
-                    // 7
-                    self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
-                }
-            }
-        }//end else
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion:nil)
-    }
-}

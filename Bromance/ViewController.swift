@@ -11,23 +11,22 @@ import FBSDKLoginKit
 import Firebase
 import GoogleSignIn
 import TwitterKit
+import SVProgressHUD
 
 class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate {
     
-//    @IBOutlet var emailField: UITextField!
-//    @IBOutlet var passwordField: UITextField!
-    @IBOutlet var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var myView: UIView!   //myView holds login buttons
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         myView.isHidden = false
         //display social media login views
         self.setupFacebookButtons()
         self.setupGoogleButtons()
         self.setupaTwitterButtons()
     }
-
 
     
     //***google button***
@@ -44,11 +43,12 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     fileprivate func setupaTwitterButtons() {
         let twitterButton = TWTRLogInButton { (session, error) in
             self.myView.isHidden = true
-            self.activityIndicator.startAnimating()  //shows spinner animation
+            
+            SVProgressHUD.show() //animate indicator
             
             if let err = error {
                 self.myView.isHidden = false
-                self.activityIndicator.stopAnimating()
+               SVProgressHUD.dismiss()
                 print("Failed to login via Twitter: ", err)
                 return
             }
@@ -62,13 +62,13 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
             FIRAuth.auth()?.signIn(with: credential, completion: {(user,error) in
                 if let err = error {
                     self.myView.isHidden = false
-                    self.activityIndicator.stopAnimating()
+                    SVProgressHUD.dismiss()
                     print("Failed to login to Firebase with Twitter", err)
                     return
                 }
                 self.storeInfoFirstLogin()   //store new user's data
                 print("successfully created a firebase twitter user", user?.uid ?? "")
-                self.activityIndicator.stopAnimating()
+                SVProgressHUD.dismiss()
                 self.performSegue(withIdentifier: "toTab", sender: nil)
             })
         }
@@ -90,7 +90,6 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
         myView.addSubview(loginButton)      //added button to myView
         //frame's are obselete, please use constraints instead because its 2016 after all
         loginButton.frame = CGRect(x: 16, y: 205, width: view.frame.width - 32, height: 50)
-        
         loginButton.delegate = self
         loginButton.readPermissions = ["email", "public_profile"]
     }
@@ -101,19 +100,21 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     //facebook login button
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         self.myView.isHidden = true
-        activityIndicator.startAnimating()  //shows spinner animation
+        
+        SVProgressHUD.show()
         
         if error != nil {
             print(error)
+            SVProgressHUD.dismiss()
             self.myView.isHidden = false
             return
         } else if(result.isCancelled){
-            self.activityIndicator.stopAnimating()
+            SVProgressHUD.dismiss()
             self.myView.isHidden = false
         }
         else if error == nil {
             showEmailAddress()
-            self.activityIndicator.stopAnimating()
+           SVProgressHUD.dismiss()
             self.performSegue(withIdentifier: "toTab", sender: nil)
         }
         
@@ -272,7 +273,13 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                     
                 } //end if
                 
-                databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName)
+                //store the device id
+                let deviceID = UIDevice.current.identifierForVendor?.uuidString //store the device id
+                //when user logged in, set value to true
+                databaseRef.child("user_profile").child("\((user.uid))").child("connections").child("\(deviceID!)").child("online").setValue(true)
+                databaseRef.child("user_profile").child("\((user.uid))").child("connections").child("\(deviceID!)").child("last_online").setValue(NSDate().timeIntervalSince1970)
+
+                databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName?.components(separatedBy: " ")[0])
                 databaseRef.child("user_profile").child("\(user.uid)/age").setValue("18")
                 databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
                 databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("0")
@@ -288,6 +295,5 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
         }//end if FIRAuth.auth()?.currentUser
     }//end storeInfoFirstLogin
     
-  
 }
 

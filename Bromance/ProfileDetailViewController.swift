@@ -30,29 +30,33 @@ class ProfileDetailViewController: UITableViewController, MFMailComposeViewContr
         let userID = FIRAuth.auth()?.currentUser?.uid
         let ref = FIRDatabase.database().reference()
         let myConnectionsRef = ref.child("user_profile").child("\(userID!)").child("connections").child("\(self.deviceID!)")
-        myConnectionsRef.child("online").setValue(false)
-        myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970)
+        //saving data with completion block
+        myConnectionsRef.child("online").setValue(false, withCompletionBlock: { (error: Error?, _:FIRDatabaseReference) in
+            //Code
+            myConnectionsRef.child("last_online").setValue(NSDate().timeIntervalSince1970, withCompletionBlock: { (error: Error?, _:FIRDatabaseReference) in
+                //Code
+                
+                //signs the user out of the Firebase app
+                try! FIRAuth.auth()!.signOut()
+                
+                //sign the user out of the facebook app
+                FBSDKAccessToken.setCurrent(nil)
+                
+                //sign the user out of the google app
+                GIDSignIn.sharedInstance().signOut()
+                
+                
+                //        //sign the user out of the twitter
+                //        let client = TWTRAPIClient.withCurrentUser()
+                //        Twitter.sharedInstance().sessionStore.logOutUserID(client.userID!)
+                
+                print("User logged out successfully")
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "loginStoryboard")
+                self.present(controller, animated: true, completion: nil)
+            })
+        })
         
-        
-
-
-        
-        //signs the user out of the Firebase app
-        try! FIRAuth.auth()!.signOut()
-        
-        //sign the user out of the facebook app
-        FBSDKAccessToken.setCurrent(nil)
-        
-        //sign the user out of the google app
-        GIDSignIn.sharedInstance().signOut()
-
-        
-//        //sign the user out of the twitter
-//        let client = TWTRAPIClient.withCurrentUser()
-//        Twitter.sharedInstance().sessionStore.logOutUserID(client.userID!)
-        
-        print("User logged out successfully")
-
     }
     
     @IBAction func onReportProblem(_ sender: Any) {

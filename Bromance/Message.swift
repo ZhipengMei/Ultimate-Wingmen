@@ -16,6 +16,7 @@ class Message: NSObject {
     var senderName: String?
     var text: String?
     var timestamp: NSNumber?
+    var mediaURL: String?
     
     // 自定义构造函数,会覆盖init()函数
     init(dict : [String : NSObject]) {

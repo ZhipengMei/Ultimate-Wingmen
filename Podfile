@@ -15,6 +15,7 @@ pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
 pod 'Firebase/Storage'
+pod ‘Firebase/Messaging’
 pod 'GeoFire', :git => 'https://github.com/firebase/geofire-objc.git'
 
 pod 'GoogleSignIn'
@@ -22,10 +23,16 @@ pod 'GoogleSignIn'
 pod 'Fabric'
 pod 'TwitterKit'
 
-pod 'GoogleMaps'
-pod 'GooglePlaces'
+#pod 'GoogleMaps'
+#pod 'GooglePlaces'
 
 # chat feature
 pod 'JSQMessagesViewController'
+
+pod 'Kingfisher', '~> 3.0'
+pod 'SVProgressHUD'
+pod 'paper-onboarding', '~> 2.0.1' 
+
+
 
 end

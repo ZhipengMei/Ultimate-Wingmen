@@ -47,7 +47,7 @@ class ChatTableCell: UITableViewCell {
                     print("Error: \(error!)")
                 } else {
                     self.username.text = userprofile?.username?.components(separatedBy: " ")[0]
-                    self.profilePic.loadImageUsingCache(urlString: (userprofile?.profile_pic_small!)!)
+                    self.profilePic.loadImageUsingCache(urlString: URL(string: (userprofile?.profile_pic_small!)!)!)
                 }
             }
         }//end if

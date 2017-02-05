@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PaperOnboarding
+import paper_onboarding
 
 class handleOnboardingVC: UIViewController, PaperOnboardingDataSource, PaperOnboardingDelegate {
 
@@ -71,21 +71,6 @@ class handleOnboardingVC: UIViewController, PaperOnboardingDataSource, PaperOnbo
         userDefaults.set(true, forKey: "onboardingComplete")
         userDefaults.synchronize()
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 
     override func didReceiveMemoryWarning() {

@@ -42,13 +42,15 @@ class NearbyUsersCollectionCell: UICollectionViewCell {
             } else {
                 // do something with the userprofile
                 self.usernameLabel.text = userprofile?.username?.components(separatedBy: " ")[0]
-                self.userImage.loadImageUsingCache(urlString: (userprofile?.profile_pic_small)!)
+                self.userImage.loadImageUsingCache(urlString: URL(string: (userprofile?.profile_pic_small)!)!)
                 //add a border to the images
                 self.userImage.layer.borderWidth = 1.5
                 
                 let connections = userprofile?.connections
                 for(deviceID, connection) in connections! { //goes through each deviceID and set connections
 //                for(_, connection) in connections! { //goes through each deviceID and set connections
+                    print(connection)
+                    
                     if((connection as! NSDictionary).object(forKey: "online") as! Bool)
                     {
                         self.userImage.layer.borderColor = UIColor.green.cgColor    //display as online

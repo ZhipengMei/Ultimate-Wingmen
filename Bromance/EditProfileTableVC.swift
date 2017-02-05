@@ -32,13 +32,13 @@ class EditProfileTableVC: UITableViewController {
         //function to download user profile or use existing
         updateProfile(thisUid: (user?.uid)!) { (userprofile, error) in
             if error == nil {
-                self.username.text = userprofile?.username
+                self.username.text = userprofile?.username?.components(separatedBy: " ")[0] //first name
                 self.emailAddress.text = userprofile?.email
                 self.gender.text = userprofile?.gender
                 self.website.text = userprofile?.website
                 self.yearsInGame.text = userprofile?.years_in_game
                 self.age.text = userprofile?.age
-                self.profileImage.loadImageUsingCache(urlString: (userprofile?.profile_pic_small)!)
+                self.profileImage.loadImageUsingCache(urlString: URL(string: (userprofile?.profile_pic_small)!)!)
                 self.level.text = userprofile?.level
             }//end if
         }//end observeHelper
@@ -62,7 +62,7 @@ class EditProfileTableVC: UITableViewController {
     }//end view did load
     
     //update the user profile and save it into cache
-    var userprofile: User?    //reset the variable
+//    var userprofile: User?    //reset the variable
     func updateProfile(thisUid: String, completion: @escaping (User?, Error?) -> Void) {
         let thisref = FIRDatabase.database().reference().child("user_profile").child((user?.uid)!)
         //keep observing
@@ -70,13 +70,15 @@ class EditProfileTableVC: UITableViewController {
             if let snapDict = snapshot.value as? NSDictionary{
                 let thisUser = User(dict: snapDict as! [String : NSObject])
                 
-                //find the older element
-                if let cacheIndex = userProfileCache.index(forKey: thisUid) {
-                    userProfileCache.remove(at: cacheIndex) //delete it
-                }
-                userProfileCache[thisUid] = thisUser    //update cache
-                self.userprofile = userProfileCache[thisUid]
-                completion(self.userprofile!, nil)
+//                //find the older element
+//                if let cacheIndex = userProfileCache.index(forKey: thisUid) {
+//                    userProfileCache.remove(at: cacheIndex) //delete it
+//                }
+//                userProfileCache[thisUid] = thisUser    //update cache
+//                self.userprofile = userProfileCache[thisUid]
+//                completion(self.userprofile!, nil)
+                completion(thisUser, nil)
+
             }
         }, withCancel: nil)
     }

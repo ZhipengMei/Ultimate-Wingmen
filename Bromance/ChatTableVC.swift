@@ -9,26 +9,24 @@
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
-
+import UserNotifications
+import SVProgressHUD
 
 class ChatTableVC: UITableViewController {
     
     let rootRef = FIRDatabase.database().reference()    //reference to firebase database
-//    var handle: UInt!
-
     var messages = [Message]()
     var messageDictionary = [String:Message]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("\n\n\n\n")
         
-//        self.navigationController?.navigationBar.tintColor = UIColor.white
-//        self.navigationController?.navigationBar.barStyle = UIBarStyle.black
+        self.downloadCurrentUserInfo() //cache image ahead of time
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+        super.viewWillAppear(true)
+        
         self.checkConvoId()
     }
     
@@ -52,12 +50,14 @@ class ChatTableVC: UITableViewController {
                 let messageId = snapshot.key
                 self.fetchLastTextWithMessageId(messageId: messageId)
             }, withCancel: nil)
+            
         }, withCancel: nil)//end observe
     }
     
     
     //retrive last text
     private func fetchLastTextWithMessageId(messageId: String) {
+        SVProgressHUD.show()
         let messagesReference = FIRDatabase.database().reference().child("messages").child(messageId)
         let messageQuery = messagesReference.queryLimited(toLast:1)
         
@@ -79,6 +79,7 @@ class ChatTableVC: UITableViewController {
                 DispatchQueue.global(qos: .userInitiated).async {
                     // Bounce back to the main thread to update the UI
                     DispatchQueue.main.async {
+                        SVProgressHUD.dismiss()
                         self.tableView.reloadData()
                     }
                 }//end DispatchQueue
@@ -148,7 +149,23 @@ class ChatTableVC: UITableViewController {
         
     }
     
-    
+    //cached image ahead of time, for later use purpose. Advise not to delete
+    func downloadCurrentUserInfo() {
+        //function to download user profile
+        guard let userUid = FIRAuth.auth()?.currentUser?.uid else { return }
+        observeHelper.loadUserProfileUsingCache(thisUid: userUid) { (userprofile, error) in
+            if error != nil {
+                print("observeHelper error: \(error!)")
+            } else {
+                //check cached image
+                if let ImageUrl = userprofile?.profile_pic_small {
+                    //アバターの設定
+                    let imageView = UIImageView()
+                    imageView.loadImageUsingCache(urlString: URL(string:ImageUrl)!)
+                }
+            }
+        }//end observeHelper
+    }
     
     //    //remove the first 10 chars on the string
     //    private func removeChar(someString: String) -> String{

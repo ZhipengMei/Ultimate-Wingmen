@@ -17,16 +17,13 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var username: UILabel!
     @IBOutlet var messageBtn: UIButton!
     @IBOutlet var moreBtn: UIBarButtonItem!
-
     @IBOutlet var bg: UIImageView!
-
     let transition = CircularTransition() //custom animation
-    
     var userID: String? //target user's id
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.profilePic.layer.cornerRadius = self.profilePic.frame.size.width/2  //circular image
         self.profilePic.clipsToBounds = true
         
@@ -42,12 +39,12 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
                     print("observeHelper error: \(error!)")
                 } else {
                     // do something with the userprofile
-                    self.username.text = userprofile?.username   //display username
+                    self.username.text = userprofile?.username?.components(separatedBy: " ")[0]
 
                     // do something with the userprofile
                     if let profileUrl = userprofile?.profile_pic_small {
-                        self.profilePic.loadImageUsingCache(urlString: profileUrl)
-                        self.bg.loadImageUsingCache(urlString: profileUrl)
+                        self.profilePic.loadImageUsingCache(urlString: URL(string:profileUrl)!)
+                        self.bg.loadImageUsingCache(urlString: URL(string:profileUrl)!)
                     }
                 }
             }//end observeHelper
@@ -141,9 +138,7 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
         
         return transition
     }
-    
-    
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
