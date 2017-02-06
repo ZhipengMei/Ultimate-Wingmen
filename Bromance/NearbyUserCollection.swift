@@ -11,6 +11,7 @@ import FirebaseAuth
 import CoreLocation
 import FirebaseDatabase
 import GeoFire
+import SVProgressHUD
 
 private let reuseIdentifier = "CollectionViewCell"
 
@@ -25,7 +26,7 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        SVProgressHUD.show()
         // Ask for authorization from the User.
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()           // Request location authorization
@@ -86,6 +87,7 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
 
         if((nearbyUIDArray.count) != 0){            //making sure set is not empty
             self.collectionView?.backgroundView = nil
+            SVProgressHUD.dismiss()
             return self.nearbyUIDArray.count
         } else {
             let frame = CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
@@ -93,6 +95,7 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
             emptyLabel.text = "No nearby user found"
             emptyLabel.textAlignment = NSTextAlignment.center
             self.collectionView?.backgroundView = emptyLabel
+            SVProgressHUD.dismiss()
             return 0
         }
         

@@ -77,7 +77,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Our App is Using Location Services </string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>Our App is Enabled Sending Photo Messages</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

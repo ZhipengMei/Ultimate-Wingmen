@@ -13,11 +13,16 @@ import FirebaseAuth
 import Photos
 import FirebaseStorage
 import MobileCoreServices
-import AVKit
+//import AVKit
 import Kingfisher
 import SVProgressHUD
+import Alamofire
+import FirebaseMessaging
 
-class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {//, URLSessionDelegate {
+    
+    //new message notification setup
+    let SERVERKEY = "AAAAedKNrXc:APA91bEplrC02YRINUia0jUNUPmRcyFrf54otWZ9Nb-3D9s5mlsgTN8-cmRl5cEFiZHwDBqT07ISMg_ehNw8YzRfllTTEhsdUalVD95OzZVFQqKOvq2AxTukS_pOc62XldtTGcoAIU6zKDr1rC_QcDqK8b5FbKDFFw"
     
     var messages = [JSQMessage]()
 
@@ -237,6 +242,11 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             ] as [String : Any]
         
         itemRef.setValue(messageItem) // 3
+        
+        //set up notification contents
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.sendPush(message: "\(senderName!): \(text!)", toUserId: "\(receiverId!)")
+        
         JSQSystemSoundPlayer.jsq_playMessageSentSound() // 4
         updateUserMessageId()
         finishSendingMessage() // 5
@@ -457,7 +467,34 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
+    func sendNotificationToMsgReceiver() {
+        var _headers: HTTPHeaders? = HTTPHeaders()
+        guard let senderUserName = FIRAuth.auth()?.currentUser?.displayName else { return }
+        let NOTIFICATION_URL  = URL(string: "https://fcm.googleapis.com/fcm/send")
 
+        let ref = rootRef.child("user_profile").child(self.receiverId).child("firebaseToken")
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let receiverDeviceID = snapshot.value as? Dictionary<String, AnyObject> {
+
+                //set up alert body
+                _headers = ["Content-Type" : "application/json",
+                            "Authorization" : "key=\(self.SERVERKEY)"]
+                
+                let _notitifcation: Parameters? = ["to" : "\(receiverDeviceID)", "notification" : ["body" : "New Message From \(senderUserName)"], "title" : "New Message"];
+                
+                _ = Alamofire.request(NOTIFICATION_URL as! URLConvertible, method: .post as HTTPMethod, parameters: _notitifcation,encoding: JSONEncoding.default, headers: _headers!).responseJSON(completionHandler: {
+                    (resp) in
+                    print(resp)
+                })
+                
+            }
+        }, withCancel: nil)
+
+    } //end sendNotificationToMsgReceiver
+    
+
+    
+ 
 
 }
 

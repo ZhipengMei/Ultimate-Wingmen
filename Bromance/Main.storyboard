@@ -314,7 +314,7 @@
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YHV-eZ-01r">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YHV-eZ-01r">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1360,7 +1360,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="I4H-N5-5C4" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="RD2-l4-KJa">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="RD2-l4-KJa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

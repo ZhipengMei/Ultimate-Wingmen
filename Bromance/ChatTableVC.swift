@@ -20,7 +20,7 @@ class ChatTableVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        SVProgressHUD.show()
         self.downloadCurrentUserInfo() //cache image ahead of time
     }
     
@@ -57,7 +57,7 @@ class ChatTableVC: UITableViewController {
     
     //retrive last text
     private func fetchLastTextWithMessageId(messageId: String) {
-        SVProgressHUD.show()
+        
         let messagesReference = FIRDatabase.database().reference().child("messages").child(messageId)
         let messageQuery = messagesReference.queryLimited(toLast:1)
         
@@ -79,7 +79,7 @@ class ChatTableVC: UITableViewController {
                 DispatchQueue.global(qos: .userInitiated).async {
                     // Bounce back to the main thread to update the UI
                     DispatchQueue.main.async {
-                        SVProgressHUD.dismiss()
+                        
                         self.tableView.reloadData()
                     }
                 }//end DispatchQueue
@@ -112,10 +112,12 @@ class ChatTableVC: UITableViewController {
             emptyLabel.textAlignment = NSTextAlignment.center
             self.tableView.backgroundView = emptyLabel
             self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+            SVProgressHUD.dismiss()
             return 0
         } else {
             self.tableView.backgroundView = nil
             self.tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+            SVProgressHUD.dismiss()
             return messages.count
         }
     }

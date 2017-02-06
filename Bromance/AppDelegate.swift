@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     var storyboard = UIStoryboard(name: "Main", bundle: nil)
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-
+        
         Fabric.with([Twitter.self]) //twitter fabric
         FIRApp.configure()  //firebase
         //google sign in
@@ -35,12 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         GIDSignIn.sharedInstance().delegate = self
         //facebook sign in
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
-
-
         
-        //badge icon unread message 
-//        UIApplication.shared.applicationIconBadgeNumber = 0;
-
+        UNUserNotificationCenter.current().delegate = self
         
         //load onboarding screen only once
         let initialViewController = storyboard.instantiateViewController(withIdentifier: "onboarding")
@@ -67,14 +63,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         UINavigationBar.appearance().barStyle = UIBarStyle.black
         UINavigationBar.appearance().tintColor = UIColor.white
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotification(_:)), name: NSNotification.Name.firInstanceIDTokenRefresh, object: nil)
+        
+        
+        
         return true
     }
+    
+    
+    
     
     func userpersist() {
         //user persist *** important ***
         FIRAuth.auth()!.addStateDidChangeListener() { auth, user in
             //check user existence
             if user != nil {
+                
+                
+                
+                
+                
+                
                 //check displayName object existence
                 if (user?.displayName == nil || user?.displayName == ""){
                     print("*** no username object ***")
@@ -83,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
                 } else { //else set up a new username
                     print("***logged in as \(user?.displayName)***")
                     //transition to tab bar when username is found
-//                    GMSServices.provideAPIKey("AIzaSyCAnbg9kemfC5bWugXYsDllQeeAJXqs_pc")    //google map api key
+                    //GMSServices.provideAPIKey("AIzaSyCAnbg9kemfC5bWugXYsDllQeeAJXqs_pc")    //google map api key
                     let tabVC = self.storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
                     self.window?.rootViewController = tabVC
                 }
@@ -153,6 +162,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        FIRMessaging.messaging().disconnect()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -161,6 +171,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        connectToFcm()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -168,18 +180,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     }
     
     
-    
-//    //remote notification
-//    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-//        
-//        print("Message Id : \(userInfo["gcm_message_id"]!)")
-//        print(userInfo)
-//        
-//    }
-//    //notification fail
-//    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-//        print(error)
-//    }
+    //remote notification
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        print("Message Id : \(userInfo["gcm_message_id"]!)")
+        print(userInfo)
+        
+    }
+    //notification fail
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print(error)
+    }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,  willPresent notification: UNNotification, withCompletionHandler   completionHandler: @escaping (_ options:   UNNotificationPresentationOptions) -> Void) {
         print("Handle push from foreground")
@@ -192,6 +203,99 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         // if you set a member variable in didReceiveRemoteNotification, you  will know if this is from closed or background
         print("\(response.notification.request.content.userInfo)")
     }
+    
+    // NOTE: Need to use this when swizzling is disabled
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+
+        //Tricky line
+        FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: FIRInstanceIDAPNSTokenType.unknown)
+        if let refreshedToken = FIRInstanceID.instanceID().token() {
+            print("InstanceID token: \(refreshedToken)")
+            
+            
+            //testing
+            guard let myuid = FIRAuth.auth()?.currentUser?.uid else { return }
+            let ref = FIRDatabase.database().reference().child("user_profile").child(myuid).child("firebaseToken")
+            ref.setValue(refreshedToken)
+        }
+    }
+    
+    func tokenRefreshNotification(_ notification: Notification) {
+        if let refreshedToken = FIRInstanceID.instanceID().token() {
+            print("InstanceID token: \(refreshedToken)")
+        }
+        
+        // Connect to FCM since connection may have failed when attempted before having a token.
+        connectToFcm()
+    }
+    
+    func connectToFcm() {
+        FIRMessaging.messaging().connect { (error) in
+            if (error != nil) {
+                print("Unable to connect with FCM. \(error)")
+            } else {
+                print("Connected to FCM.")
+            }
+        }
+    }
+    
+    
+    func sendPush(message: String, toUserId: String) {
+        let ref = FIRDatabase.database().reference().child("user_profile").child(toUserId).child("firebaseToken")
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let receiverDeviceID = snapshot.value as? String {
+                //acutally sending the new message nitification
+                self.push(message: message, receiverToken: receiverDeviceID)
+            }
+        }, withCancel: nil)
+        
+    }
+    
+    //method for sending notification when user send a new message
+    func push(message: String, receiverToken: String) {
+        var token: String?
+
+        token = receiverToken
+
+        if token != nil {
+            let SERVERKEY = "AAAAedKNrXc:APA91bEplrC02YRINUia0jUNUPmRcyFrf54otWZ9Nb-3D9s5mlsgTN8-cmRl5cEFiZHwDBqT07ISMg_ehNw8YzRfllTTEhsdUalVD95OzZVFQqKOvq2AxTukS_pOc62XldtTGcoAIU6zKDr1rC_QcDqK8b5FbKDFFw"
+
+            var request = URLRequest(url: URL(string: "https://fcm.googleapis.com/fcm/send")!)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("key=\(SERVERKEY)", forHTTPHeaderField: "Authorization")
+            let json = [
+                "to" : token!,
+                "priority" : "high",
+                "notification" : [
+                    "body" : message
+                ]
+                ] as [String : Any]
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+                request.httpBody = jsonData
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    guard let data = data, error == nil else {
+                        print("Error=\(error)")
+                        return
+                    }
+                    
+                    if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+                        // check for http errors
+                        print("Status Code should be 200, but is \(httpStatus.statusCode)")
+                        print("Response = \(response)")
+                    }
+                    
+                    let responseString = String(data: data, encoding: .utf8)
+                    print("responseString = \(responseString)")
+                }
+                task.resume()
+            }
+            catch {
+                print(error)
+            }
+        }
+    }//end push
 
 
 }

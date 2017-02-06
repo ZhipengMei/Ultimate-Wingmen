@@ -18,6 +18,7 @@ class User: NSObject {
     var years_in_game: String?
     var connections: NSDictionary?
     var level: String?
+    var firebaseToken: String?
     
     // 自定义构造函数,会覆盖init()函数
     init(dict : [String : NSObject]) {

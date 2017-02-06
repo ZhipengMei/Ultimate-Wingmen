@@ -45,6 +45,7 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
                     if let profileUrl = userprofile?.profile_pic_small {
                         self.profilePic.loadImageUsingCache(urlString: URL(string:profileUrl)!)
                         self.bg.loadImageUsingCache(urlString: URL(string:profileUrl)!)
+                        print("Done: load profile image ")
                     }
                 }
             }//end observeHelper

@@ -290,6 +290,13 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                 } else {
                     databaseRef.child("user_profile").child("\(user.uid)/email").setValue("")
                 }
+                //set firebase token to database
+                if let refreshedToken = FIRInstanceID.instanceID().token() {
+                    databaseRef.child("user_profile").child("\(user.uid)").child("firebaseToken").setValue(refreshedToken)
+        
+                }
+                
+                
             
             })//end databaseRef.child("user_profile")
         }//end if FIRAuth.auth()?.currentUser
