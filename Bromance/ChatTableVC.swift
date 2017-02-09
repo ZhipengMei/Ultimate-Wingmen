@@ -11,8 +11,9 @@ import FirebaseAuth
 import FirebaseDatabase
 import UserNotifications
 import SVProgressHUD
+import UserNotifications
 
-class ChatTableVC: UITableViewController {
+class ChatTableVC: UITableViewController, UNUserNotificationCenterDelegate{
     
     let rootRef = FIRDatabase.database().reference()    //reference to firebase database
     var messages = [Message]()
@@ -20,8 +21,12 @@ class ChatTableVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UNUserNotificationCenter.current().delegate = self
+        self.askNotfiPermission()
+        
         SVProgressHUD.show()
-        self.downloadCurrentUserInfo() //cache image ahead of time
+//        self.downloadCurrentUserInfo() //cache image ahead of time
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -151,23 +156,36 @@ class ChatTableVC: UITableViewController {
         
     }
     
-    //cached image ahead of time, for later use purpose. Advise not to delete
-    func downloadCurrentUserInfo() {
-        //function to download user profile
-        guard let userUid = FIRAuth.auth()?.currentUser?.uid else { return }
-        observeHelper.loadUserProfileUsingCache(thisUid: userUid) { (userprofile, error) in
-            if error != nil {
-                print("observeHelper error: \(error!)")
-            } else {
-                //check cached image
-                if let ImageUrl = userprofile?.profile_pic_small {
-                    //アバターの設定
-                    let imageView = UIImageView()
-                    imageView.loadImageUsingCache(urlString: URL(string:ImageUrl)!)
-                }
-            }
-        }//end observeHelper
+    //ask user for notification permission
+    func askNotfiPermission() {
+        //create the notificationCenter
+        let center  = UNUserNotificationCenter.current()
+        center.delegate = self
+        // set the type as sound or badge
+        center.requestAuthorization(options: [.sound,.alert,.badge]) { (granted, error) in }
+        UIApplication.shared.registerForRemoteNotifications()
     }
+    
+    
+    
+    
+//    //cached image ahead of time, for later use purpose. Advise not to delete
+//    func downloadCurrentUserInfo() {
+//        //function to download user profile
+//        guard let userUid = FIRAuth.auth()?.currentUser?.uid else { return }
+//        observeHelper.loadUserProfileUsingCache(thisUid: userUid) { (userprofile, error) in
+//            if error != nil {
+//                print("observeHelper error: \(error!)")
+//            } else {
+//                //check cached image
+//                if let ImageUrl = userprofile?.profile_pic_small {
+//                    //アバターの設定
+//                    let imageView = UIImageView()
+//                    imageView.loadImageUsingCache(urlString: URL(string:ImageUrl)!)
+//                }
+//            }
+//        }//end observeHelper
+//    }
     
     //    //remove the first 10 chars on the string
     //    private func removeChar(someString: String) -> String{

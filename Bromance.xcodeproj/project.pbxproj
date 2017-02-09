@@ -563,6 +563,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27CE281FC588E28D4FA168C3 /* Pods-Bromance.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Bromance/Bromance.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
@@ -582,6 +583,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBBF6032F2BEE2B574B866BB /* Pods-Bromance.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Bromance/Bromance.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

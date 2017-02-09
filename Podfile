@@ -32,7 +32,7 @@ pod 'JSQMessagesViewController'
 pod 'Kingfisher', '~> 3.0'
 pod 'SVProgressHUD'
 pod 'paper-onboarding', '~> 2.0.1'
-pod 'Alamofire'
+#pod 'Alamofire'
 
 
 

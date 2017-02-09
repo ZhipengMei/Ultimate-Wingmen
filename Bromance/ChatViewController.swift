@@ -75,6 +75,12 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.view.backgroundColor = UIColor.white
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        rootRef.removeAllObservers() //remove firebase database observer
     }
     
     //load the image
@@ -226,8 +232,89 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             collectionView.reloadData()
         }
     }
-    
+    //overriding JSQMessage function
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
+        
+        var check1: Bool?
+        var check2: Bool?
+        
+        //duo ref to check blockedlist on both sender and receiver's side
+        //checking receiver blocklist side
+        let ref = self.rootRef.child("user_profile").child(self.receiverId!).child("blocked").child(self.senderId!)
+        ref.observeSingleEvent(of: .value, with: {
+            snapshot in
+            //store the return package content into blockBool (could be null)
+            if (snapshot.value as? Bool) != nil {   //if the content is not null
+                check1 = snapshot.value as? Bool   //then store it inside check 1
+            } else {
+                check1 = false                      //if the content is null the check 1 is false because id isnt on blockedlist
+            }
+            
+            //checking sender blocked users list
+            let ref2 = self.rootRef.child("user_profile").child(self.senderId!).child("blocked").child(self.receiverId!)
+            ref2.observeSingleEvent(of:.value, with: {
+                snapshot2 in
+                //checking the return package has content
+                if (snapshot2.value as? Bool) != nil {
+                    check2 = snapshot2.value as? Bool
+                } else {
+                    check2 = false
+                }
+                
+                //as long as one user is block then message cannot be deliver
+                if check1! == true || check2! == true {
+                    //user is blocked
+                    // create the alert
+                    let alert = UIAlertController(title: "uh-oh", message: "Message is unable to deliver.", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+                    // show the alert
+                    self.present(alert, animated: true, completion: nil)
+
+                } else {
+                    //user is not blocked
+                    //send message
+                    self.sendingMsg(button, withMessageText: text, senderId: senderId, senderDisplayName: senderDisplayName, date: date)
+                }
+                
+                
+            })//end ref2
+
+        })//end ref
+        
+        
+        
+        
+//        //checking my block users list
+//        let ref2 = self.rootRef.child("user_profile").child(self.senderId!).child("blocked").child(self.receiverId!)
+//        ref2.observe(.value, with: {
+//            snapshot in
+//            //checking the return package has content
+//            if let blockBool = snapshot.value as? Bool {
+//                //print(snapshot.value!)
+//                //uis not on blockedlist yet
+//                if blockBool {
+//                    //user is blocked
+//                    // create the alert
+//                    let alert = UIAlertController(title: "uh-oh", message: "Message is unable to deliver.", preferredStyle: UIAlertControllerStyle.alert)
+//                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+//                    // show the alert
+//                    self.present(alert, animated: true, completion: nil)
+//                } else {
+//                    //user is not blocked
+//                    //send message
+//                    self.sendingMsg(button, withMessageText: text, senderId: senderId, senderDisplayName: senderDisplayName, date: date)
+//                }
+//            } else {
+//                //firebase return package is null
+//                //send message
+//                self.sendingMsg(button, withMessageText: text, senderId: senderId, senderDisplayName: senderDisplayName, date: date)
+//            }
+//            
+//        })//end ref
+    }
+    
+    func sendingMsg(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
+
         //acutal sender name is the current user
         let senderName = FIRAuth.auth()?.currentUser?.displayName
         let timeStamp = NSNumber(value: Int(NSDate().timeIntervalSince1970))
@@ -354,34 +441,34 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     
     
-    private func fetchImageDataAtURL(_ photoURL: String, forMediaItem mediaItem: JSQPhotoMediaItem, clearsPhotoMessageMapOnSuccessForKey key: String?) {
-        let storageRef = FIRStorage.storage().reference(forURL: photoURL)
-        storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
-            if let error = error {
-                print("Error downloading image data: \(error)")
-                return
-            }
-            
-            storageRef.metadata(completion: { (metadata, metadataErr) in
-                if let error = metadataErr {
-                    print("Error downloading metadata: \(error)")
-                    return
-                }
-                
-                if (metadata?.contentType == "image/gif") {
-                    mediaItem.image = UIImage.gifWithData(data!)
-                } else {
-                    mediaItem.image = UIImage.init(data: data!)
-                }
-                self.collectionView.reloadData()
-                
-                guard key != nil else {
-                    return
-                }
-                self.photoMessageMap.removeValue(forKey: key!)
-            })
-        }
-    }
+//    private func fetchImageDataAtURL(_ photoURL: String, forMediaItem mediaItem: JSQPhotoMediaItem, clearsPhotoMessageMapOnSuccessForKey key: String?) {
+//        let storageRef = FIRStorage.storage().reference(forURL: photoURL)
+//        storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
+//            if let error = error {
+//                print("Error downloading image data: \(error)")
+//                return
+//            }
+//            
+//            storageRef.metadata(completion: { (metadata, metadataErr) in
+//                if let error = metadataErr {
+//                    print("Error downloading metadata: \(error)")
+//                    return
+//                }
+//                
+//                if (metadata?.contentType == "image/gif") {
+//                    mediaItem.image = UIImage.gifWithData(data!)
+//                } else {
+//                    mediaItem.image = UIImage.init(data: data!)
+//                }
+//                self.collectionView.reloadData()
+//                
+//                guard key != nil else {
+//                    return
+//                }
+//                self.photoMessageMap.removeValue(forKey: key!)
+//            })
+//        }
+//    }
     
     //image pic on nav title
     func setupNavBarWithUser() {
@@ -441,8 +528,13 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
                 
                 self.navigationItem.titleView = titleView
+                self.navigationItem.titleView?.alpha = 0
                 
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.navigationItem.titleView?.alpha = 1
+                })
                 
+
                 //add tapgesture to title view
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
                 tapGesture.cancelsTouchesInView = true
@@ -492,6 +584,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
 
     } //end sendNotificationToMsgReceiver
     
+
 
     
  

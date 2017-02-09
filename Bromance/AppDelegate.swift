@@ -45,12 +45,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         if userDefaults.bool(forKey: "onboardingComplete") {
             userpersist()
             
-            //create the notificationCenter
-            let center  = UNUserNotificationCenter.current()
-            center.delegate = self
-            // set the type as sound or badge
-            center.requestAuthorization(options: [.sound,.alert,.badge]) { (granted, error) in }
-            application.registerForRemoteNotifications()
+//            //create the notificationCenter
+//            let center  = UNUserNotificationCenter.current()
+//            center.delegate = self
+//            // set the type as sound or badge
+//            center.requestAuthorization(options: [.sound,.alert,.badge]) { (granted, error) in }
+//            application.registerForRemoteNotifications()
             
         } else {
             //otherwise show onboarding view
@@ -65,8 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotification(_:)), name: NSNotification.Name.firInstanceIDTokenRefresh, object: nil)
         
-        
-        
         return true
     }
     
@@ -78,12 +76,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         FIRAuth.auth()!.addStateDidChangeListener() { auth, user in
             //check user existence
             if user != nil {
-                
-                
-                
-                
-                
-                
                 //check displayName object existence
                 if (user?.displayName == nil || user?.displayName == ""){
                     print("*** no username object ***")
@@ -114,6 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         
         if let err = error {
             print("Failed to log into Google: ", err)
+            SVProgressHUD.dismiss()
             return
         }
         
@@ -123,6 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         FIRAuth.auth()?.signIn(with: credentials, completion: { (user, error) in
             if let err = error {
                 print("Failed to create a Firebase User with Google account: ", err)
+                SVProgressHUD.dismiss()
                 return
             }
             guard let uid = user?.uid else { return }
@@ -182,10 +176,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     //remote notification
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        
-        print("Message Id : \(userInfo["gcm_message_id"]!)")
-        print(userInfo)
-        
+        if let gcm_message_id = userInfo["gcm_message_id"] {
+            print("Message Id : \(gcm_message_id)")
+            print(userInfo)
+        }
     }
     //notification fail
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -299,4 +293,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
 
 
 }
+
 

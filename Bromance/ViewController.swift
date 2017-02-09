@@ -12,11 +12,13 @@ import Firebase
 import GoogleSignIn
 import TwitterKit
 import SVProgressHUD
+import WebKit
+import SafariServices
 
-class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate {
+class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, SFSafariViewControllerDelegate {
     
     @IBOutlet var myView: UIView!   //myView holds login buttons
-
+    var webView: UIWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
         self.setupFacebookButtons()
         self.setupGoogleButtons()
         self.setupaTwitterButtons()
+    
     }
 
     
@@ -285,6 +288,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                 databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("0")
                 databaseRef.child("user_profile").child("\(user.uid)/website").setValue("")
                 databaseRef.child("user_profile").child("\(user.uid)/level").setValue("AFC")
+
                 if let email = user.email {
                     databaseRef.child("user_profile").child("\(user.uid)/email").setValue(email)
                 } else {
@@ -301,6 +305,23 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
             })//end databaseRef.child("user_profile")
         }//end if FIRAuth.auth()?.currentUser
     }//end storeInfoFirstLogin
+
     
+    //terms and privacy webview
+    @IBAction func term(_ sender: Any) {
+        let svc = SFSafariViewController(url: NSURL(string: "https://animemei.github.io/WingMe/privacy/")! as URL)
+        svc.delegate = self
+        present(svc, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func privacy(_ sender: Any) {
+        let svc = SFSafariViewController(url: NSURL(string: "https://animemei.github.io/WingMe/privacy/")! as URL)
+        svc.delegate = self
+        present(svc, animated: true, completion: nil)
+    }
+    
+
 }
+
 
