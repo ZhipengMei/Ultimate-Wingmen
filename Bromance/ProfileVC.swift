@@ -21,11 +21,13 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var bg: UIImageView!
     let transition = CircularTransition() //custom animation
     var userID: String? //target user's id
-    let currentLoggedInUserId = FIRAuth.auth()?.currentUser?.uid
+    var currentLoggedInUserId: String!
     let rootRef = FIRDatabase.database().reference()    //databse root reference
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        currentLoggedInUserId = FIRAuth.auth()?.currentUser?.uid
         
         //making sure userID has something
         if self.userID == nil {
@@ -51,8 +53,9 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
         self.profilePic.clipsToBounds = true
         
         
-        if self.userID != nil { //other user viewing
-            
+        if (self.userID != nil && self.currentLoggedInUserId != nil)  { //other user viewing
+            print("self.userID \(self.userID)")
+            print("self.currentLoggedInUserId \(self.currentLoggedInUserId)")
             //change the more item name to block if user viewing another user's profile
             //if the ids matched means the same user viewing his own profile
             if self.userID == currentLoggedInUserId {
