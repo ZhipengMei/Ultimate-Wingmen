@@ -573,7 +573,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Bromance/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = com.teamacorne.WingMe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.teamacorne.iWingMe;
 				PRODUCT_NAME = WingMe;
 				SWIFT_VERSION = 3.0;
 			};
@@ -593,7 +593,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Bromance/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = com.teamacorne.WingMe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.teamacorne.iWingMe;
 				PRODUCT_NAME = WingMe;
 				SWIFT_VERSION = 3.0;
 			};
