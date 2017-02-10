@@ -26,13 +26,12 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        SVProgressHUD.show()
         // Ask for authorization from the User.
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()           // Request location authorization
         
         if CLLocationManager.locationServicesEnabled() {
-            SVProgressHUD.show()
             self.locationManager.delegate = self         // Set the delegate
             self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers //less accurate to save power
             self.locationManager.startUpdatingLocation()
@@ -117,7 +116,7 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
         //setup user's current latitude and longitude
         let locationLat = (locationManager.location?.coordinate.latitude)!
         let locationLong = (locationManager.location?.coordinate.longitude)!
-        print("location ---------- \(locationLat)  : \(locationLat)")
+        print("location ---------- \(locationLat)  : \(locationLong)")
         //save location data to firebase
         saveGeoData(latitude: locationLat, longitude: locationLong)
         self.getNearbyUser() //get nearby users
@@ -135,15 +134,40 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
     
     //function for saving GeoLocation data to firebase
     func saveGeoData(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
-        UIApplication.shared.beginIgnoringInteractionEvents()
         SVProgressHUD.show()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
         //create a GeoFire instance
         geoFire = GeoFire(firebaseRef: rootRef.child("locations") )    //create a child folder to store geo-location data
         let userID = user?.uid  //get user id
         //storing data to firebaseDatabase with key as uid
-        geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID)
-        SVProgressHUD.dismiss()
-        UIApplication.shared.endIgnoringInteractionEvents()
+//        geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID)
+        geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID) { (error) in
+            if (error != nil) {
+                print("An error occured: \(error)")
+                UIApplication.shared.endIgnoringInteractionEvents()
+                SVProgressHUD.dismiss()
+            } else {
+                print("Saved location successfully!")
+                UIApplication.shared.endIgnoringInteractionEvents()
+                SVProgressHUD.dismiss()
+            }
+        }
+        
+        
+//        //double checking location
+//        var checkGeoFire: GeoFire? = nil
+//        checkGeoFire = GeoFire(firebaseRef: rootRef.child("locations").child(userID!))
+//        checkGeoFire?.getLocationForKey(userID!, withCallback: {
+//            geoSnapshot in
+//            
+//            if geoSnapshot.0?.coordinate.latitude == nil {
+//                self.geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID)
+//            }
+//        
+//        })
+        
+
     }
     
     var checkLocationKey = [String]()

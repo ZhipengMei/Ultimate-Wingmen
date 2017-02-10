@@ -33,7 +33,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
         self.setupFacebookButtons()
         self.setupGoogleButtons()
         self.setupaTwitterButtons()
-    
+
     }
 
     
@@ -213,16 +213,32 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     
     //store user's basic info on the very first login
     func storeInfoFirstLogin() {
-        //using userdefault to check profile's existence
-        if UserDefaults.standard.object(forKey: "existingProfile") == nil {
-            self.setupNewprofile()
-        } else {
-            if let profileIsSetup = UserDefaults.standard.object(forKey: "existingProfile")! as? Bool {
-                if profileIsSetup == false {
-                    self.setupNewprofile()
-                }
+        guard let thisUserId = FIRAuth.auth()?.currentUser?.uid else { return }
+        let profileNameRef = FIRDatabase.database().reference().child("user_profile").child(thisUserId).child("username")
+        profileNameRef.observeSingleEvent(of: .value, with: {
+            snapshot in
+            //if the username is nil assuming the user profile needs to be reset
+            if let somevalue = snapshot.value as? String {
+                //acutally have something
+            } else {
+                print("Profile is empty.")
+                self.setupNewprofile()
             }
-        }
+        })
+        
+        
+        
+        
+//        //using userdefault to check profile's existence
+//        if UserDefaults.standard.object(forKey: "existingProfile") == nil {
+//            self.setupNewprofile()
+//        } else {
+//            if let profileIsSetup = UserDefaults.standard.object(forKey: "existingProfile")! as? Bool {
+//                if profileIsSetup == false {
+//                    self.setupNewprofile()
+//                }
+//            }
+//        }
         
     }//end storeInfoFirstLogin
     

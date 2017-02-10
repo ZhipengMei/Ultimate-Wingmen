@@ -122,15 +122,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
                 return
             }
             guard let uid = user?.uid else { return }
+            SVProgressHUD.dismiss()
+            UIApplication.shared.endIgnoringInteractionEvents()
             ViewController().storeInfoFirstLogin()          //calling function from another class
             print("Successfully logged into Firebase with Google", uid)
             //go to tab
             let tabVC = self.storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-            SVProgressHUD.dismiss()
-            UIApplication.shared.endIgnoringInteractionEvents()
             self.window?.rootViewController = tabVC
         })
-        UIApplication.shared.endIgnoringInteractionEvents()
+        
     }
     
 

@@ -20,9 +20,7 @@ class ChatTableVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
 
-        
         SVProgressHUD.show()
 //        self.downloadCurrentUserInfo() //cache image ahead of time
     }
