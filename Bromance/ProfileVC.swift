@@ -33,21 +33,6 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
         if self.userID == nil {
             self.userID = FIRAuth.auth()?.currentUser?.uid
         }
-
-        //decided to leave this feature out because nobody wants to see a blocked title
-//        //change message button title
-//        if UserDefaults.standard.object(forKey: "blocking") != nil {
-//            if let blocking = UserDefaults.standard.object(forKey: "blocking")! as? Bool {
-//                if blocking == true {
-//                    self.messageBtn.setTitle("Blocked", for: .normal)
-//                    self.messageBtn.isUserInteractionEnabled = false
-//                } else {
-//                    self.messageBtn.isUserInteractionEnabled = true
-//                    self.messageBtn.setTitle("Message", for: .normal)
-//                }
-//            }
-//        }
-
         
         self.profilePic.layer.cornerRadius = self.profilePic.frame.size.width/2  //circular image
         self.profilePic.clipsToBounds = true
@@ -64,6 +49,10 @@ class ProfileVC: UIViewController, UIViewControllerTransitioningDelegate {
                 //otherwise user is viewing another user's profile
                 self.moreBtn.title = "Report"
             }
+            
+
+            
+            
             
             //function to download user profile or use existing
             observeHelper.loadUserProfileUsingCache(thisUid: userID!) { (userprofile, error) in

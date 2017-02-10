@@ -15,63 +15,40 @@ class observeHelper {
     
     static func loadUserProfileUsingCache(thisUid: String, completion: @escaping (User?, Error?) -> Void) {
         
-//        var userprofile: User?    //reset the variable
-            //check if the profile already exist
-//            if let index = userProfileCache.index(forKey: thisUid) {
-////                print("using cache profile")
-//                userprofile = userProfileCache[index].value
-//                completion(userprofile!, nil)
-//            } else {
-                let ref = FIRDatabase.database().reference().child("user_profile").child(thisUid)
-
-                //obserview once then stop receiving users update
-//                ref.observeSingleEvent(of: .value, with: { (snapshot) in
-//                    if let snapDict = snapshot.value as? NSDictionary{
-//                        let thisUser = User(dict: snapDict as! [String : NSObject])
-//                        userProfileCache[thisUid] = thisUser
-//                        userprofile = userProfileCache[thisUid]
-//                        completion(userprofile!, nil)
-//                    }
-//                }, withCancel: nil)
-                
-                //keep observing
-                ref.observe(.value, with: { (snapshot) in
-                    if let snapDict = snapshot.value as? NSDictionary{
-                        let thisUser = User(dict: snapDict as! [String : NSObject])
-                        
-//                        //find the older element
-//                        if let cacheIndex = userProfileCache.index(forKey: thisUid) {
-//                            userProfileCache.remove(at: cacheIndex) //delete it
-//                        }
-                        //add the new one
-//                        userProfileCache[thisUid] = thisUser
-//                        userprofile = userProfileCache[thisUid]
-//                        completion(userprofile!, nil)
-                        completion(thisUser, nil)
-                    }
-                }, withCancel: nil)
-                
-//            }//end else
-    }//end loadUserProfileUsingCache
-    
-    
-    //return only the userID from firebase
-    static func loadUserIDonly(thisUid: String, completion: @escaping (String?, Error?) -> Void) {
-        let keyRef = FIRDatabase.database().reference().child("user_profile").child(thisUid)
+        let ref = FIRDatabase.database().reference().child("user_profile").child(thisUid)
         
-        keyRef.observeSingleEvent(of: .value, with: {
-            snapshot in
-            
-            if let existingUser = snapshot.value as? NSDictionary {
-                completion(snapshot.key, nil)
-            } else {
-                //remove extra location data if location data doesnt mathc any userprofile
-                let locationRef = FIRDatabase.database().reference().child("locations").child(thisUid)
-                locationRef.removeValue()
-            }
-            
-        })//end keyRef
-    }//end loadUserID
+        //keep observing
+        ref.observe(.value, with: { (snapshot) in
+            if let snapDict = snapshot.value as? NSDictionary{
+                
+                if snapDict["profile_pic_small"] == nil {
+                    print("This user do not have profile image")
+                    //checking profile image
+                    let existingImageRef = FIRDatabase.database().reference().child("user_profile").child(thisUid).child("profile_pic_small")
+                    //set default image
+                    existingImageRef.setValue("https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default_image%2Fprofile_pic_small.jpg?alt=media&token=d18e1e96-08b3-4eb7-81e3-9a0f73d904c9")
 
+//                    existingImageRef.observeSingleEvent(of: .value, with: {
+//                        imageStuff in
+//                        
+//                        if let imageString = imageStuff.value as? String {
+//                            print("ProfileVC: This user has a image.\n")
+//                        } else {
+//                            print("This user does not have a image.\n Creating a default image for this user.")
+//                            //set up default image
+//                            existingImageRef.setValue("https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default_image%2Fprofile_pic_small.jpg?alt=media&token=d18e1e96-08b3-4eb7-81e3-9a0f73d904c9")
+//                        }
+//                        
+//                    })//end observe existingImageRef
+                } else {
+                    let thisUser = User(dict: snapDict as! [String : NSObject])
+                    completion(thisUser, nil)
+                }
+                
+
+            }
+        }, withCancel: nil)
+        
+    }//end loadUserProfileUsingCache
 
 }

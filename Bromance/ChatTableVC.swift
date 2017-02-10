@@ -11,9 +11,8 @@ import FirebaseAuth
 import FirebaseDatabase
 import UserNotifications
 import SVProgressHUD
-import UserNotifications
 
-class ChatTableVC: UITableViewController, UNUserNotificationCenterDelegate{
+class ChatTableVC: UITableViewController {
     
     let rootRef = FIRDatabase.database().reference()    //reference to firebase database
     var messages = [Message]()
@@ -22,8 +21,7 @@ class ChatTableVC: UITableViewController, UNUserNotificationCenterDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        UNUserNotificationCenter.current().delegate = self
-        self.askNotfiPermission()
+
         
         SVProgressHUD.show()
 //        self.downloadCurrentUserInfo() //cache image ahead of time
@@ -156,15 +154,7 @@ class ChatTableVC: UITableViewController, UNUserNotificationCenterDelegate{
         
     }
     
-    //ask user for notification permission
-    func askNotfiPermission() {
-        //create the notificationCenter
-        let center  = UNUserNotificationCenter.current()
-        center.delegate = self
-        // set the type as sound or badge
-        center.requestAuthorization(options: [.sound,.alert,.badge]) { (granted, error) in }
-        UIApplication.shared.registerForRemoteNotifications()
-    }
+
     
     
     

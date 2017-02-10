@@ -103,10 +103,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     //google sign in
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         SVProgressHUD.show() //animate indicator
-        
+        UIApplication.shared.beginIgnoringInteractionEvents()
         if let err = error {
             print("Failed to log into Google: ", err)
             SVProgressHUD.dismiss()
+            UIApplication.shared.endIgnoringInteractionEvents()
             return
         }
         
@@ -117,6 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
             if let err = error {
                 print("Failed to create a Firebase User with Google account: ", err)
                 SVProgressHUD.dismiss()
+                UIApplication.shared.endIgnoringInteractionEvents()
                 return
             }
             guard let uid = user?.uid else { return }
@@ -125,9 +127,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
             //go to tab
             let tabVC = self.storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
             SVProgressHUD.dismiss()
+            UIApplication.shared.endIgnoringInteractionEvents()
             self.window?.rootViewController = tabVC
         })
-
+        UIApplication.shared.endIgnoringInteractionEvents()
     }
     
 
@@ -205,12 +208,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: FIRInstanceIDAPNSTokenType.unknown)
         if let refreshedToken = FIRInstanceID.instanceID().token() {
             print("InstanceID token: \(refreshedToken)")
+        
             
-            
-            //testing
+            //update token to database
             guard let myuid = FIRAuth.auth()?.currentUser?.uid else { return }
-            let ref = FIRDatabase.database().reference().child("user_profile").child(myuid).child("firebaseToken")
-            ref.setValue(refreshedToken)
+            let ref = FIRDatabase.database().reference().child("user_profile").child(myuid)
+            ref.observeSingleEvent(of: .value, with: { snapshot in
+                if let userstuff = snapshot.value as? NSDictionary {
+                    let tokenRef = FIRDatabase.database().reference().child("user_profile").child(myuid).child("firebaseToken")
+                    tokenRef.setValue(refreshedToken)
+                }
+            })
         }
     }
     

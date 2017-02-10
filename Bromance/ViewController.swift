@@ -14,14 +14,19 @@ import TwitterKit
 import SVProgressHUD
 import WebKit
 import SafariServices
+import SVProgressHUD
+import UserNotifications
 
-class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, SFSafariViewControllerDelegate {
+class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, SFSafariViewControllerDelegate, UNUserNotificationCenterDelegate {
     
     @IBOutlet var myView: UIView!   //myView holds login buttons
     var webView: UIWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UNUserNotificationCenter.current().delegate = self
+        self.askNotfiPermission()
         
         myView.isHidden = false
         //display social media login views
@@ -46,7 +51,6 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     fileprivate func setupaTwitterButtons() {
         let twitterButton = TWTRLogInButton { (session, error) in
             self.myView.isHidden = true
-            
             SVProgressHUD.show() //animate indicator
             
             if let err = error {
@@ -201,14 +205,34 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     //google button bug
     // due to tab-gesture dismiss keyboard, tab-gesture would mess up google button
 
+    
+    
+
+
 
     
     //store user's basic info on the very first login
     func storeInfoFirstLogin() {
-        print("Setting up new users profile ...")
+        //using userdefault to check profile's existence
+        if UserDefaults.standard.object(forKey: "existingProfile") == nil {
+            self.setupNewprofile()
+        } else {
+            if let profileIsSetup = UserDefaults.standard.object(forKey: "existingProfile")! as? Bool {
+                if profileIsSetup == false {
+                    self.setupNewprofile()
+                }
+            }
+        }
         
+    }//end storeInfoFirstLogin
+    
+    private func setupNewprofile() {
+        UIApplication.shared.beginIgnoringInteractionEvents() //disable user touch action while downloading image
+        SVProgressHUD.show()
+        print("\nSetting up new users profile ...")
         //if user is not nil
         if let user = FIRAuth.auth()?.currentUser {
+            
             //firebase storage to store media files
             let storageRef = FIRStorage.storage().reference(forURL: "gs://bromance-e91d8.appspot.com")
             let profilePicRef = storageRef.child(user.uid + "/profile_pic_small.jpg")
@@ -219,7 +243,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
             let profileImageRef = databaseRef.child("user_profile").child(userID).child("profile_pic_small")
             
             profileImageRef.observe(.value, with: {(snapshot) in
-                
+
                 let profile_pic = snapshot.value as? String
                 
                 //download image from facebook only if when profile image does not exist
@@ -230,7 +254,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                     let fbprofileImage = FBSDKGraphRequest(graphPath: "me/picture", parameters: ["height":300,"width":300,"redirect":false], httpMethod:"GET")
                     
                     fbprofileImage?.start(completionHandler: {(connection, result, error) -> Void in
-
+                        
                         if(error == nil) {
                             let dictionary = result as? NSDictionary        //store JSON result as a dictionary
                             let data = dictionary?.object(forKey: "data") //go inside the data node
@@ -245,53 +269,62 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                                         //print("downloadUrl is")
                                         //print(downloadUrl()!.absoluteString)
                                         profileImageRef.setValue(downloadUrl()!.absoluteString)
+                                        print("xxxxxxx  This user has a image ")
+                                        UIApplication.shared.endIgnoringInteractionEvents()//enable user touch action finished downloading image
+                                        
+                                        SVProgressHUD.dismiss()
                                     } else {
                                         print("Error in downloading image")
+                                        UIApplication.shared.endIgnoringInteractionEvents()
                                     }
                                 }
                             }//end if
-                        }//end if
-                    })// *** getting picture from facebook end ***
-                    
-                    //getting image from low quality google/twitter
-                    if(profile_pic == nil){
-                        //print("profile pic still nill")
-                        let imageUrl = user.photoURL
-                        
-                        if let imageData = NSData(contentsOf: imageUrl!){
-                            profilePicRef.put(imageData as Data, metadata: nil){  //upload profile image into firebase
-                                metadata,error in
-                                if(error == nil) {
-                                    //size, content type or the download url
-                                    let downloadUrl = metadata!.downloadURL
-                                    //print("downloadUrl is")
-                                    //print(downloadUrl()!.absoluteString)
-                                    //upload user image to firebase
-                                    profileImageRef.setValue(downloadUrl()!.absoluteString)
-                                    
-                                    //double checking user image is being processes at this point, right after
-                                    let existingImageRef = FIRDatabase.database().reference().child("user_profile").child("\(user.uid)").child("profile_pic_small")
-                                    existingImageRef.observeSingleEvent(of: .value, with: {
-                                        imageStuff in
-                                        
-                                        if let imageString = imageStuff.value as? String {
-                                            print("This user has a image: \n \(imageString)")
+                        } else {
+                            //getting image from low quality google/twitter
+                            if(profile_pic == nil){
+                                SVProgressHUD.show()
+                                //print("profile pic still nill")
+                                let imageUrl = user.photoURL
+                                
+                                if let imageData = NSData(contentsOf: imageUrl!){
+                                    profilePicRef.put(imageData as Data, metadata: nil){  //upload profile image into firebase
+                                        metadata,error in
+                                        if(error == nil) {
+                                            //size, content type or the download url
+                                            let downloadUrl = metadata!.downloadURL
+                                            //print("downloadUrl is")
+                                            //print(downloadUrl()!.absoluteString)
+                                            //upload user image to firebase
+                                            profileImageRef.setValue(downloadUrl()!.absoluteString)
+                                            
+                                            //double checking user image is being processes at this point, right after
+                                            let existingImageRef = FIRDatabase.database().reference().child("user_profile").child("\(user.uid)").child("profile_pic_small")
+                                            existingImageRef.observeSingleEvent(of: .value, with: {
+                                                imageStuff in
+                                                
+                                                if let imageString = imageStuff.value as? String {
+                                                    print("This user has a image: \n \(imageString)")
+                                                    SVProgressHUD.dismiss()
+                                                    UIApplication.shared.endIgnoringInteractionEvents()
+                                                } else {
+                                                    print("This user does not have a image.\n Creating a default image for this user.")
+                                                    //set up default image
+                                                    profileImageRef.setValue("https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default_image%2Fprofile_pic_small.jpg?alt=media&token=d18e1e96-08b3-4eb7-81e3-9a0f73d904c9")
+                                                    SVProgressHUD.dismiss()
+                                                    UIApplication.shared.endIgnoringInteractionEvents() //enable user touch action finished downloading image
+                                                }
+                                                
+                                            })//end observe existingImageRef
+                                            
                                         } else {
-                                            print("This user does not have a image.\n Creating a default image for this user.")
-                                            //set up default image
-                                            profileImageRef.setValue("https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default_image%2Fprofile_pic_small.jpg?alt=media&token=d18e1e96-08b3-4eb7-81e3-9a0f73d904c9")
+                                            print("Error in downloading image")
+                                            UIApplication.shared.endIgnoringInteractionEvents()
                                         }
-                                        
-                                    })//end observe existingImageRef
-                                    
-                                } else {
-                                    print("Error in downloading image")
-                                }
-                            }
-                        }//end if
-                        
-                        
-                    }//end if profile_pic still nil
+                                    }
+                                }//end if
+                            }//end if profile_pic still nil
+                        }
+                    })// *** getting picture from facebook end ***
                     
                 } //end if
                 
@@ -300,14 +333,14 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                 //when user logged in, set value to true
                 databaseRef.child("user_profile").child("\((user.uid))").child("connections").child("\(deviceID!)").child("online").setValue(true)
                 databaseRef.child("user_profile").child("\((user.uid))").child("connections").child("\(deviceID!)").child("last_online").setValue(NSDate().timeIntervalSince1970)
-
+                
                 databaseRef.child("user_profile").child("\(user.uid)/username").setValue(user.displayName?.components(separatedBy: " ")[0])
                 databaseRef.child("user_profile").child("\(user.uid)/age").setValue("18")
                 databaseRef.child("user_profile").child("\(user.uid)/gender").setValue("")
                 databaseRef.child("user_profile").child("\(user.uid)/years_in_game").setValue("0")
                 databaseRef.child("user_profile").child("\(user.uid)/website").setValue("")
                 databaseRef.child("user_profile").child("\(user.uid)/level").setValue("AFC")
-
+                
                 if let email = user.email {
                     databaseRef.child("user_profile").child("\(user.uid)/email").setValue(email)
                 } else {
@@ -316,14 +349,13 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                 //set firebase token to database
                 if let refreshedToken = FIRInstanceID.instanceID().token() {
                     databaseRef.child("user_profile").child("\(user.uid)").child("firebaseToken").setValue(refreshedToken)
-        
+                    
                 }
                 
-                
-            
+                UserDefaults.standard.setValue(true, forKey: "existingProfile")
             })//end databaseRef.child("user_profile")
         }//end if FIRAuth.auth()?.currentUser
-    }//end storeInfoFirstLogin
+    }
 
     
     //terms and privacy webview
@@ -338,6 +370,16 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
         let svc = SFSafariViewController(url: NSURL(string: "https://animemei.github.io/WingMe/privacy/")! as URL)
         svc.delegate = self
         present(svc, animated: true, completion: nil)
+    }
+    
+    //ask user for notification permission
+    func askNotfiPermission() {
+        //create the notificationCenter
+        let center  = UNUserNotificationCenter.current()
+        center.delegate = self
+        // set the type as sound or badge
+        center.requestAuthorization(options: [.sound,.alert,.badge]) { (granted, error) in }
+        UIApplication.shared.registerForRemoteNotifications()
     }
     
 

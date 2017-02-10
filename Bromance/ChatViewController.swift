@@ -503,7 +503,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 self.navigationItem.titleView = titleView
                 self.navigationItem.titleView?.alpha = 0
                 
-                UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 2, animations: {
                     self.navigationItem.titleView?.alpha = 1
                 })
                 

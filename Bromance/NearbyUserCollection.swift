@@ -26,12 +26,13 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        SVProgressHUD.show()
+        
         // Ask for authorization from the User.
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()           // Request location authorization
         
         if CLLocationManager.locationServicesEnabled() {
+            SVProgressHUD.show()
             self.locationManager.delegate = self         // Set the delegate
             self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers //less accurate to save power
             self.locationManager.startUpdatingLocation()
@@ -113,14 +114,13 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
     
     //******Get current location******
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
         //setup user's current latitude and longitude
         let locationLat = (locationManager.location?.coordinate.latitude)!
         let locationLong = (locationManager.location?.coordinate.longitude)!
+        print("location ---------- \(locationLat)  : \(locationLat)")
         //save location data to firebase
         saveGeoData(latitude: locationLat, longitude: locationLong)
         self.getNearbyUser() //get nearby users
-        
         //display map view
         //        showCurrentLocationOnMap(lat: locationLat, long: locationLong)
         self.locationManager.stopUpdatingLocation() //stop updating location
@@ -135,6 +135,7 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
     
     //function for saving GeoLocation data to firebase
     func saveGeoData(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
+        UIApplication.shared.beginIgnoringInteractionEvents()
         SVProgressHUD.show()
         //create a GeoFire instance
         geoFire = GeoFire(firebaseRef: rootRef.child("locations") )    //create a child folder to store geo-location data
@@ -142,6 +143,7 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
         //storing data to firebaseDatabase with key as uid
         geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID)
         SVProgressHUD.dismiss()
+        UIApplication.shared.endIgnoringInteractionEvents()
     }
     
     var checkLocationKey = [String]()
@@ -168,22 +170,30 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
                 self.checkLocationKey = Array(self.nearbyUIDSet)
                 self.nearbyUIDSet = []  //empty the set for future operation
                 for count in 0...(self.checkLocationKey.count - 1) {
-                    observeHelper.loadUserIDonly(thisUid: self.checkLocationKey[count]) { (checkID, error) in
-                        if error != nil {
-                            print("observeHelper error: \(error!)")
-                        } else {
-                            //print(checkID!)
-                            //print("people nearby")
-                            self.nearbyUIDArray.append(checkID!)
-                            //print(self.nearbyUIDArray.count)
+                    
+                    let keyRef = FIRDatabase.database().reference().child("user_profile").child(self.checkLocationKey[count])
+                    keyRef.observeSingleEvent(of: .value, with: {
+                        snapshot in
+                        
+                        if let existingUser = snapshot.value as? NSDictionary {
+                            self.nearbyUIDSet.insert(snapshot.key)
+                            self.nearbyUIDArray = Array(self.nearbyUIDSet)
                             SVProgressHUD.dismiss()
                             self.collectionView?.reloadData()
+
+                        } else {
+                            //remove extra location data if location data doesnt mathc any userprofile
+                            let locationRef = FIRDatabase.database().reference().child("locations").child(snapshot.key)
+                            locationRef.removeValue()
+                            SVProgressHUD.dismiss()
                         }
-                    }//end observeHelper
+                        
+                    })//end keyRef
                 }//end for
             }//end if
         })//end observe ready
         SVProgressHUD.dismiss()
+        
     }
 
     
