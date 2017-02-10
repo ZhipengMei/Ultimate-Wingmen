@@ -283,34 +283,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         
         
         
-        
-//        //checking my block users list
-//        let ref2 = self.rootRef.child("user_profile").child(self.senderId!).child("blocked").child(self.receiverId!)
-//        ref2.observe(.value, with: {
-//            snapshot in
-//            //checking the return package has content
-//            if let blockBool = snapshot.value as? Bool {
-//                //print(snapshot.value!)
-//                //uis not on blockedlist yet
-//                if blockBool {
-//                    //user is blocked
-//                    // create the alert
-//                    let alert = UIAlertController(title: "uh-oh", message: "Message is unable to deliver.", preferredStyle: UIAlertControllerStyle.alert)
-//                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
-//                    // show the alert
-//                    self.present(alert, animated: true, completion: nil)
-//                } else {
-//                    //user is not blocked
-//                    //send message
-//                    self.sendingMsg(button, withMessageText: text, senderId: senderId, senderDisplayName: senderDisplayName, date: date)
-//                }
-//            } else {
-//                //firebase return package is null
-//                //send message
-//                self.sendingMsg(button, withMessageText: text, senderId: senderId, senderDisplayName: senderDisplayName, date: date)
-//            }
-//            
-//        })//end ref
+
     }
     
     func sendingMsg(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {

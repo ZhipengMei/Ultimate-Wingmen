@@ -52,7 +52,26 @@ class observeHelper {
                 }, withCancel: nil)
                 
 //            }//end else
-    }
+    }//end loadUserProfileUsingCache
+    
+    
+    //return only the userID from firebase
+    static func loadUserIDonly(thisUid: String, completion: @escaping (String?, Error?) -> Void) {
+        let keyRef = FIRDatabase.database().reference().child("user_profile").child(thisUid)
+        
+        keyRef.observeSingleEvent(of: .value, with: {
+            snapshot in
+            
+            if let existingUser = snapshot.value as? NSDictionary {
+                completion(snapshot.key, nil)
+            } else {
+                //remove extra location data if location data doesnt mathc any userprofile
+                let locationRef = FIRDatabase.database().reference().child("locations").child(thisUid)
+                locationRef.removeValue()
+            }
+            
+        })//end keyRef
+    }//end loadUserID
 
 
 }

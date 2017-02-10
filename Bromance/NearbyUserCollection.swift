@@ -92,7 +92,7 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
         } else {
             let frame = CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
             let emptyLabel = UILabel(frame: frame)
-            emptyLabel.text = "No nearby user found"
+            emptyLabel.text = "No nearby user found\nRefresh Automatically"
             emptyLabel.textAlignment = NSTextAlignment.center
             self.collectionView?.backgroundView = emptyLabel
             SVProgressHUD.dismiss()
@@ -135,14 +135,18 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
     
     //function for saving GeoLocation data to firebase
     func saveGeoData(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
+        SVProgressHUD.show()
         //create a GeoFire instance
         geoFire = GeoFire(firebaseRef: rootRef.child("locations") )    //create a child folder to store geo-location data
         let userID = user?.uid  //get user id
         //storing data to firebaseDatabase with key as uid
         geoFire?.setLocation(CLLocation(latitude: latitude, longitude: longitude), forKey: userID)
+        SVProgressHUD.dismiss()
     }
     
+    var checkLocationKey = [String]()
     func getNearbyUser(){
+        SVProgressHUD.show()
         self.nearbyUIDSet.removeAll()   //reset it
         // Query locations at user current location with a radius of 20 miles (math: 32186 meters /1000)
         let circleQuery = geoFire?.query(at: locationManager.location, withRadius: 32)
@@ -156,14 +160,30 @@ class NearbyUserCollection: UICollectionViewController, CLLocationManagerDelegat
         
         // call .observeReady block when .observe is finished
         circleQuery?.observeReady({
+            
             //print("All initial data has been loaded and events have been fired!")
+            //solved firebase extra location data do not match non-existing userprofile
+            //fileter out extra spam location data
             if(self.nearbyUIDSet.count > 0){
-                self.nearbyUIDArray = Array(self.nearbyUIDSet)  //convert set to array (contains a list of nearby users' uid)
-                print("people nearby")
-                print(self.nearbyUIDArray.count)
-                self.collectionView?.reloadData()
-            }
-        })
+                self.checkLocationKey = Array(self.nearbyUIDSet)
+                self.nearbyUIDSet = []  //empty the set for future operation
+                for count in 0...(self.checkLocationKey.count - 1) {
+                    observeHelper.loadUserIDonly(thisUid: self.checkLocationKey[count]) { (checkID, error) in
+                        if error != nil {
+                            print("observeHelper error: \(error!)")
+                        } else {
+                            //print(checkID!)
+                            //print("people nearby")
+                            self.nearbyUIDArray.append(checkID!)
+                            //print(self.nearbyUIDArray.count)
+                            SVProgressHUD.dismiss()
+                            self.collectionView?.reloadData()
+                        }
+                    }//end observeHelper
+                }//end for
+            }//end if
+        })//end observe ready
+        SVProgressHUD.dismiss()
     }
 
     

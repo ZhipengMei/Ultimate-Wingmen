@@ -205,8 +205,9 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
     
     //store user's basic info on the very first login
     func storeInfoFirstLogin() {
-        print("inside first login in")
+        print("Setting up new users profile ...")
         
+        //if user is not nil
         if let user = FIRAuth.auth()?.currentUser {
             //firebase storage to store media files
             let storageRef = FIRStorage.storage().reference(forURL: "gs://bromance-e91d8.appspot.com")
@@ -252,6 +253,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                         }//end if
                     })// *** getting picture from facebook end ***
                     
+                    //getting image from low quality google/twitter
                     if(profile_pic == nil){
                         //print("profile pic still nill")
                         let imageUrl = user.photoURL
@@ -264,7 +266,24 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDel
                                     let downloadUrl = metadata!.downloadURL
                                     //print("downloadUrl is")
                                     //print(downloadUrl()!.absoluteString)
+                                    //upload user image to firebase
                                     profileImageRef.setValue(downloadUrl()!.absoluteString)
+                                    
+                                    //double checking user image is being processes at this point, right after
+                                    let existingImageRef = FIRDatabase.database().reference().child("user_profile").child("\(user.uid)").child("profile_pic_small")
+                                    existingImageRef.observeSingleEvent(of: .value, with: {
+                                        imageStuff in
+                                        
+                                        if let imageString = imageStuff.value as? String {
+                                            print("This user has a image: \n \(imageString)")
+                                        } else {
+                                            print("This user does not have a image.\n Creating a default image for this user.")
+                                            //set up default image
+                                            profileImageRef.setValue("https://firebasestorage.googleapis.com/v0/b/bromance-e91d8.appspot.com/o/default_image%2Fprofile_pic_small.jpg?alt=media&token=d18e1e96-08b3-4eb7-81e3-9a0f73d904c9")
+                                        }
+                                        
+                                    })//end observe existingImageRef
+                                    
                                 } else {
                                     print("Error in downloading image")
                                 }
